@@ -1,7 +1,7 @@
 export default function Footer() {
     return (
         <>
-            <div className="text-center mb-[8%] py-4 border-t-2 border-gray-300 text-gray-500 flex gap-4 items-center justify-between max-w-2xl md:max-w-4xl lg:max-w-7xl w-full m-auto">
+            <div className="text-center mb-[8%] py-4 border-t-2 border-gray-300 text-cyan-100 flex gap-4 items-center justify-between max-w-2xl md:max-w-4xl lg:max-w-7xl w-full m-auto">
                 <div>
                     <p className="text-sm">Made with ❤️ by Dev Mistry</p>
                     <p className="text-sm">© 2025 All rights reserved.</p>
