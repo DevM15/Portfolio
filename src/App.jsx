@@ -16,13 +16,13 @@ export default function App() {
         <Navbar />
         <Hero />
       </div>
-      <div className="bg-[#00314e] h-full w-full pt-20 pb-10 text-white">
-        <div className="max-w-2xl md:max-w-2xl lg:max-w-7xl w-full m-auto flex gap-10 py-20" id="About">
-          <div className="w-1/2 border-r-2 border-gray-300 pr-10">
+      <div className="bg-[#00314e] h-full w-full text-white">
+        <div className="max-w-2xl lg:max-w-7xl w-full m-auto flex flex-col lg:flex-row gap-10 p-10 md:py-20" id="About">
+          <div className="lg:border-r-2 lg:border-gray-300 lg:pr-10 lg:w-1/2">
             <About />
             <Education />
           </div>
-          <div className="w-1/2 flex flex-col justify-between">
+          <div className="flex flex-col justify-between lg:w-1/2">
             <Skills />
             <Platform />
           </div>
