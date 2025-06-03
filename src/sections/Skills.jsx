@@ -6,7 +6,7 @@ export default function Skills() {
                 <img src="./img/react.png" alt="" className='w-20 h-20 object-contain rounded lg:grayscale hover:grayscale-0 transition-all duration-300' />
                 <img src="./img/node.png" alt="" className='w-20 h-20 object-contain rounded lg:grayscale hover:grayscale-0 transition-all duration-300' />
                 <img src="./img/java.png" alt="" className='w-20 h-20 object-contain rounded lg:grayscale hover:grayscale-0 transition-all duration-300' />
-                <img src="./img/mongodb.png" alt="" className='w-20 h-20 object-contain rounded lg:grayscale hover:grayscale-0 transition-all duration-300' />
+                <img src="./img/mongoDB.png" alt="" className='w-20 h-20 object-contain rounded lg:grayscale hover:grayscale-0 transition-all duration-300' />
                 <img src="./img/javascript.png" alt="" className='w-20 h-20 object-contain rounded lg:grayscale hover:grayscale-0 transition-all duration-300' />
                 <img src="./img/git.png" alt="" className='w-20 h-20 object-contain rounded lg:grayscale hover:grayscale-0 transition-all duration-300' />
             </div>
