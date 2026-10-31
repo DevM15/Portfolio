@@ -19,9 +19,9 @@ module.exports = {
         pink: '#E8D9DD',
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-        display: ['"Space Grotesk"', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'monospace'],
+        sans: ['"General Sans"', '"Inter"', 'system-ui', 'sans-serif'],
+        display: ['"General Sans"', '"Inter"', 'sans-serif'],
+        mono: ['"Fira Code"', 'monospace'],
       },
       fontSize: {
         'giant': ['clamp(3.5rem, 11vw, 9.5rem)', { lineHeight: '0.86', letterSpacing: '-0.04em' }],
