@@ -42,20 +42,20 @@ export default function JourneySection() {
   return (
     <div className="w-full h-full flex flex-col justify-between py-16 px-6 md:px-16 max-w-[1600px] mx-auto select-none">
       {/* Top Section Metadata */}
-      <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#85867C] uppercase border-b border-white/[0.08] pb-4">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-4">
         <div className="flex items-center gap-3">
-          <span className="text-[#E8E2D5] font-bold">06 / JOURNEY</span>
-          <span className="text-white/20">•</span>
-          <span>HORIZONTAL EVOLUTION TIMELINE</span>
+          <span className="text-[#F1EFE8] font-bold">06 / JOURNEY</span>
+          <span className="text-white/10">•</span>
+          <span className="text-[#9EA49F]">HORIZONTAL EVOLUTION TIMELINE</span>
         </div>
-        <div className="hidden sm:block">2022 ━━━━━ 2026</div>
+        <div className="hidden sm:block text-[#9EA49F]">2022 ━━━━━ 2026</div>
       </div>
 
       {/* Main Horizontal Timeline Bar and Milestone Columns */}
       <div className="my-auto py-8">
         {/* Continuous Horizontal Progression Line */}
-        <div className="relative w-full h-px bg-white/10 mb-12 hidden md:block">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#4AC7A5]/40 via-[#E8E2D5]/30 to-[#4AC7A5]/60" />
+        <div className="relative w-full h-px bg-[#2A302C] mb-12 hidden md:block">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#65E6D2]/60 via-[#F1EFE8]/30 to-[#65E6D2]/80" />
         </div>
 
         {/* 5-Stage Evolution Nodes */}
@@ -66,30 +66,30 @@ export default function JourneySection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="flex flex-col relative group"
+              className="flex flex-col relative group p-5 bg-[#111513] border border-[#2A302C] rounded-[2px] hover:border-[#65E6D2]/60 transition-colors shadow-lg"
             >
               {/* Year Marker */}
-              <div className="flex items-baseline justify-between mb-3 pb-2 border-b border-white/[0.08]">
-                <span className="text-3xl sm:text-4xl font-display font-black text-[#E8E2D5] tracking-tight group-hover:text-white transition-colors">
+              <div className="flex items-baseline justify-between mb-3 pb-2 border-b border-[#2A302C]">
+                <span className="text-3xl sm:text-4xl font-display font-black text-[#F1EFE8] tracking-tight group-hover:text-[#65E6D2] transition-colors">
                   {step.year}
                 </span>
-                <span className="font-mono text-[9px] tracking-widest text-[#4AC7A5] uppercase">
+                <span className="font-mono text-[9px] tracking-widest text-[#65E6D2] uppercase">
                   {step.stage}
                 </span>
               </div>
 
               {/* Stage Headline */}
-              <h4 className="font-display font-bold text-sm text-[#E8E2D5] uppercase tracking-tight mb-2">
+              <h4 className="font-display font-bold text-sm text-[#F1EFE8] uppercase tracking-tight mb-2">
                 {step.headline}
               </h4>
 
               {/* One Short Phrase Only */}
-              <p className="font-sans text-xs text-[#85867C] font-light leading-relaxed">
+              <p className="font-sans text-xs text-[#9EA49F] font-light leading-relaxed">
                 {step.description}
               </p>
 
               {/* Indicator dot */}
-              <div className="mt-4 flex items-center gap-2 font-mono text-[9px] text-[#66705E] uppercase">
+              <div className="mt-4 flex items-center gap-2 font-mono text-[9px] text-[#626A65] uppercase">
                 <span>STAGE 0{idx + 1}</span>
                 <span>→</span>
               </div>
@@ -97,6 +97,15 @@ export default function JourneySection() {
           ))}
         </div>
       </div>
+
+      {/* Bottom Technical Note */}
+      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-[#626A65] uppercase border-t border-[#2A302C] pt-4">
+        <span>06 / 08 EVOLUTION PROGRESSION</span>
+        <span>NEXT: CODE ARCHIVE →</span>
+      </div>
+    </div>
+  );
+}
 
       {/* Bottom Technical Note */}
       <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-[#85867C] uppercase border-t border-white/[0.08] pt-4">

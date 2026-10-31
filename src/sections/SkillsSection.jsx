@@ -27,16 +27,16 @@ export default function SkillsSection() {
   return (
     <div className="w-full h-full flex flex-col justify-between py-16 px-6 md:px-16 max-w-[1500px] mx-auto select-none">
       {/* Top Section Metadata */}
-      <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#85867C] uppercase border-b border-white/[0.08] pb-4">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-4">
         <div className="flex items-center gap-3">
-          <span className="text-[#E8E2D5] font-bold">05 / SKILLS</span>
-          <span className="text-white/20">•</span>
-          <span>EDITORIAL TECHNICAL MAP</span>
+          <span className="text-[#F1EFE8] font-bold">05 / SKILLS</span>
+          <span className="text-white/10">•</span>
+          <span className="text-[#9EA49F]">DIGITAL TECHNICAL MAP & CAPABILITIES</span>
         </div>
-        <div className="hidden sm:block">SYSTEM SPECIFICATIONS</div>
+        <div className="hidden sm:block text-[#9EA49F]">SYSTEM SPECIFICATIONS</div>
       </div>
 
-      {/* Main Technical Map Grid (Typographic spatial grouping) */}
+      {/* Main Technical Map Grid */}
       <div className="my-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {STACK_MAP.map((group, idx) => (
           <motion.div
@@ -44,30 +44,30 @@ export default function SkillsSection() {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: idx * 0.1 }}
-            className="flex flex-col justify-between p-6 bg-[#171A15]/75 border border-[#4A4C45]/60 rounded-[3px] backdrop-blur-sm"
+            className="flex flex-col justify-between p-6 bg-[#111513] border border-[#2A302C] rounded-[2px] shadow-lg"
           >
             <div>
               {/* Category Header */}
-              <div className="font-mono text-[9px] tracking-[0.25em] text-[#4AC7A5] uppercase mb-2">
+              <div className="font-mono text-[9px] tracking-[0.25em] text-[#65E6D2] uppercase mb-2">
                 0{idx + 1} // DOMAIN
               </div>
-              <h3 className="text-2xl sm:text-3xl font-display font-black text-[#E8E2D5] uppercase tracking-tight leading-none mb-3">
+              <h3 className="text-2xl sm:text-3xl font-display font-black text-[#F1EFE8] uppercase tracking-tight leading-none mb-3">
                 {group.category}
               </h3>
-              <p className="font-sans text-xs text-[#85867C] font-light leading-relaxed mb-6">
+              <p className="font-sans text-xs text-[#9EA49F] font-light leading-relaxed mb-6">
                 {group.description}
               </p>
             </div>
 
             {/* Clean Typographic Skills List */}
-            <ul className="space-y-2.5 pt-4 border-t border-white/[0.08] font-mono text-xs">
+            <ul className="space-y-2.5 pt-4 border-t border-[#2A302C] font-mono text-xs">
               {group.skills.map((skill) => (
                 <li
                   key={skill}
-                  className="flex items-center justify-between text-[#C8C1B2] hover:text-white transition-colors"
+                  className="flex items-center justify-between text-[#9EA49F] hover:text-[#F1EFE8] transition-colors"
                 >
                   <span>{skill}</span>
-                  <span className="text-[9px] text-[#66705E]">●</span>
+                  <span className="text-[9px] text-[#65E6D2]">●</span>
                 </li>
               ))}
             </ul>
@@ -76,7 +76,7 @@ export default function SkillsSection() {
       </div>
 
       {/* Bottom Technical Note */}
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-[#85867C] uppercase border-t border-white/[0.08] pt-4">
+      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-[#626A65] uppercase border-t border-[#2A302C] pt-4">
         <span>05 / 08 TECHNICAL SPECIFICATIONS</span>
         <span>NEXT: JOURNEY TIMELINE →</span>
       </div>

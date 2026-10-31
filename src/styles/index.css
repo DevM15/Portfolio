@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Permanent+Marker&family=Kalam:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 * {
   margin: 0;
@@ -11,8 +11,8 @@
 }
 
 html, body {
-  background-color: #10130F;
-  color: #E8E1D2;
+  background-color: #0B0D0C;
+  color: #F1EFE8;
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
   width: 100vw;
@@ -22,43 +22,22 @@ html, body {
   cursor: none !important;
 }
 
-/* Ensure all interactive elements, cards, and buttons never show default browser hand cursor */
+/* Ensure all interactive elements never show default browser hand cursor */
 *, a, button, input, textarea, select, [role="button"], .cursor-pointer, [data-interactive] {
   cursor: none !important;
 }
 
-/* Background grid & subtle paper texture */
-.bg-canvas-pattern {
-  background-color: #10130F;
+/* Digital Grid Background */
+.bg-digital-mesh {
+  background-color: #0B0D0C;
   background-image: 
-    radial-gradient(circle at 50% 50%, rgba(23, 109, 108, 0.08) 0%, transparent 60%),
-    radial-gradient(circle at 85% 20%, rgba(104, 107, 92, 0.08) 0%, transparent 50%),
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    radial-gradient(circle at 50% 40%, rgba(101, 230, 210, 0.04) 0%, transparent 70%),
+    linear-gradient(to right, rgba(42, 48, 44, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 48, 44, 0.35) 1px, transparent 1px);
+  background-size: 100% 100%, 64px 64px, 64px 64px;
 }
 
-/* Torn lined paper pattern inspired by scrapbook aesthetic */
-.bg-lined-paper {
-  background-color: #FAFAF7;
-  background-image: linear-gradient(#D8E2DC 1px, transparent 1px);
-  background-size: 100% 24px;
-}
-
-/* 3D Perspective container */
-.scene-3d-perspective {
-  perspective: 1400px;
-  perspective-origin: 50% 50%;
-  transform-style: preserve-3d;
-}
-
-.card-3d {
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
-  will-change: transform;
-}
-
-/* Custom minimal scrollbar hide */
+/* Minimal scrollbar hide */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
