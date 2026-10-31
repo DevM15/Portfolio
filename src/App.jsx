@@ -95,6 +95,42 @@ const FILTERS = [
   'AGENTIC AI',
 ];
 
+// Dynamic background atmosphere variations per section
+const SECTION_ATMOSPHERES = {
+  0: { // 01 HOME: Subtle cool teal tone
+    primaryGlow: 'radial-gradient(circle at 28% 44%, rgba(101, 230, 210, 0.038) 0%, rgba(11, 16, 15, 0.4) 45%, transparent 72%)',
+    secondaryGlow: 'radial-gradient(circle at 74% 52%, rgba(13, 18, 17, 0.6) 0%, transparent 65%)',
+  },
+  1: { // 02 ABOUT: Slightly warmer graphite tone
+    primaryGlow: 'radial-gradient(circle at 35% 48%, rgba(140, 150, 145, 0.025) 0%, rgba(13, 18, 17, 0.5) 45%, transparent 70%)',
+    secondaryGlow: 'radial-gradient(circle at 70% 40%, rgba(101, 230, 210, 0.02) 0%, transparent 60%)',
+  },
+  2: { // 03 INTERNSHIP: Technical muted deep tone
+    primaryGlow: 'radial-gradient(circle at 30% 50%, rgba(101, 230, 210, 0.025) 0%, rgba(11, 16, 15, 0.5) 45%, transparent 70%)',
+    secondaryGlow: 'radial-gradient(circle at 75% 45%, rgba(119, 136, 255, 0.018) 0%, transparent 65%)',
+  },
+  3: { // 04 PROJECTS: Deep obsidian graphite
+    primaryGlow: 'radial-gradient(circle at 50% 40%, rgba(11, 16, 15, 0.7) 0%, transparent 75%)',
+    secondaryGlow: 'radial-gradient(circle at 20% 60%, rgba(101, 230, 210, 0.02) 0%, transparent 60%)',
+  },
+  4: { // 05 SKILLS: Controlled technical graphite
+    primaryGlow: 'radial-gradient(circle at 45% 45%, rgba(101, 230, 210, 0.03) 0%, rgba(13, 18, 17, 0.5) 50%, transparent 70%)',
+    secondaryGlow: 'radial-gradient(circle at 80% 50%, rgba(13, 18, 17, 0.6) 0%, transparent 60%)',
+  },
+  5: { // 06 JOURNEY: Subtle horizontal drift tone
+    primaryGlow: 'radial-gradient(circle at 50% 50%, rgba(101, 230, 210, 0.028) 0%, rgba(11, 16, 15, 0.6) 50%, transparent 75%)',
+    secondaryGlow: 'radial-gradient(circle at 85% 40%, rgba(119, 136, 255, 0.02) 0%, transparent 65%)',
+  },
+  6: { // 07 GITHUB: Pure deep graphite with subtle source tone
+    primaryGlow: 'radial-gradient(circle at 35% 45%, rgba(101, 230, 210, 0.032) 0%, rgba(11, 16, 15, 0.5) 45%, transparent 70%)',
+    secondaryGlow: 'radial-gradient(circle at 70% 55%, rgba(13, 18, 17, 0.7) 0%, transparent 65%)',
+  },
+  7: { // 08 CONTACT: Atmospheric cyan horizon tone
+    primaryGlow: 'radial-gradient(circle at 30% 45%, rgba(101, 230, 210, 0.045) 0%, rgba(11, 16, 15, 0.5) 50%, transparent 75%)',
+    secondaryGlow: 'radial-gradient(circle at 75% 55%, rgba(119, 136, 255, 0.025) 0%, transparent 65%)',
+  },
+};
+
 export default function App() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [prevSectionIndex, setPrevSectionIndex] = useState(0);
@@ -231,9 +267,37 @@ export default function App() {
   };
 
   const currentSection = SECTIONS[currentSectionIndex];
+  const activeAtmosphere = SECTION_ATMOSPHERES[currentSectionIndex] || SECTION_ATMOSPHERES[0];
 
   return (
-    <div className="relative w-screen h-screen bg-[#0B0D0C] text-[#F1EFE8] overflow-hidden select-none font-sans bg-digital-mesh">
+    <div className="relative w-screen h-screen bg-[#080B0A] text-[#F1EFE8] overflow-hidden select-none font-sans">
+      {/* ==================== PREMIUM CINEMATIC BACKGROUND LAYERS ==================== */}
+      {/* 1. Base dark atmosphere with very slow organic drift (22s loop) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Animated dynamic atmospheric glow */}
+        <div
+          className="absolute -inset-[12%] animate-ambient-drift transition-all duration-1000 ease-out"
+          style={{
+            backgroundImage: `${activeAtmosphere.primaryGlow}, ${activeAtmosphere.secondaryGlow}`,
+          }}
+        />
+
+        {/* 2. Barely visible cinematic vignette around viewport perimeter */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle at 50% 50%, transparent 58%, rgba(4, 6, 5, 0.72) 100%)',
+          }}
+        />
+
+        {/* 3. Extremely faint film grain layer (~2% opacity) */}
+        <div className="absolute inset-0 pointer-events-none bg-subtle-grain mix-blend-overlay opacity-80" />
+
+        {/* 4. Minimal Architectural Horizon Guidelines (0.06 - 0.08 opacity) */}
+        <div className="absolute top-20 left-6 right-6 md:left-12 md:right-12 h-px bg-[rgba(241,239,232,0.06)]" />
+        <div className="absolute bottom-[72px] left-6 right-6 md:left-12 md:right-12 h-px bg-[rgba(241,239,232,0.06)]" />
+      </div>
+
       <CustomCursor />
 
       {/* ==================== ONE-TIME DM OPENING INTRO ANIMATION ==================== */}
@@ -256,9 +320,9 @@ export default function App() {
                     delay: delays[colIndex],
                     ease: [0.76, 0, 0.24, 1],
                   }}
-                  className="relative h-full flex-1 bg-[#0B0D0C] border-r border-[#2A302C]/20 last:border-r-0"
+                  className="relative h-full flex-1 bg-[#080B0A] border-r border-[#2A302C]/10 last:border-r-0"
                 >
-                  <div className="absolute inset-0 bg-digital-mesh opacity-30 pointer-events-none" />
+                  <div className="absolute inset-0 bg-subtle-grain opacity-60 pointer-events-none" />
                 </motion.div>
               );
             })}

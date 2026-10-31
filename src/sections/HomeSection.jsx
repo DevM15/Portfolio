@@ -51,13 +51,13 @@ export default function HomeSection({ onExplore }) {
           </motion.div>
         </div>
 
-        {/* Right Column: Clean Rectangular Archive Photograph (No tape, no paper, no fake frame) */}
+        {/* Right Column: Clean Rectangular Archive Photograph */}
         <div className="lg:col-span-5 flex justify-center lg:justify-end">
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-[360px] aspect-[3/4] bg-[#111513] border border-[#2A302C] rounded-[2px] overflow-hidden group shadow-2xl"
+            className="relative w-full max-w-[360px] aspect-[3/4] bg-[#0D1211] border border-[rgba(241,239,232,0.15)] rounded-[2px] overflow-hidden group shadow-2xl"
           >
             {/* Crisp Portrait Photo */}
             <img
@@ -67,11 +67,11 @@ export default function HomeSection({ onExplore }) {
             />
 
             {/* Corner Digital Technical Tags */}
-            <div className="absolute top-4 left-4 font-mono text-[9px] tracking-widest text-[#F1EFE8] bg-[#0B0D0C]/85 px-2.5 py-1 backdrop-blur-sm border border-[#2A302C] uppercase">
+            <div className="absolute top-4 left-4 font-mono text-[9px] tracking-widest text-[#F1EFE8] bg-[#080B0A]/85 px-2.5 py-1 backdrop-blur-sm border border-[rgba(241,239,232,0.12)] uppercase">
               ID: 01 // DEV MISTRY
             </div>
 
-            <div className="absolute bottom-4 right-4 font-mono text-[9px] tracking-widest text-[#65E6D2] bg-[#0B0D0C]/85 px-2.5 py-1 backdrop-blur-sm border border-[#2A302C] uppercase">
+            <div className="absolute bottom-4 right-4 font-mono text-[9px] tracking-widest text-[#65E6D2] bg-[#080B0A]/85 px-2.5 py-1 backdrop-blur-sm border border-[rgba(241,239,232,0.12)] uppercase">
               LOC: MUMBAI
             </div>
           </motion.div>
