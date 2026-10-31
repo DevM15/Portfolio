@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomCursor from './components/CustomCursor';
+import SpatialCanvasBackground from './components/SpatialCanvasBackground';
 import HomeSection from './sections/HomeSection';
 import AboutSection from './sections/AboutSection';
 import InternshipSection from './sections/InternshipSection';
@@ -270,33 +271,24 @@ export default function App() {
   const activeAtmosphere = SECTION_ATMOSPHERES[currentSectionIndex] || SECTION_ATMOSPHERES[0];
 
   return (
-    <div className="relative w-screen h-screen bg-[#080B0A] text-[#F1EFE8] overflow-hidden select-none font-sans">
-      {/* ==================== PREMIUM CINEMATIC BACKGROUND LAYERS ==================== */}
-      {/* 1. Base dark atmosphere with very slow organic drift (22s loop) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Animated dynamic atmospheric glow */}
-        <div
-          className="absolute -inset-[12%] animate-ambient-drift transition-all duration-1000 ease-out"
-          style={{
-            backgroundImage: `${activeAtmosphere.primaryGlow}, ${activeAtmosphere.secondaryGlow}`,
-          }}
-        />
+    <div className="relative w-screen h-screen bg-[#050706] text-[#F1EFE8] overflow-hidden select-none font-sans">
+      {/* ==================== PROCEDURAL SPATIAL CANVAS BACKGROUND ==================== */}
+      <SpatialCanvasBackground sectionIndex={currentSectionIndex} />
 
-        {/* 2. Barely visible cinematic vignette around viewport perimeter */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle at 50% 50%, transparent 58%, rgba(4, 6, 5, 0.72) 100%)',
-          }}
-        />
+      {/* Subtle Depth Vignette Layer (Darkening Viewport Borders) */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[1]"
+        style={{
+          background: 'radial-gradient(circle at 50% 50%, transparent 60%, rgba(5, 7, 6, 0.75) 100%)',
+        }}
+      />
 
-        {/* 3. Extremely faint film grain layer (~2% opacity) */}
-        <div className="absolute inset-0 pointer-events-none bg-subtle-grain mix-blend-overlay opacity-80" />
+      {/* Extremely Faint Film Grain Overlay (~1.8%) */}
+      <div className="absolute inset-0 pointer-events-none z-[2] bg-subtle-grain mix-blend-overlay opacity-75" />
 
-        {/* 4. Minimal Architectural Horizon Guidelines (0.06 - 0.08 opacity) */}
-        <div className="absolute top-20 left-6 right-6 md:left-12 md:right-12 h-px bg-[rgba(241,239,232,0.06)]" />
-        <div className="absolute bottom-[72px] left-6 right-6 md:left-12 md:right-12 h-px bg-[rgba(241,239,232,0.06)]" />
-      </div>
+      {/* Minimal Architectural Horizon Guidelines (0.05 opacity) */}
+      <div className="absolute top-20 left-6 right-6 md:left-12 md:right-12 h-px bg-[rgba(241,239,232,0.05)] pointer-events-none z-[3]" />
+      <div className="absolute bottom-[72px] left-6 right-6 md:left-12 md:right-12 h-px bg-[rgba(241,239,232,0.05)] pointer-events-none z-[3]" />
 
       <CustomCursor />
 
