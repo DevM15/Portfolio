@@ -1,14 +1,18 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useEffect } from 'react';
 
 /**
- * 12 Curated Exhibition Objects around the Shallow Camera Cylinder:
- * 
- * Each card strictly adheres to:
- * - 1 or 2 primary elements only (image + minimal label/button)
- * - Portrait aspect ratio (0.68 - 0.75) with reduced size: 190–225px × 270–320px
- * - Bends toward camera: center card has highest Z (+180px), edges wrap backward (-450px)
- * - Profile photo inside Card 01 (ABOUT DEV) occupying 70% of the card
- * - Pseudo-random deterministic button/label positions inside the card
+ * 12 Curated Exhibition Objects arranged in a continuous, infinite 3D cylinder:
+ *
+ * Geometry & Convex Curve:
+ * - Camera is fixed at center (0, 0, 0)
+ * - Curve bends TOWARD the camera:
+ *   angle = diffAngle (in radians)
+ *   x = radiusX * sin(angle)
+ *   z = cos(angle) * depthAmp - depthOffset (center has +150px, edges recede to -500px)
+ *   rotateY = -angle (in degrees)
+ * - High-performance direct DOM matrix interpolation (no setState per frame)
+ * - Velocity + friction + lerp momentum physics
+ * - Smooth liquid hover displacement (target lerp)
  */
 const EXHIBITION_ITEMS = [
   {
@@ -123,171 +127,243 @@ const EXHIBITION_ITEMS = [
 ];
 
 export default function HomeSection({ onOpenSection }) {
-  // Rotational state around cylindrical 3D space
-  const [rotationAngle, setRotationAngle] = useState(0);
-  const rotationAngleRef = useRef(0);
-  rotationAngleRef.current = rotationAngle;
+  const containerRef = useRef(null);
+  const cardElementsRef = useRef([]);
+  const cardImgRefs = useRef([]);
+  const reticleRef = useRef(null);
 
-  const [hoveredCardId, setHoveredCardId] = useState(null);
-  const [pointerOffset, setPointerOffset] = useState({ rx: 0, ry: 0, tx: 0, ty: 0 });
-
-  // Camera center reticle tracking (smooth delayed follower, max 14px)
-  const [cameraReticle, setCameraReticle] = useState({ x: 0, y: 0 });
-
-  // Physics animation state
-  const velocityRef = useRef(0);
-  const animFrameRef = useRef(null);
-  const isDraggingRef = useRef(false);
-  const dragStartXRef = useRef(0);
-  const dragStartAngleRef = useRef(0);
-  const lastTimeRef = useRef(performance.now());
-  const magnetTimeoutRef = useRef(null);
+  // Physics animation variables in refs (eliminates 60fps React re-renders)
+  const physicsRef = useRef({
+    currentRotation: 0,
+    targetRotation: 0,
+    velocity: 0,
+    friction: 0.915,
+    smoothing: 0.085,
+    wheelSensitivity: 0.012,
+    isDragging: false,
+    dragStartX: 0,
+    dragStartRotation: 0,
+    touchStartX: 0,
+    lastTouchX: 0,
+    hoveredIndex: -1,
+    targetPointerX: 0,
+    targetPointerY: 0,
+    currentPointerX: 0,
+    currentPointerY: 0,
+    cameraReticleX: 0,
+    cameraReticleY: 0,
+    targetReticleX: 0,
+    targetReticleY: 0,
+    cardStates: EXHIBITION_ITEMS.map(() => ({
+      x: 0,
+      y: 0,
+      z: -600,
+      rotY: 0,
+      rotX: 0,
+      scale: 0.7,
+      opacity: 0,
+      brightness: 0.6,
+      imgScale: 1,
+    })),
+  });
 
   const totalCards = EXHIBITION_ITEMS.length;
-  const stepAngle = 360 / totalCards; // 30 degrees per card
+  const stepAngle = 360 / totalCards; // 30° per card
 
-  // Magnetic snap to nearest card
-  const snapToNearest = useCallback(() => {
-    clearTimeout(magnetTimeoutRef.current);
-    magnetTimeoutRef.current = setTimeout(() => {
-      if (isDraggingRef.current || Math.abs(velocityRef.current) > 0.05) return;
-      const current = rotationAngleRef.current;
-      const snapped = Math.round(current / stepAngle) * stepAngle;
-      const diff = snapped - current;
-
-      if (Math.abs(diff) > 0.08) {
-        velocityRef.current += diff * 0.14;
-      }
-    }, 160);
-  }, [stepAngle]);
-
-  // Main physics loop: inertia, friction & momentum
+  // Main 60fps RequestAnimationFrame Render Loop
   useEffect(() => {
-    let active = true;
+    let animId;
+    const p = physicsRef.current;
 
-    const tick = (now) => {
-      if (!active) return;
-      lastTimeRef.current = now;
+    // Linear interpolation helper
+    const lerp = (start, end, factor) => start + (end - start) * factor;
 
-      if (!isDraggingRef.current) {
-        // Natural exponential friction decay
-        velocityRef.current *= 0.93;
+    const tick = () => {
+      // 1. Velocity + Momentum Physics
+      if (!p.isDragging) {
+        p.velocity *= p.friction;
+        p.targetRotation += p.velocity;
+      }
 
-        if (Math.abs(velocityRef.current) > 0.005) {
-          setRotationAngle((prev) => prev + velocityRef.current);
-        } else if (Math.abs(velocityRef.current) !== 0) {
-          velocityRef.current = 0;
-          snapToNearest();
+      // Smooth rotation interpolation
+      p.currentRotation = lerp(p.currentRotation, p.targetRotation, p.smoothing);
+
+      // Smooth pointer & camera reticle interpolation
+      p.currentPointerX = lerp(p.currentPointerX, p.targetPointerX, 0.08);
+      p.currentPointerY = lerp(p.currentPointerY, p.targetPointerY, 0.08);
+      p.cameraReticleX = lerp(p.cameraReticleX, p.targetReticleX, 0.08);
+      p.cameraReticleY = lerp(p.cameraReticleY, p.targetReticleY, 0.08);
+
+      // Update camera reticle DOM transform
+      if (reticleRef.current) {
+        reticleRef.current.style.transform = `translate3d(${p.cameraReticleX}px, ${p.cameraReticleY}px, 0)`;
+      }
+
+      // 2. Calculate Every Card's 3D Cylindrical Geometry
+      for (let i = 0; i < totalCards; i++) {
+        const el = cardElementsRef.current[i];
+        if (!el) continue;
+
+        const cardTheta = i * stepAngle;
+        let diffAngle = (cardTheta + p.currentRotation) % 360;
+        if (diffAngle > 180) diffAngle -= 360;
+        if (diffAngle < -180) diffAngle += 360;
+
+        const absDiff = Math.abs(diffAngle);
+        const cardState = p.cardStates[i];
+
+        // Graceful culling: only display 5–7 cards on visible forward half (±85°)
+        if (absDiff > 85) {
+          cardState.opacity = lerp(cardState.opacity, 0, 0.15);
+          if (cardState.opacity < 0.01) {
+            el.style.opacity = '0';
+            el.style.pointerEvents = 'none';
+            continue;
+          }
+        }
+
+        // ==================== CONVEX CYLINDER DEPTH PROFILE ====================
+        // The curve bends TOWARD the camera:
+        // Center card (0°) has +150px Z, inner cards have -80px, edges recede down to -500px
+        const rad = (diffAngle * Math.PI) / 180;
+        const targetX = Math.sin(rad) * 660; // radiusX
+        const targetZ = Math.cos(rad) * 450 - 300; // Convex Z depth (+150px at center, -500px at edges)
+        const targetRotY = -diffAngle * 0.58; // Cards wrap around camera
+
+        // Continuous Normalized Distance Falloffs
+        const normDist = Math.min(absDiff / 85, 1);
+        const targetScale = lerp(1.08, 0.68, normDist);
+        const targetOpacity = lerp(1.0, 0.45, normDist);
+        const targetBrightness = lerp(1.0, 0.65, normDist);
+
+        // Hover offset
+        const isHovered = p.hoveredIndex === i;
+        const hoverTz = isHovered ? 24 : 0;
+        const hoverTx = isHovered ? p.currentPointerX * 8 : 0;
+        const hoverTy = isHovered ? p.currentPointerY * 8 : 0;
+        const hoverRotX = isHovered ? p.currentPointerY * -2.5 : 0;
+        const hoverRotY = isHovered ? p.currentPointerX * 2.5 : 0;
+        const hoverScaleFactor = isHovered ? 1.04 : 1.0;
+
+        // Smooth Spring-like interpolation per card
+        cardState.x = lerp(cardState.x, targetX + hoverTx, 0.08);
+        cardState.y = lerp(cardState.y, hoverTy, 0.08);
+        cardState.z = lerp(cardState.z, targetZ + hoverTz, 0.08);
+        cardState.rotY = lerp(cardState.rotY, targetRotY + hoverRotY, 0.08);
+        cardState.rotX = lerp(cardState.rotX, hoverRotX, 0.08);
+        cardState.scale = lerp(cardState.scale, targetScale * hoverScaleFactor, 0.08);
+        cardState.opacity = lerp(cardState.opacity, targetOpacity, 0.08);
+        cardState.brightness = lerp(cardState.brightness, targetBrightness, 0.08);
+        cardState.imgScale = lerp(cardState.imgScale, isHovered ? 1.03 : 1.0, 0.08);
+
+        // Update card DOM transforms directly (GPU-friendly translate3d)
+        el.style.transform = `
+          translate3d(calc(-50% + ${cardState.x.toFixed(2)}px), calc(-50% + ${cardState.y.toFixed(2)}px), ${cardState.z.toFixed(2)}px)
+          rotateY(${cardState.rotY.toFixed(2)}deg)
+          rotateX(${cardState.rotX.toFixed(2)}deg)
+          scale(${cardState.scale.toFixed(3)})
+        `;
+        el.style.opacity = cardState.opacity.toFixed(3);
+        el.style.zIndex = Math.round(100 - absDiff);
+        el.style.pointerEvents = cardState.opacity > 0.2 ? 'auto' : 'none';
+
+        // Update liquid image scale
+        const img = cardImgRefs.current[i];
+        if (img) {
+          img.style.filter = `contrast(1.1) brightness(${cardState.brightness.toFixed(2)})`;
+          img.style.transform = `scale(${cardState.imgScale.toFixed(3)})`;
         }
       }
 
-      animFrameRef.current = requestAnimationFrame(tick);
+      animId = requestAnimationFrame(tick);
     };
 
-    animFrameRef.current = requestAnimationFrame(tick);
-    return () => {
-      active = false;
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-      clearTimeout(magnetTimeoutRef.current);
-    };
-  }, [snapToNearest]);
+    animId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animId);
+  }, [totalCards, stepAngle]);
 
-  // Mouse wheel listener: map vertical wheel to cylindrical gallery rotation
+  // Wheel listener: feeding smooth velocity
   useEffect(() => {
     const handleWheel = (e) => {
       e.preventDefault();
+      const p = physicsRef.current;
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      velocityRef.current -= delta * 0.018;
-      snapToNearest();
+      // Add velocity smoothly without instant position jumps
+      p.velocity -= delta * p.wheelSensitivity;
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [snapToNearest]);
+  }, []);
 
-  // Viewport mouse tracking for camera reticle
-  const handleContainerMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const nx = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-    const ny = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-    setCameraReticle({
-      x: nx * 14,
-      y: ny * 12,
-    });
+  // Viewport Mouse Move for Camera Reticle
+  const handleMouseMove = (e) => {
+    const p = physicsRef.current;
+    const halfW = window.innerWidth / 2;
+    const halfH = window.innerHeight / 2;
+    p.targetReticleX = ((e.clientX - halfW) / halfW) * 14;
+    p.targetReticleY = ((e.clientY - halfH) / halfH) * 12;
+
+    if (p.isDragging) {
+      const diff = e.clientX - p.dragStartX;
+      p.targetRotation = p.dragStartRotation + diff * 0.16;
+    }
   };
 
-  // Drag interaction
   const handleMouseDown = (e) => {
     if (e.target.closest('button, a')) return;
-    isDraggingRef.current = true;
-    dragStartXRef.current = e.clientX;
-    dragStartAngleRef.current = rotationAngle;
-    velocityRef.current = 0;
-  };
-
-  const handleMouseMove = (e) => {
-    handleContainerMouseMove(e);
-    if (!isDraggingRef.current) return;
-    const diff = e.clientX - dragStartXRef.current;
-    setRotationAngle(dragStartAngleRef.current + diff * 0.14);
+    const p = physicsRef.current;
+    p.isDragging = true;
+    p.dragStartX = e.clientX;
+    p.dragStartRotation = p.targetRotation;
+    p.velocity = 0;
   };
 
   const handleMouseUp = () => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
-    snapToNearest();
+    physicsRef.current.isDragging = false;
   };
 
-  // Touch swipe support
-  const touchStartXRef = useRef(0);
+  // Touch Swipe Integration
   const handleTouchStart = (e) => {
     if (e.touches.length !== 1) return;
-    touchStartXRef.current = e.touches[0].clientX;
-    dragStartAngleRef.current = rotationAngle;
-    velocityRef.current = 0;
+    const p = physicsRef.current;
+    p.isDragging = true;
+    p.touchStartX = e.touches[0].clientX;
+    p.lastTouchX = e.touches[0].clientX;
+    p.dragStartRotation = p.targetRotation;
+    p.velocity = 0;
   };
 
   const handleTouchMove = (e) => {
     if (e.touches.length !== 1) return;
-    const diff = e.touches[0].clientX - touchStartXRef.current;
-    setRotationAngle(dragStartAngleRef.current + diff * 0.2);
+    const p = physicsRef.current;
+    const currentX = e.touches[0].clientX;
+    const diff = currentX - p.touchStartX;
+    p.targetRotation = p.dragStartRotation + diff * 0.22;
+    p.velocity = (currentX - p.lastTouchX) * 0.12;
+    p.lastTouchX = currentX;
   };
 
   const handleTouchEnd = () => {
-    snapToNearest();
+    physicsRef.current.isDragging = false;
   };
 
-  // Fluid pointer tilt & liquid displacement on hovered cards
-  const handleCardMouseMove = (e, cardId) => {
-    setHoveredCardId(cardId);
+  // Smooth Liquid Pointer Hover Handler
+  const handleCardMouseMove = (e, index) => {
+    const p = physicsRef.current;
+    p.hoveredIndex = index;
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    const normX = x / (rect.width / 2);
-    const normY = y / (rect.height / 2);
-
-    setPointerOffset({
-      rx: -normY * 4,
-      ry: normX * 4.5,
-      tx: normX * 7,
-      ty: normY * 7,
-    });
+    const nx = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+    const ny = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+    p.targetPointerX = nx;
+    p.targetPointerY = ny;
   };
 
   const handleCardMouseLeave = () => {
-    setHoveredCardId(null);
-    setPointerOffset({ rx: 0, ry: 0, tx: 0, ty: 0 });
-  };
-
-  // Keyboard navigation
-  const handleKeyDown = (e) => {
-    if (e.key === 'ArrowRight') {
-      velocityRef.current -= 3.5;
-      snapToNearest();
-    } else if (e.key === 'ArrowLeft') {
-      velocityRef.current += 3.5;
-      snapToNearest();
-    }
+    const p = physicsRef.current;
+    p.hoveredIndex = -1;
+    p.targetPointerX = 0;
+    p.targetPointerY = 0;
   };
 
   // Helper for deterministic button positioning classes
@@ -311,31 +387,28 @@ export default function HomeSection({ onOpenSection }) {
 
   return (
     <div
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
+      onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
       className="relative w-full h-full flex flex-col justify-center items-center select-none overflow-hidden cursor-grab active:cursor-grabbing outline-none"
     >
-      {/* Main 3D Shallow Cylindrical Exhibition Stage (Viewport Camera Center = 50% 50%) */}
+      {/* 3D Exhibition Stage: Perspective 1800px with Fixed Stationary Camera Center */}
       <div
+        ref={containerRef}
         className="relative w-full h-[580px] sm:h-[620px] md:h-[660px] flex items-center justify-center overflow-visible"
         style={{
-          perspective: '1500px',
+          perspective: '1800px',
           perspectiveOrigin: '50% 50%',
         }}
       >
-        {/* ==================== 1. FIXED STATIONARY CAMERA RETICLE ==================== */}
-        {/* Subtle camera reticle anchored in the open center space */}
+        {/* ==================== 1. FIXED CAMERA RETICLE (VIEWPOINT = 0,0,0) ==================== */}
         <div
-          className="absolute z-10 pointer-events-none transition-transform duration-300 ease-out flex items-center justify-center opacity-30"
-          style={{
-            transform: `translate(${cameraReticle.x}px, ${cameraReticle.y}px)`,
-          }}
+          ref={reticleRef}
+          className="absolute z-10 pointer-events-none flex items-center justify-center opacity-30"
+          style={{ willChange: 'transform' }}
         >
           <div className="relative w-8 h-8 flex items-center justify-center">
             <div className="w-4 h-4 rounded-full border border-[#65E6D2]" />
@@ -347,119 +420,57 @@ export default function HomeSection({ onOpenSection }) {
           </div>
         </div>
 
-        {/* ==================== 2. INFINITE SHALLOW CYLINDRICAL CURVED GALLERY ==================== */}
-        {/* The cylinder bends TOWARD the camera: center cards have +Z, edge cards have -Z */}
-        {EXHIBITION_ITEMS.map((item, index) => {
-          const itemTheta = index * stepAngle;
-          let diffAngle = (itemTheta + rotationAngle) % 360;
-          if (diffAngle > 180) diffAngle -= 360;
-          if (diffAngle < -180) diffAngle += 360;
+        {/* ==================== 2. CONVEX CYLINDRICAL CARDS (BENDING TOWARD CAMERA) ==================== */}
+        {EXHIBITION_ITEMS.map((item, index) => (
+          <div
+            key={item.id}
+            ref={(el) => (cardElementsRef.current[index] = el)}
+            onClick={() => onOpenSection(item.sectionId)}
+            onMouseMove={(e) => handleCardMouseMove(e, index)}
+            onMouseLeave={handleCardMouseLeave}
+            className="absolute z-20 w-[190px] sm:w-[210px] md:w-[225px] aspect-[0.71] flex flex-col justify-between cursor-pointer pointer-events-auto"
+            style={{
+              transformStyle: 'preserve-3d',
+              left: '50%',
+              top: '50%',
+              willChange: 'transform, opacity',
+            }}
+          >
+            {/* Image-First Editorial Card (1-2 elements strictly) */}
+            <div className="relative w-full h-full bg-[#0D1211] rounded-[2px] overflow-hidden border border-[rgba(241,239,232,0.15)] hover:border-[#65E6D2] shadow-[0_20px_50px_rgba(0,0,0,0.92)] transition-colors duration-300">
+              {/* Visual Area */}
+              <div className={`relative w-full h-full overflow-hidden ${item.isProfile ? 'p-3 flex flex-col justify-between' : ''}`}>
+                <img
+                  ref={(img) => (cardImgRefs.current[index] = img)}
+                  src={item.image}
+                  alt={item.label}
+                  className="w-full h-full object-cover rounded-[1px] transition-transform duration-300"
+                />
 
-          const absDiff = Math.abs(diffAngle);
-          // Render only 5–7 cards in view (±85° arc), gracefully culling outer cards
-          if (absDiff > 85) return null;
-
-          // Shallow cylinder projection calculations:
-          // X spreads horizontally across a gentle arc: ~680px radius
-          const rad = (diffAngle * Math.PI) / 180;
-          const translateX = Math.sin(rad) * 680;
-
-          // Z bends TOWARD camera: center card has highest Z (+180px), edges recede down to -450px
-          const translateZ = Math.cos(rad) * 480 - 300;
-
-          // RotateY: center is 0°, inner cards ±12–20°, outer cards ±40–50°
-          const rotateY = -diffAngle * 0.55;
-
-          // Scale falloff: center card 1.08, neighbors 0.88, outer 0.70
-          const scale = Math.max(0.68, 1.08 - (absDiff / 100) * 0.38);
-
-          // Opacity falloff: center card 1.0, outer cards 0.45
-          const opacity = Math.max(0.42, 1.0 - (absDiff / 85) * 0.58);
-
-          const isCenter = absDiff < 16;
-          const isHovered = hoveredCardId === item.id;
-
-          // Liquid pointer hover transform offsets
-          const hoverTx = isHovered ? pointerOffset.tx : 0;
-          const hoverTy = isHovered ? pointerOffset.ty : 0;
-          const hoverRx = isHovered ? pointerOffset.rx : 0;
-          const hoverRy = isHovered ? pointerOffset.ry : 0;
-          const hoverTz = isHovered ? 20 : 0;
-          const hoverScale = isHovered ? 1.04 : 1;
-
-          return (
-            <div
-              key={item.id}
-              onClick={() => onOpenSection(item.sectionId)}
-              onMouseMove={(e) => handleCardMouseMove(e, item.id)}
-              onMouseLeave={handleCardMouseLeave}
-              className="absolute z-20 w-[190px] sm:w-[210px] md:w-[225px] aspect-[0.71] flex flex-col justify-between cursor-pointer pointer-events-auto transition-opacity"
-              style={{
-                transformStyle: 'preserve-3d',
-                transform: `
-                  translateX(calc(-50% + ${translateX + hoverTx}px))
-                  translateY(calc(-50% + ${hoverTy}px))
-                  translateZ(${translateZ + hoverTz}px)
-                  rotateY(${rotateY + hoverRy}deg)
-                  rotateX(${hoverRx}deg)
-                  scale(${scale * hoverScale})
-                `,
-                opacity: opacity,
-                zIndex: Math.round(100 - absDiff),
-                left: '50%',
-                top: '50%',
-                willChange: 'transform, opacity',
-              }}
-            >
-              {/* Image-First Physical Object: strictly 1–2 elements only */}
-              <div
-                className={`relative w-full h-full bg-[#0D1211] rounded-[2px] overflow-hidden transition-all duration-300 ${
-                  isCenter || isHovered
-                    ? 'border border-[#65E6D2] shadow-[0_20px_50px_rgba(0,0,0,0.95)]'
-                    : 'border border-[rgba(241,239,232,0.14)] shadow-xl'
-                }`}
-              >
-                {/* Visual Area (Occupies 70-85% for profile, 90%+ for others) */}
-                <div className={`relative w-full h-full overflow-hidden ${item.isProfile ? 'p-3 flex flex-col justify-between' : ''}`}>
-                  <img
-                    src={item.image}
-                    alt={item.label}
-                    className={`w-full h-full object-cover transition-all duration-700 ease-out rounded-[1px] ${
-                      isCenter || isHovered
-                        ? 'grayscale-0 contrast-108 brightness-100 scale-105'
-                        : 'grayscale contrast-125 brightness-80 scale-100'
-                    }`}
-                  />
-
-                  {/* Micro Section Label */}
-                  <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-[0.2em] text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase">
-                    {item.label}
-                  </div>
-
-                  {/* Pseudo-Random Deterministic Action Button INSIDE Card */}
-                  <div className={`absolute z-30 transition-all duration-300 pointer-events-auto ${getButtonPositionClass(item.btnPosition)}`}>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onOpenSection(item.sectionId);
-                      }}
-                      className={`font-mono text-[8px] tracking-widest uppercase px-2 py-0.5 rounded-[1px] border transition-all duration-300 flex items-center gap-1 shadow-md cursor-pointer ${
-                        isCenter || isHovered
-                          ? 'bg-[#65E6D2] text-[#050706] border-[#65E6D2] font-bold shadow-[0_0_12px_rgba(101,230,210,0.35)]'
-                          : 'bg-[#050706]/80 text-[#F1EFE8] border-white/20 hover:border-[#65E6D2] hover:text-[#65E6D2]'
-                      }`}
-                    >
-                      <span>{item.btnText}</span>
-                    </button>
-                  </div>
-
-                  {/* Subtle surface reflection overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none" />
+                {/* Micro Section Label */}
+                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-[0.2em] text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase pointer-events-none">
+                  {item.label}
                 </div>
+
+                {/* Deterministic Button Placement Inside Card */}
+                <div className={`absolute z-30 pointer-events-auto ${getButtonPositionClass(item.btnPosition)}`}>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOpenSection(item.sectionId);
+                    }}
+                    className="font-mono text-[8px] tracking-widest uppercase px-2 py-0.5 rounded-[1px] border border-white/20 bg-[#050706]/80 text-[#F1EFE8] hover:border-[#65E6D2] hover:bg-[#65E6D2] hover:text-[#050706] hover:font-bold transition-all shadow-md cursor-pointer flex items-center gap-1"
+                  >
+                    <span>{item.btnText}</span>
+                  </button>
+                </div>
+
+                {/* Subtle surface reflection overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none" />
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );
