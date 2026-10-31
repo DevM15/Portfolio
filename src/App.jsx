@@ -404,8 +404,8 @@ export default function App() {
                 key={sec.id}
                 onClick={() => navigateToView(sec.id)}
                 className={`transition-all duration-200 cursor-pointer ${isActive && !contactOpen
-                    ? 'text-[#65E6D2] font-black underline underline-offset-8 decoration-[#65E6D2]'
-                    : 'text-[#9EA49F] hover:text-[#F1EFE8]'
+                  ? 'text-[#65E6D2] font-black underline underline-offset-8 decoration-[#65E6D2]'
+                  : 'text-[#9EA49F] hover:text-[#F1EFE8]'
                   }`}
               >
                 {sec.label}
