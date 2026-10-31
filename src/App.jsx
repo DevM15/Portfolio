@@ -114,25 +114,25 @@ export default function App() {
       return;
     }
 
-    // Step 0 -> Step 1 at 350ms: Centered DM appears
+    // Step 0 -> Step 1 at 800ms: Centered DM appears with graceful fade-in
     const timer1 = setTimeout(() => {
       setIntroStep(1);
-    }, 350);
+    }, 800);
 
-    // Step 1 -> Step 2 at 650ms: Letters separate diagonally with expanding line
+    // Step 1 -> Step 2 at 1800ms: Letters separate diagonally with expanding line
     const timer2 = setTimeout(() => {
       setIntroStep(2);
-    }, 650);
+    }, 1800);
 
-    // Step 2 -> Step 3 at 850ms: Diagonal reveal mask cuts open
+    // Step 2 -> Step 3 at 2700ms: Diagonal reveal mask cuts open smoothly
     const timer3 = setTimeout(() => {
       setIntroStep(3);
-    }, 850);
+    }, 2700);
 
-    // Complete intro at 1350ms
+    // Complete intro at 3600ms
     const timer4 = setTimeout(() => {
       setShowIntro(false);
-    }, 1350);
+    }, 3600);
 
     return () => {
       clearTimeout(timer1);
@@ -244,26 +244,26 @@ export default function App() {
             exit={{
               opacity: 0,
               clipPath: 'polygon(150% -20%, 150% 120%, -50% 120%, -20% -20%)',
-              transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+              transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
             }}
             className="fixed inset-0 z-[100] bg-[#0B0D0C] flex items-center justify-center pointer-events-auto"
             style={{
               clipPath: introStep >= 3
                 ? 'polygon(120% 0%, 120% 100%, 100% 100%, -20% 0%)'
                 : 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-              transition: 'clip-path 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+              transition: 'clip-path 0.9s cubic-bezier(0.22, 1, 0.36, 1)',
             }}
           >
             {/* Subtle digital grid backdrop */}
-            <div className="absolute inset-0 bg-digital-mesh opacity-40 pointer-events-none" />
+            <div className="absolute inset-0 pointer-events-none bg-digital-mesh opacity-40" />
 
             <div className="relative flex items-center justify-center select-none">
               {/* Expanding diagonal slit line */}
               {introStep >= 2 && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 320, opacity: 1 }}
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  animate={{ height: 360, opacity: 1 }}
+                  transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                   className="absolute w-[2px] bg-gradient-to-b from-transparent via-[#65E6D2] to-transparent rotate-[32deg] z-10"
                 />
               )}
@@ -272,13 +272,13 @@ export default function App() {
               <div className="flex items-center text-7xl sm:text-9xl font-display font-black tracking-tighter text-[#F1EFE8]">
                 {/* D Letter - separates up-left */}
                 <motion.span
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{
                     opacity: introStep >= 1 ? 1 : 0,
-                    y: introStep >= 2 ? -28 : 0,
-                    x: introStep >= 2 ? -24 : 0,
+                    y: introStep >= 2 ? -34 : 0,
+                    x: introStep >= 2 ? -28 : 0,
                   }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                   className="inline-block"
                 >
                   D
@@ -286,14 +286,14 @@ export default function App() {
 
                 {/* M Letter - separates down-right */}
                 <motion.span
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{
                     opacity: introStep >= 1 ? 1 : 0,
-                    y: introStep >= 2 ? 28 : 0,
-                    x: introStep >= 2 ? 24 : 0,
+                    y: introStep >= 2 ? 34 : 0,
+                    x: introStep >= 2 ? 28 : 0,
                     color: introStep >= 2 ? '#65E6D2' : '#F1EFE8',
                   }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                   className="inline-block"
                 >
                   M
@@ -303,9 +303,10 @@ export default function App() {
               {/* Sub-label during reveal */}
               {introStep >= 1 && (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="absolute -bottom-12 font-mono text-[10px] tracking-[0.3em] text-[#65E6D2] uppercase"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                  className="absolute -bottom-14 font-mono text-[10px] tracking-[0.35em] text-[#65E6D2] uppercase"
                 >
                   INITIALIZING SYSTEM ARCHIVE
                 </motion.div>
@@ -338,11 +339,10 @@ export default function App() {
             <button
               key={sec.id}
               onClick={() => navigateToSection(idx)}
-              className={`transition-all duration-200 cursor-pointer ${
-                currentSectionIndex === idx && !contactOpen
+              className={`transition-all duration-200 cursor-pointer ${currentSectionIndex === idx && !contactOpen
                   ? 'text-[#65E6D2] font-black underline underline-offset-8 decoration-[#65E6D2]'
                   : 'text-[#9EA49F] hover:text-[#F1EFE8]'
-              }`}
+                }`}
             >
               {sec.label}
             </button>
@@ -494,17 +494,15 @@ export default function App() {
             <div key={sec.id} className="flex items-center gap-3">
               <button
                 onClick={() => navigateToSection(idx)}
-                className={`transition-colors cursor-pointer ${
-                  currentSectionIndex === idx ? 'text-[#65E6D2] font-bold' : 'hover:text-[#F1EFE8]'
-                }`}
+                className={`transition-colors cursor-pointer ${currentSectionIndex === idx ? 'text-[#65E6D2] font-bold' : 'hover:text-[#F1EFE8]'
+                  }`}
               >
                 {sec.num}
               </button>
               {idx < SECTIONS.length - 1 && (
                 <span
-                  className={`w-4 sm:w-7 h-px transition-colors ${
-                    currentSectionIndex >= idx ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'
-                  }`}
+                  className={`w-4 sm:w-7 h-px transition-colors ${currentSectionIndex >= idx ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'
+                    }`}
                 />
               )}
             </div>
