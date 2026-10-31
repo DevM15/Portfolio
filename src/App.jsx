@@ -303,7 +303,7 @@ export default function App() {
                   }}
                   className="relative h-full flex-1 bg-[#080B0A] border-r border-[#2A302C]/10 last:border-r-0"
                 >
-                  <div className="absolute inset-0 bg-subtle-grain opacity-60 pointer-events-none" />
+                  <div className="absolute inset-0 pointer-events-none bg-subtle-grain opacity-60" />
                 </motion.div>
               );
             })}
@@ -371,20 +371,20 @@ export default function App() {
 
       {/* ==================== GLOBAL FIXED HEADER ==================== */}
       <header className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-5 flex items-center justify-between uppercase font-sans text-[#F1EFE8] pointer-events-none border-b border-[#2A302C]/60 bg-[#050706]/85 backdrop-blur-md">
-        <div className="flex items-center gap-6 md:gap-12 pointer-events-auto">
+        <div className="flex items-center gap-6 pointer-events-auto md:gap-12">
           <div className="flex items-baseline gap-2">
             <span className="font-mono text-[10px] tracking-widest text-[#626A65]">NAME /</span>
             <span className="text-base sm:text-[19px] md:text-[20px] font-black tracking-tight text-[#F1EFE8] font-display">
               DEV MISTRY
             </span>
           </div>
-          <div className="hidden lg:flex items-baseline gap-2">
+          <div className="items-baseline hidden gap-2 lg:flex">
             <span className="font-mono text-[10px] tracking-widest text-[#626A65]">OCCUPATION /</span>
             <span className="text-sm sm:text-base md:text-[18px] font-bold tracking-tight text-[#F1EFE8]">
               FULL STACK DEVELOPER
             </span>
           </div>
-          <div className="hidden xl:flex items-baseline gap-2">
+          <div className="items-baseline hidden gap-2 xl:flex">
             <span className="font-mono text-[10px] tracking-widest text-[#626A65]">LOCATION /</span>
             <span className="text-sm sm:text-base md:text-[18px] font-bold tracking-tight text-[#9EA49F]">
               MUMBAI
@@ -403,11 +403,10 @@ export default function App() {
               <button
                 key={sec.id}
                 onClick={() => navigateToView(sec.id)}
-                className={`transition-all duration-200 cursor-pointer ${
-                  isActive && !contactOpen
+                className={`transition-all duration-200 cursor-pointer ${isActive && !contactOpen
                     ? 'text-[#65E6D2] font-black underline underline-offset-8 decoration-[#65E6D2]'
                     : 'text-[#9EA49F] hover:text-[#F1EFE8]'
-                }`}
+                  }`}
               >
                 {sec.label}
               </button>
@@ -564,17 +563,15 @@ export default function App() {
             <div key={sec.id} className="flex items-center gap-3">
               <button
                 onClick={() => navigateToView(sec.id)}
-                className={`transition-colors cursor-pointer ${
-                  currentViewId === sec.id ? 'text-[#65E6D2] font-bold' : 'hover:text-[#F1EFE8]'
-                }`}
+                className={`transition-colors cursor-pointer ${currentViewId === sec.id ? 'text-[#65E6D2] font-bold' : 'hover:text-[#F1EFE8]'
+                  }`}
               >
                 {sec.num}
               </button>
               {idx < ALL_VIEWS.length - 1 && (
                 <span
-                  className={`w-4 sm:w-7 h-px transition-colors ${
-                    currentIndex >= idx ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'
-                  }`}
+                  className={`w-4 sm:w-7 h-px transition-colors ${currentIndex >= idx ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'
+                    }`}
                 />
               )}
             </div>
