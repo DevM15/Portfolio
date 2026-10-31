@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700,800,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;600;700;800;900&display=swap');
 
 * {
   margin: 0;
@@ -14,7 +13,7 @@
 html, body {
   background-color: #050706;
   color: #F1EFE8;
-  font-family: 'General Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
   width: 100vw;
   height: 100vh;
