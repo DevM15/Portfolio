@@ -262,7 +262,7 @@ export default function App() {
   return (
     <div className="relative w-screen h-screen bg-[#050706] text-[#F1EFE8] overflow-hidden select-none font-sans">
       {/* ==================== PROCEDURAL SPATIAL CANVAS BACKGROUND ==================== */}
-      <SpatialCanvasBackground sectionIndex={currentSectionIndex} />
+      <SpatialCanvasBackground sectionIndex={currentIndex} />
 
       {/* Subtle Depth Vignette Layer (Darkening Viewport Borders) */}
       <div
@@ -806,7 +806,7 @@ export default function App() {
                     <button
                       onClick={() => {
                         setOpenInfo(false);
-                        navigateToSection(3); // Jump to Projects
+                        navigateToView('projects'); // Jump to Projects
                       }}
                       className="w-full py-2.5 bg-[#65E6D2] text-[#0B0D0C] font-mono text-xs tracking-widest uppercase font-bold shadow-lg transition-all hover:bg-[#7788FF] hover:text-white flex items-center justify-center gap-2 cursor-pointer"
                     >
@@ -816,7 +816,7 @@ export default function App() {
                     <button
                       onClick={() => {
                         setOpenInfo(false);
-                        setContactOpen(true);
+                        navigateToView('contact');
                       }}
                       className="w-full py-2 bg-[#171B19] hover:bg-[#2A302C] text-[#F1EFE8] font-mono text-xs tracking-widest uppercase transition-colors border border-[#2A302C] cursor-pointer"
                     >
