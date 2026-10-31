@@ -55,6 +55,36 @@ html, body {
   will-change: transform;
 }
 
+/* 3D Text Flip on Nav Links */
+.flip-nav-link {
+  display: inline-block;
+  overflow: hidden;
+  height: 1.25em;
+  line-height: 1.25em;
+  position: relative;
+  vertical-align: middle;
+}
+
+.flip-nav-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.flip-nav-link:hover .flip-nav-inner {
+  transform: translateY(-50%);
+}
+
+.flip-nav-front,
+.flip-nav-back {
+  display: block;
+  white-space: nowrap;
+}
+
+.flip-nav-back {
+  color: #65E6D2;
+}
+
 /* Minimal scrollbar hide */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
