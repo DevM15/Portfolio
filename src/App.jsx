@@ -119,20 +119,20 @@ export default function App() {
       setIntroStep(1);
     }, 800);
 
-    // Step 1 -> Step 2 at 1800ms: Letters separate diagonally with expanding line
+    // Step 1 -> Step 2 at 1800ms: Slicing - Letters separate diagonally with expanding line
     const timer2 = setTimeout(() => {
       setIntroStep(2);
     }, 1800);
 
-    // Step 2 -> Step 3 at 2700ms: Diagonal reveal mask cuts open smoothly
+    // Step 2 -> Step 3 at 2700ms: Columns lift upward in patterned staggered waves
     const timer3 = setTimeout(() => {
       setIntroStep(3);
     }, 2700);
 
-    // Complete intro at 3600ms
+    // Complete intro at 3900ms after columns exit
     const timer4 = setTimeout(() => {
       setShowIntro(false);
-    }, 3600);
+    }, 3900);
 
     return () => {
       clearTimeout(timer1);
@@ -239,68 +239,88 @@ export default function App() {
       {/* ==================== ONE-TIME DM OPENING INTRO ANIMATION ==================== */}
       <AnimatePresence>
         {showIntro && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{
-              opacity: 0,
-              clipPath: 'polygon(150% -20%, 150% 120%, -50% 120%, -20% -20%)',
-              transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
-            }}
-            className="fixed inset-0 z-[100] bg-[#0B0D0C] flex items-center justify-center pointer-events-auto"
-            style={{
-              clipPath: introStep >= 3
-                ? 'polygon(120% 0%, 120% 100%, 100% 100%, -20% 0%)'
-                : 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-              transition: 'clip-path 0.9s cubic-bezier(0.22, 1, 0.36, 1)',
-            }}
-          >
-            {/* Subtle digital grid backdrop */}
-            <div className="absolute inset-0 pointer-events-none bg-digital-mesh opacity-40" />
-
-            <div className="relative flex items-center justify-center select-none">
-              {/* Expanding diagonal slit line */}
-              {introStep >= 2 && (
+          <div className="fixed inset-0 z-[100] pointer-events-none flex">
+            {/* 6 Vertical Shutter Columns that lift upward with staggered delay pattern */}
+            {[0, 1, 2, 3, 4, 5].map((colIndex) => {
+              // Create an outward symmetrical pattern: inner columns lift first, outer follow (or progressive wave)
+              const delays = [0.18, 0.08, 0, 0.04, 0.12, 0.22];
+              return (
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 560, opacity: 1 }}
-                  transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute w-[3px] bg-gradient-to-b from-transparent via-[#65E6D2] to-transparent rotate-[32deg] z-10 pointer-events-none"
-                />
-              )}
-
-              {/* Centered DM Monogram - Grand Scale */}
-              <div className="flex items-center text-8xl sm:text-[14rem] md:text-[18rem] lg:text-[22rem] font-display font-black tracking-tighter text-[#F1EFE8] leading-none select-none">
-                {/* D Letter - separates up-left with subtle rightward shift */}
-                <motion.span
-                  initial={{ opacity: 0, y: 30 }}
+                  key={colIndex}
+                  initial={{ y: 0 }}
                   animate={{
-                    opacity: introStep >= 1 ? 1 : 0,
-                    y: introStep >= 2 ? -48 : 0,
-                    x: introStep >= 2 ? -15 : 0,
+                    y: introStep >= 3 ? '-100%' : 0,
                   }}
-                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                  className="inline-block"
+                  transition={{
+                    duration: 0.85,
+                    delay: delays[colIndex],
+                    ease: [0.76, 0, 0.24, 1],
+                  }}
+                  className="relative h-full flex-1 bg-[#0B0D0C] border-r border-[#2A302C]/20 last:border-r-0"
                 >
-                  D
-                </motion.span>
+                  <div className="absolute inset-0 bg-digital-mesh opacity-30 pointer-events-none" />
+                </motion.div>
+              );
+            })}
 
-                {/* M Letter - separates down-right with generous breathing room away from the diagonal line */}
-                <motion.span
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{
-                    opacity: introStep >= 1 ? 1 : 0,
-                    y: introStep >= 2 ? 48 : 0,
-                    x: introStep >= 2 ? 82 : 0,
-                    color: introStep >= 2 ? '#65E6D2' : '#F1EFE8',
-                  }}
-                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                  className="inline-block"
-                >
-                  M
-                </motion.span>
+            {/* Floating Centered Monogram & Slit on top of the columns */}
+            <motion.div
+              initial={{ opacity: 1 }}
+              animate={{
+                opacity: introStep >= 3 ? 0 : 1,
+                y: introStep >= 3 ? -90 : 0,
+              }}
+              transition={{
+                duration: 0.65,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-auto"
+            >
+              <div className="relative flex items-center justify-center select-none">
+                {/* Expanding diagonal slit line */}
+                {introStep >= 2 && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 560, opacity: 1 }}
+                    transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute w-[3px] bg-gradient-to-b from-transparent via-[#65E6D2] to-transparent rotate-[32deg] z-10 pointer-events-none"
+                  />
+                )}
+
+                {/* Centered DM Monogram - Grand Scale */}
+                <div className="flex items-center text-8xl sm:text-[14rem] md:text-[18rem] lg:text-[22rem] font-display font-black tracking-tighter text-[#F1EFE8] leading-none select-none">
+                  {/* D Letter - separates up-left */}
+                  <motion.span
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{
+                      opacity: introStep >= 1 ? 1 : 0,
+                      y: introStep >= 2 ? -48 : 0,
+                      x: introStep >= 2 ? -15 : 0,
+                    }}
+                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                    className="inline-block"
+                  >
+                    D
+                  </motion.span>
+
+                  {/* M Letter - separates down-right */}
+                  <motion.span
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{
+                      opacity: introStep >= 1 ? 1 : 0,
+                      y: introStep >= 2 ? 48 : 0,
+                      x: introStep >= 2 ? 82 : 0,
+                      color: introStep >= 2 ? '#65E6D2' : '#F1EFE8',
+                    }}
+                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                    className="inline-block"
+                  >
+                    M
+                  </motion.span>
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
