@@ -270,13 +270,13 @@ export default function App() {
 
               {/* Centered DM Monogram - Grand Scale */}
               <div className="flex items-center text-8xl sm:text-[14rem] md:text-[18rem] lg:text-[22rem] font-display font-black tracking-tighter text-[#F1EFE8] leading-none select-none">
-                {/* D Letter - separates up-left */}
+                {/* D Letter - separates up-left with subtle rightward shift */}
                 <motion.span
                   initial={{ opacity: 0, y: 30 }}
                   animate={{
                     opacity: introStep >= 1 ? 1 : 0,
                     y: introStep >= 2 ? -48 : 0,
-                    x: introStep >= 2 ? -54 : 0,
+                    x: introStep >= 2 ? -15 : 0,
                   }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                   className="inline-block"
