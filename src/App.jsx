@@ -262,21 +262,21 @@ export default function App() {
               {introStep >= 2 && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 360, opacity: 1 }}
+                  animate={{ height: 520, opacity: 1 }}
                   transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute w-[2px] bg-gradient-to-b from-transparent via-[#65E6D2] to-transparent rotate-[32deg] z-10"
+                  className="absolute w-[3px] bg-gradient-to-b from-transparent via-[#65E6D2] to-transparent rotate-[32deg] z-10"
                 />
               )}
 
-              {/* Centered DM Monogram */}
-              <div className="flex items-center text-7xl sm:text-9xl font-display font-black tracking-tighter text-[#F1EFE8]">
+              {/* Centered DM Monogram - Grand Scale */}
+              <div className="flex items-center text-8xl sm:text-[14rem] md:text-[18rem] lg:text-[22rem] font-display font-black tracking-tighter text-[#F1EFE8] leading-none select-none">
                 {/* D Letter - separates up-left */}
                 <motion.span
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{
                     opacity: introStep >= 1 ? 1 : 0,
-                    y: introStep >= 2 ? -34 : 0,
-                    x: introStep >= 2 ? -28 : 0,
+                    y: introStep >= 2 ? -48 : 0,
+                    x: introStep >= 2 ? -40 : 0,
                   }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                   className="inline-block"
@@ -286,11 +286,11 @@ export default function App() {
 
                 {/* M Letter - separates down-right */}
                 <motion.span
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{
                     opacity: introStep >= 1 ? 1 : 0,
-                    y: introStep >= 2 ? 34 : 0,
-                    x: introStep >= 2 ? 28 : 0,
+                    y: introStep >= 2 ? 48 : 0,
+                    x: introStep >= 2 ? 40 : 0,
                     color: introStep >= 2 ? '#65E6D2' : '#F1EFE8',
                   }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
@@ -299,18 +299,6 @@ export default function App() {
                   M
                 </motion.span>
               </div>
-
-              {/* Sub-label during reveal */}
-              {introStep >= 1 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, ease: 'easeOut' }}
-                  className="absolute -bottom-14 font-mono text-[10px] tracking-[0.35em] text-[#65E6D2] uppercase"
-                >
-                  INITIALIZING SYSTEM ARCHIVE
-                </motion.div>
-              )}
             </div>
           </motion.div>
         )}
