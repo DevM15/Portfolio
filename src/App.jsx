@@ -369,24 +369,24 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* ==================== GLOBAL FIXED HEADER ==================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-5 flex items-center justify-between uppercase font-sans text-[#F1EFE8] pointer-events-none border-b border-[#2A302C]/60 bg-[#050706]/85 backdrop-blur-md">
+      {/* ==================== GLOBAL FIXED HEADER (HUD FLOATING TRANSPARENT) ==================== */}
+      <header className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-5 flex items-center justify-between uppercase font-sans text-[#F1EFE8] pointer-events-none bg-transparent">
         <div className="flex items-center gap-6 pointer-events-auto md:gap-12">
           <div className="flex items-baseline gap-2">
             <span className="font-mono text-[10px] tracking-widest text-[#626A65]">NAME /</span>
-            <span className="text-base sm:text-[19px] md:text-[20px] font-black tracking-tight text-[#F1EFE8] font-display">
+            <span className="text-base sm:text-[18px] md:text-[19px] font-black tracking-tight text-[#F1EFE8] font-display">
               DEV MISTRY
             </span>
           </div>
           <div className="items-baseline hidden gap-2 lg:flex">
             <span className="font-mono text-[10px] tracking-widest text-[#626A65]">OCCUPATION /</span>
-            <span className="text-sm sm:text-base md:text-[18px] font-bold tracking-tight text-[#F1EFE8]">
+            <span className="text-sm sm:text-base md:text-[16px] font-bold tracking-tight text-[#F1EFE8]">
               FULL STACK DEVELOPER
             </span>
           </div>
           <div className="items-baseline hidden gap-2 xl:flex">
             <span className="font-mono text-[10px] tracking-widest text-[#626A65]">LOCATION /</span>
-            <span className="text-sm sm:text-base md:text-[18px] font-bold tracking-tight text-[#9EA49F]">
+            <span className="text-sm sm:text-base md:text-[16px] font-bold tracking-tight text-[#9EA49F]">
               MUMBAI
             </span>
           </div>
@@ -403,10 +403,11 @@ export default function App() {
               <button
                 key={sec.id}
                 onClick={() => navigateToView(sec.id)}
-                className={`transition-all duration-200 cursor-pointer ${isActive && !contactOpen
-                  ? 'text-[#65E6D2] font-black underline underline-offset-8 decoration-[#65E6D2]'
-                  : 'text-[#9EA49F] hover:text-[#F1EFE8]'
-                  }`}
+                className={`transition-all duration-200 cursor-pointer ${
+                  isActive && !contactOpen
+                    ? 'text-[#65E6D2] font-black underline underline-offset-8 decoration-[#65E6D2]'
+                    : 'text-[#9EA49F] hover:text-[#F1EFE8]'
+                }`}
               >
                 {sec.label}
               </button>
@@ -550,40 +551,27 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* ==================== GLOBAL FIXED FOOTER (Scroll Indicator & Section Tracker) ==================== */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 h-[72px] px-6 md:px-12 flex items-center justify-between font-sans uppercase text-[#F1EFE8] pointer-events-none border-t border-[#2A302C] bg-[#0B0D0C]/90 backdrop-blur-md">
-        <div className="flex items-center gap-4 pointer-events-auto">
-          <span className="text-sm font-bold tracking-tight sm:text-base">SYSTEM ARCHIVE / 2026</span>
-          <span className="font-mono text-xs text-[#65E6D2]">[{currentSection.num} / 08]</span>
+      {/* ==================== GLOBAL FIXED FOOTER (FLOATING MINIMAL HUD) ==================== */}
+      <footer className="fixed bottom-0 left-0 right-0 z-40 h-[60px] px-6 md:px-12 flex items-center justify-between font-mono text-[10px] tracking-[0.25em] uppercase text-[#626A65] pointer-events-none bg-transparent">
+        <div className="flex items-center gap-3 pointer-events-auto">
+          <span className="text-[#F1EFE8] font-bold">DEV MISTRY</span>
+          <span>•</span>
+          <span>MUMBAI</span>
         </div>
 
-        {/* Small Editorial Horizontal Progress Bar: 01 ━━━ 02 ━━━ 03 ... ━━━ 08 */}
-        <div className="hidden lg:flex items-center gap-3 font-mono text-[10px] tracking-widest text-[#626A65] pointer-events-auto">
-          {ALL_VIEWS.map((sec, idx) => (
-            <div key={sec.id} className="flex items-center gap-3">
-              <button
-                onClick={() => navigateToView(sec.id)}
-                className={`transition-colors cursor-pointer ${currentViewId === sec.id ? 'text-[#65E6D2] font-bold' : 'hover:text-[#F1EFE8]'
-                  }`}
-              >
-                {sec.num}
-              </button>
-              {idx < ALL_VIEWS.length - 1 && (
-                <span
-                  className={`w-4 sm:w-7 h-px transition-colors ${currentIndex >= idx ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'
-                    }`}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-4 pointer-events-auto">
+        <div className="flex items-center gap-6 pointer-events-auto">
           <button
-            onClick={() => setOpenInfo(true)}
-            className="hover:text-[#65E6D2] text-[#F1EFE8] font-mono font-bold text-[11px] tracking-wider cursor-pointer"
+            onClick={() => navigateToView('projects')}
+            className="hover:text-[#65E6D2] transition-colors cursor-pointer"
           >
-            SPECIFICATION [INFO]
+            PROJECTS
+          </button>
+          <span>•</span>
+          <button
+            onClick={() => navigateToView('contact')}
+            className="hover:text-[#65E6D2] transition-colors cursor-pointer"
+          >
+            CONTACT
           </button>
         </div>
       </footer>
