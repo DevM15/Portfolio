@@ -19,6 +19,12 @@ html, body {
   height: 100vh;
   user-select: none;
   -webkit-user-select: none;
+  cursor: none !important;
+}
+
+/* Ensure all interactive elements also hide system cursor so custom SVG cursor takes over */
+a, button, input, textarea, select, [role="button"], .cursor-pointer {
+  cursor: none !important;
 }
 
 /* Background grid & subtle paper texture */

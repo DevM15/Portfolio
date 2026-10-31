@@ -106,48 +106,61 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Precision Core Cursor Dot with Crosshair Ring & Orbit Badge */}
+      {/* Precision Custom SVG Cursor */}
       <div
         className="pointer-events-none fixed z-[9999] hidden md:block"
         style={{
           left: `${pos.x}px`,
           top: `${pos.y}px`,
           transform: 'translate(-50%, -50%)',
-          transition: 'transform 0.08s ease-out',
+          willChange: 'left, top',
         }}
       >
-        {/* Core Dot */}
-        <div
-          className={`rounded-full transition-all duration-200 ${
-            isClicking
-              ? 'w-2 h-2 bg-[#FAEDCD] scale-75'
-              : isHovering
-              ? 'w-3 h-3 bg-[#E8E1D2] scale-125'
-              : 'w-2 h-2 bg-[#E8E1D2]'
-          }`}
-        />
-
-        {/* Outer Crosshair / Aperture Ring */}
-        <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#E8E1D2]/40 transition-all duration-300 ${
-            isClicking
-              ? 'w-10 h-10 border-[#FAEDCD] scale-110'
-              : isHovering
-              ? 'w-12 h-12 border-[#E8E1D2]/80 bg-white/[0.04]'
-              : 'w-7 h-7'
-          }`}
+        <svg
+          width={isHovering ? 46 : isClicking ? 32 : 36}
+          height={isHovering ? 46 : isClicking ? 32 : 36}
+          viewBox="0 0 40 40"
+          className="transition-all duration-200 ease-out"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Subtle crosshair ticks */}
-          <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0.5 h-1 bg-[#E8E1D2]/60" />
-          <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-0.5 h-1 bg-[#E8E1D2]/60" />
-          <span className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 h-0.5 w-1 bg-[#E8E1D2]/60" />
-          <span className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 h-0.5 w-1 bg-[#E8E1D2]/60" />
-        </div>
+          {/* Outer Rotating Crosshair Ring */}
+          <circle
+            cx="20"
+            cy="20"
+            r={isHovering ? 17 : 14}
+            stroke={isClicking ? '#FAEDCD' : isHovering ? '#E8E1D2' : 'rgba(232, 225, 210, 0.45)'}
+            strokeWidth={isHovering ? '1.5' : '1'}
+            strokeDasharray={isHovering ? '4 2' : 'none'}
+            className={isHovering ? 'animate-spin' : ''}
+            style={{ animationDuration: '8s' }}
+          />
 
-        {/* Tiny orbiting aesthetic satellite element */}
-        <div
-          className="absolute -top-3 -right-3 w-1.5 h-1.5 rounded-full bg-[#176D6C] border border-[#E8E1D2]/50 animate-pulse"
-        />
+          {/* Precision 4-Axis Reticle Ticks */}
+          <line x1="20" y1="2" x2="20" y2="7" stroke="#E8E1D2" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="20" y1="33" x2="20" y2="38" stroke="#E8E1D2" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="2" y1="20" x2="7" y2="20" stroke="#E8E1D2" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="33" y1="20" x2="38" y2="20" stroke="#E8E1D2" strokeWidth="1.2" strokeLinecap="round" />
+
+          {/* Central Target Reticle */}
+          <circle
+            cx="20"
+            cy="20"
+            r={isClicking ? 3.5 : isHovering ? 4 : 2.5}
+            fill={isClicking ? '#FAEDCD' : '#E8E1D2'}
+            className="transition-all duration-150"
+          />
+
+          {/* Satellite Orbit Dot */}
+          <circle
+            cx="32"
+            cy="8"
+            r="1.75"
+            fill="#176D6C"
+            stroke="rgba(232, 225, 210, 0.8)"
+            strokeWidth="0.8"
+          />
+        </svg>
       </div>
 
       {/* Pop Rain / Confetti Particles on Click */}
