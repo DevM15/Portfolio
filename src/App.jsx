@@ -23,62 +23,33 @@ const SECTIONS = [
 ];
 
 // Exhibition items for the centered 360° cylindrical carousel on HOME
+// Only actual Dev Mistry portfolio work & profile:
+// 1 Active Center Card + 1 Left Secondary Card + 1 Right Secondary Card (3 clean exhibition items)
 const CAROUSEL_ITEMS = [
   {
     id: '01',
     title: 'DEV MISTRY',
     badge: 'ABOUT DEV',
     category: 'PROFILE',
+    type: 'profile',
     image: '/img/dev_portrait.jpg',
     aspect: 'aspect-[3/4]',
   },
   {
     id: '02',
-    title: 'CAIMAN EXHIBITION',
-    badge: 'VISUAL IDENTITIES',
+    title: 'ARCADE',
+    badge: 'VIEW PROJECT',
     category: 'SYSTEM DESIGN',
-    image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1000&q=80',
-    aspect: 'aspect-[3/4]',
-  },
-  {
-    id: '03',
-    title: 'BLIND SPOT',
-    badge: 'POSTERS DESIGN',
-    category: 'NEURAL SIGNAL',
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
-    aspect: 'aspect-[3/4]',
-  },
-  {
-    id: '04',
-    title: 'LU-FARM ANIMATIONS',
-    badge: 'ANIMATIONS',
-    category: 'MOTION SYSTEMS',
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1400&q=80',
+    image: './img/project1.png',
     aspect: 'aspect-[16/10]',
   },
   {
-    id: '05',
-    title: 'FORM SHAPES',
-    badge: 'TYPOGRAPHY',
-    category: 'EDITORIAL GRAPHICS',
-    image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=80',
-    aspect: 'aspect-[3/4]',
-  },
-  {
-    id: '06',
-    title: 'DONT BE DUMB',
-    badge: 'TYPOGRAPHY',
-    category: 'BRANDING',
-    image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1000&q=80',
-    aspect: 'aspect-[3/4]',
-  },
-  {
-    id: '07',
-    title: 'ALL PROJECTS',
-    badge: 'ALL PROJECTS',
-    category: 'CATALOG ARCHIVE',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-    aspect: 'aspect-[4/3]',
+    id: '03',
+    title: 'PDF DECODER',
+    badge: 'VIEW PROJECT',
+    category: 'WEB PIPELINE',
+    image: './img/project2.png',
+    aspect: 'aspect-[16/10]',
   },
 ];
 
@@ -337,11 +308,11 @@ export default function App() {
           </div>
           <div className="hidden lg:block">
             <span className="text-[#E8E1D2]">OCCUPATION / </span>
-            <span>GRAPHIC & SYSTEM DESIGNER</span>
+            <span>FULL STACK DEVELOPER</span>
           </div>
           <div className="hidden xl:block">
             <span className="text-[#E8E1D2]">LOCATION / </span>
-            <span>AHMEDABAD / OSLO, NORWAY</span>
+            <span>MUMBAI</span>
           </div>
         </div>
 
@@ -367,7 +338,8 @@ export default function App() {
       </header>
 
       {/* ==================== HORIZONTAL EXHIBITION STAGE ==================== */}
-      <main className="relative w-full h-full pt-20 pb-16 z-10 overflow-hidden">
+      {/* Dedicated safe area: header takes top ~75px, footer has 80px safe zone with 30px breathing buffer */}
+      <main className="relative w-full h-[calc(100vh-160px)] mt-20 mb-[80px] z-10 overflow-hidden flex items-center justify-center">
         <AnimatePresence mode="wait">
           {currentSectionIndex === 0 && (
             /* 01 HOME (Infinite 360° Amphitheater Cylinder with Compact Profile Card) */
@@ -417,12 +389,13 @@ export default function App() {
                     const isProfile = item.type === 'profile' || item.id === '01';
 
                     let cardWidth = 'clamp(320px, 28vw, 420px)';
-                    let cardHeightOffset = 'clamp(460px, 58vh, 600px)';
+                    let cardHeightOffset = '380px';
                     if (isProfile) {
                       cardWidth = 'clamp(260px, 22vw, 300px)';
-                      cardHeightOffset = '400px';
+                      cardHeightOffset = '380px';
                     } else if (isLandscape) {
-                      cardWidth = 'clamp(380px, 36vw, 540px)';
+                      cardWidth = 'clamp(360px, 32vw, 480px)';
+                      cardHeightOffset = '320px';
                     }
 
                     let cardRotateY = rotateY;
@@ -454,7 +427,7 @@ export default function App() {
                           zIndex: Math.round(100 - absDiff),
                           width: cardWidth,
                           left: `calc(-1 * ${cardWidth} / 2)`,
-                          top: `calc(-1 * ${cardHeightOffset} / 2 - 28px)`,
+                          top: `calc(-1 * ${cardHeightOffset} / 2 - 35px)`,
                           transition: isSnapping
                             ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease'
                             : 'none',
@@ -657,7 +630,7 @@ export default function App() {
       </main>
 
       {/* ==================== GLOBAL FIXED FOOTER (Scroll Indicator & Section Tracker) ==================== */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 px-6 md:px-12 py-5 flex items-center justify-between font-sans uppercase text-[#E8E1D2] pointer-events-none border-t border-white/[0.06] bg-[#10130F]/90 backdrop-blur-md">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 h-[72px] px-6 md:px-12 flex items-center justify-between font-sans uppercase text-[#E8E1D2] pointer-events-none border-t border-white/[0.08] bg-[#10130F]/95 backdrop-blur-md">
         <div className="pointer-events-auto flex items-center gap-4">
           <span className="font-bold text-sm sm:text-base tracking-tight">PORTFOLIO / 2026</span>
           <span className="font-mono text-xs text-[#4AC7A5]">[{currentSection.num} / 08]</span>

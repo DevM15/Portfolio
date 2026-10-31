@@ -85,3 +85,4 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
     </div>
   );
 }
+

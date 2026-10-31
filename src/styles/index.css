@@ -22,8 +22,8 @@ html, body {
   cursor: none !important;
 }
 
-/* Ensure all interactive elements also hide system cursor so custom SVG cursor takes over */
-a, button, input, textarea, select, [role="button"], .cursor-pointer {
+/* Ensure all interactive elements, cards, and buttons never show default browser hand cursor */
+*, a, button, input, textarea, select, [role="button"], .cursor-pointer, [data-interactive] {
   cursor: none !important;
 }
 
