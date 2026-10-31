@@ -394,7 +394,7 @@ export default function App() {
                   const opacity = Math.max(0.45, 1.0 - (absDiff / 140) * 0.65);
                   const isCenter = absDiff < 18;
                   const isHovered = hoveredCardId === item.id;
-
+                  const isLandscape = item.aspect.includes('16/10') || item.aspect.includes('4/3');
                   const isProfile = item.type === 'profile' || item.id === '01';
 
                   // Card sizing:
