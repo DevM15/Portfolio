@@ -370,19 +370,25 @@ export default function App() {
       </AnimatePresence>
 
       {/* ==================== GLOBAL FIXED HEADER ==================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#F1EFE8] pointer-events-none border-b border-[#2A302C]/60 bg-[#0B0D0C]/80 backdrop-blur-md">
-        <div className="flex items-center gap-6 md:gap-14 pointer-events-auto text-[11px] font-bold tracking-tight">
-          <div>
-            <span className="text-[#626A65]">NAME / </span>
-            <span className="text-[#F1EFE8]">DEV MISTRY</span>
+      <header className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-5 flex items-center justify-between uppercase font-sans text-[#F1EFE8] pointer-events-none border-b border-[#2A302C]/60 bg-[#050706]/85 backdrop-blur-md">
+        <div className="flex items-center gap-6 md:gap-12 pointer-events-auto">
+          <div className="flex items-baseline gap-2">
+            <span className="font-mono text-[10px] tracking-widest text-[#626A65]">NAME /</span>
+            <span className="text-base sm:text-[19px] md:text-[20px] font-black tracking-tight text-[#F1EFE8] font-display">
+              DEV MISTRY
+            </span>
           </div>
-          <div className="hidden lg:block">
-            <span className="text-[#626A65]">OCCUPATION / </span>
-            <span className="text-[#9EA49F]">FULL STACK DEVELOPER</span>
+          <div className="hidden lg:flex items-baseline gap-2">
+            <span className="font-mono text-[10px] tracking-widest text-[#626A65]">OCCUPATION /</span>
+            <span className="text-sm sm:text-base md:text-[18px] font-bold tracking-tight text-[#F1EFE8]">
+              FULL STACK DEVELOPER
+            </span>
           </div>
-          <div className="hidden xl:block">
-            <span className="text-[#626A65]">LOCATION / </span>
-            <span className="text-[#9EA49F]">MUMBAI</span>
+          <div className="hidden xl:flex items-baseline gap-2">
+            <span className="font-mono text-[10px] tracking-widest text-[#626A65]">LOCATION /</span>
+            <span className="text-sm sm:text-base md:text-[18px] font-bold tracking-tight text-[#9EA49F]">
+              MUMBAI
+            </span>
           </div>
         </div>
 
