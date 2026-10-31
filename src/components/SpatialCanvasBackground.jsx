@@ -169,12 +169,14 @@ export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
       ctx.strokeStyle = 'rgba(150, 170, 165, 0.05)';
       ctx.lineWidth = 0.8;
       for (let i = 0; i < 9; i++) {
+        const radiusX = Math.max(1, width * 0.16 - i * 8);
+        const radiusY = Math.max(1, height * 0.12 - i * 5);
         ctx.beginPath();
         ctx.ellipse(
           trMeshX + i * 14,
           trMeshY + i * 16,
-          width * 0.16 - i * 8,
-          height * 0.12 - i * 5,
+          radiusX,
+          radiusY,
           Math.PI / 4 + Math.sin(elapsed * 0.1) * 0.05,
           0,
           Math.PI * 2
@@ -269,8 +271,9 @@ export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
         ctx.strokeStyle = 'rgba(180, 190, 185, 0.16)';
         for (let a = 0; a < 6; a++) {
           const ang = (a * Math.PI) / 3;
+          const rx = Math.max(0.5, Math.abs(radius * Math.cos(ang)));
           ctx.beginPath();
-          ctx.ellipse(0, 0, radius * Math.cos(ang), radius, ang, 0, Math.PI * 2);
+          ctx.ellipse(0, 0, rx, radius, ang, 0, Math.PI * 2);
           ctx.stroke();
         }
 
@@ -508,3 +511,4 @@ export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
     />
   );
 }
+
