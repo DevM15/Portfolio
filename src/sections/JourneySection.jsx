@@ -107,12 +107,3 @@ export default function JourneySection() {
   );
 }
 
-      {/* Bottom Technical Note */}
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-[#85867C] uppercase border-t border-white/[0.08] pt-4">
-        <span>06 / 08 SYSTEM EVOLUTION</span>
-        <span>NEXT: OPEN SOURCE ARCHIVE →</span>
-      </div>
-    </div>
-  );
-}
-
