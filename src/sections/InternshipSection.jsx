@@ -23,17 +23,24 @@ const INTERNSHIPS = [
   },
 ];
 
-export default function InternshipSection() {
+export default function InternshipSection({ onBack }) {
   return (
     <div className="w-full h-full flex flex-col justify-between py-12 px-6 md:px-16 max-w-[1500px] mx-auto select-none">
       {/* Top Section Metadata */}
       <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-4">
         <div className="flex items-center gap-3">
-          <span className="text-[#65E6D2] font-bold">03 / INTERNSHIP</span>
+          <span className="text-[#65E6D2] font-bold">02 / INTERNSHIP</span>
           <span className="text-white/10">•</span>
           <span className="text-[#9EA49F]">COMMISSIONED EXPERIENCE ARCHIVE</span>
         </div>
-        <div className="hidden sm:block text-[#9EA49F]">TECHNICAL WORK HISTORY</div>
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="text-[#65E6D2] hover:text-white transition-colors cursor-pointer"
+          >
+            ← BACK TO HOME
+          </button>
+        )}
       </div>
 
       {/* Main Internship Horizontal Panels */}

@@ -12,15 +12,22 @@ import GithubSection from './sections/GithubSection';
 import ContactSection from './sections/ContactSection';
 import './styles/index.css';
 
-// 8 Major Cohesive Exhibition Sections
-const SECTIONS = [
+// Top-Level Minimal Navigation Sections
+const NAV_SECTIONS = [
+  { id: 'home', label: 'HOME', num: '01' },
+  { id: 'projects', label: 'PROJECTS', num: '02' },
+  { id: 'contact', label: 'CONTACT', num: '03' },
+];
+
+// All Exhibition Views (including interactive card views from Home)
+const ALL_VIEWS = [
   { id: 'home', label: 'HOME', num: '01' },
   { id: 'about', label: 'ABOUT', num: '02' },
   { id: 'internship', label: 'INTERNSHIP', num: '03' },
-  { id: 'projects', label: 'PROJECTS', num: '04' },
-  { id: 'skills', label: 'SKILLS', num: '05' },
-  { id: 'journey', label: 'JOURNEY', num: '06' },
-  { id: 'github', label: 'GITHUB', num: '07' },
+  { id: 'skills', label: 'SKILLS', num: '04' },
+  { id: 'journey', label: 'JOURNEY', num: '05' },
+  { id: 'github', label: 'GITHUB', num: '06' },
+  { id: 'projects', label: 'PROJECTS', num: '07' },
   { id: 'contact', label: 'CONTACT', num: '08' },
 ];
 
@@ -133,8 +140,8 @@ const SECTION_ATMOSPHERES = {
 };
 
 export default function App() {
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [prevSectionIndex, setPrevSectionIndex] = useState(0);
+  const [currentViewId, setCurrentViewId] = useState('home');
+  const [prevViewId, setPrevViewId] = useState('home');
   const [contactOpen, setContactOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState('ALL WORK');
   const [openInfo, setOpenInfo] = useState(false);
@@ -179,10 +186,10 @@ export default function App() {
     };
   }, []);
 
-  const navigateToSection = (index) => {
-    if (index === currentSectionIndex) return;
-    setPrevSectionIndex(currentSectionIndex);
-    setCurrentSectionIndex(index);
+  const navigateToView = (viewId) => {
+    if (viewId === currentViewId) return;
+    setPrevViewId(currentViewId);
+    setCurrentViewId(viewId);
     setContactOpen(false);
   };
 
@@ -206,48 +213,31 @@ export default function App() {
     setContactTilt({ rx: 0, ry: 0 });
   };
 
-  // Wheel listener: smooth horizontal section-by-section navigation
-  const wheelLockRef = useRef(false);
-  useEffect(() => {
-    const onWheel = (e) => {
-      if (contactOpen || openInfo || showIntro) return;
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (Math.abs(delta) < 20 || wheelLockRef.current) return;
-
-      wheelLockRef.current = true;
-      if (delta > 0) {
-        navigateToSection(Math.min(currentSectionIndex + 1, SECTIONS.length - 1));
-      } else {
-        navigateToSection(Math.max(currentSectionIndex - 1, 0));
-      }
-
-      setTimeout(() => {
-        wheelLockRef.current = false;
-      }, 450);
-    };
-
-    window.addEventListener('wheel', onWheel, { passive: true });
-    return () => window.removeEventListener('wheel', onWheel);
-  }, [currentSectionIndex, contactOpen, openInfo, showIntro]);
-
-  // Keyboard navigation (← and →)
+  // Keyboard navigation (← and →) between top-level sections
   useEffect(() => {
     if (contactOpen || openInfo || showIntro) return;
 
     const onKeyDown = (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        navigateToSection(Math.min(currentSectionIndex + 1, SECTIONS.length - 1));
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        navigateToSection(Math.max(currentSectionIndex - 1, 0));
+      if (e.key === 'ArrowRight') {
+        if (currentViewId === 'home') navigateToView('projects');
+        else if (currentViewId === 'projects') navigateToView('contact');
+      } else if (e.key === 'ArrowLeft') {
+        if (currentViewId === 'contact') navigateToView('projects');
+        else if (currentViewId === 'projects') navigateToView('home');
+        else if (currentViewId !== 'home') navigateToView('home');
+      } else if (e.key === 'Escape') {
+        if (currentViewId !== 'home') navigateToView('home');
       }
     };
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [currentSectionIndex, contactOpen, openInfo, showIntro]);
+  }, [currentViewId, contactOpen, openInfo, showIntro]);
 
-  // Calculate dynamic transition direction
-  const direction = currentSectionIndex >= prevSectionIndex ? 1 : -1;
+  const viewOrder = ['home', 'about', 'internship', 'skills', 'journey', 'github', 'projects', 'contact'];
+  const currentIndex = viewOrder.indexOf(currentViewId);
+  const prevIndex = viewOrder.indexOf(prevViewId);
+  const direction = currentIndex >= prevIndex ? 1 : -1;
 
   // Directional section animation variants
   const sectionVariants = {
@@ -267,8 +257,7 @@ export default function App() {
     }),
   };
 
-  const currentSection = SECTIONS[currentSectionIndex];
-  const activeAtmosphere = SECTION_ATMOSPHERES[currentSectionIndex] || SECTION_ATMOSPHERES[0];
+  const currentSection = ALL_VIEWS.find((v) => v.id === currentViewId) || ALL_VIEWS[0];
 
   return (
     <div className="relative w-screen h-screen bg-[#050706] text-[#F1EFE8] overflow-hidden select-none font-sans">
@@ -397,28 +386,35 @@ export default function App() {
           </div>
         </div>
 
-        {/* Top-Right Navigation: 8-Section Cohesive Exhibition Navigation */}
-        <nav className="flex items-center gap-4 font-sans text-xs font-bold tracking-tight pointer-events-auto sm:gap-6 sm:text-sm">
-          {SECTIONS.map((sec, idx) => (
-            <button
-              key={sec.id}
-              onClick={() => navigateToSection(idx)}
-              className={`transition-all duration-200 cursor-pointer ${currentSectionIndex === idx && !contactOpen
-                  ? 'text-[#65E6D2] font-black underline underline-offset-8 decoration-[#65E6D2]'
-                  : 'text-[#9EA49F] hover:text-[#F1EFE8]'
+        {/* Top-Right Navigation: ONLY HOME, PROJECTS, CONTACT */}
+        <nav className="flex items-center gap-6 font-sans text-xs font-bold tracking-tight pointer-events-auto sm:gap-8 sm:text-sm">
+          {NAV_SECTIONS.map((sec) => {
+            const isActive =
+              (sec.id === 'home' && !['projects', 'contact'].includes(currentViewId)) ||
+              sec.id === currentViewId;
+
+            return (
+              <button
+                key={sec.id}
+                onClick={() => navigateToView(sec.id)}
+                className={`transition-all duration-200 cursor-pointer ${
+                  isActive && !contactOpen
+                    ? 'text-[#65E6D2] font-black underline underline-offset-8 decoration-[#65E6D2]'
+                    : 'text-[#9EA49F] hover:text-[#F1EFE8]'
                 }`}
-            >
-              {sec.label}
-            </button>
-          ))}
+              >
+                {sec.label}
+              </button>
+            );
+          })}
         </nav>
       </header>
 
       {/* ==================== HORIZONTAL EXHIBITION STAGE ==================== */}
       <main className="relative w-full h-[calc(100vh-160px)] mt-20 mb-[80px] z-10 overflow-hidden flex items-center justify-center">
         <AnimatePresence mode="wait" custom={direction}>
-          {currentSectionIndex === 0 && (
-            /* 01 HOME */
+          {currentViewId === 'home' && (
+            /* 01 HOME (Hero + Horizontal Section Cards + Previews) */
             <motion.div
               key="scene-home"
               custom={direction}
@@ -428,12 +424,16 @@ export default function App() {
               exit="exit"
               className="flex items-center justify-center w-full h-full"
             >
-              <HomeSection onExplore={() => navigateToSection(1)} />
+              <HomeSection
+                onOpenSection={(secId) => navigateToView(secId)}
+                onNavigateToProjects={() => navigateToView('projects')}
+                onNavigateToContact={() => navigateToView('contact')}
+              />
             </motion.div>
           )}
 
-          {currentSectionIndex === 1 && (
-            /* 02 ABOUT */
+          {currentViewId === 'about' && (
+            /* 02 ABOUT (Full Spec View) */
             <motion.div
               key="scene-about"
               custom={direction}
@@ -443,12 +443,12 @@ export default function App() {
               exit="exit"
               className="flex items-center justify-center w-full h-full"
             >
-              <AboutSection />
+              <AboutSection onBack={() => navigateToView('home')} />
             </motion.div>
           )}
 
-          {currentSectionIndex === 2 && (
-            /* 03 INTERNSHIP */
+          {currentViewId === 'internship' && (
+            /* 03 INTERNSHIP (Full Spec View) */
             <motion.div
               key="scene-internship"
               custom={direction}
@@ -458,12 +458,57 @@ export default function App() {
               exit="exit"
               className="flex items-center justify-center w-full h-full"
             >
-              <InternshipSection />
+              <InternshipSection onBack={() => navigateToView('home')} />
             </motion.div>
           )}
 
-          {currentSectionIndex === 3 && (
-            /* 04 PROJECTS */
+          {currentViewId === 'skills' && (
+            /* 04 SKILLS (Full Spec View) */
+            <motion.div
+              key="scene-skills"
+              custom={direction}
+              variants={sectionVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="flex items-center justify-center w-full h-full"
+            >
+              <SkillsSection onBack={() => navigateToView('home')} />
+            </motion.div>
+          )}
+
+          {currentViewId === 'journey' && (
+            /* 05 JOURNEY (Full Spec View) */
+            <motion.div
+              key="scene-journey"
+              custom={direction}
+              variants={sectionVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="flex items-center justify-center w-full h-full"
+            >
+              <JourneySection onBack={() => navigateToView('home')} />
+            </motion.div>
+          )}
+
+          {currentViewId === 'github' && (
+            /* 06 GITHUB (Full Spec View) */
+            <motion.div
+              key="scene-github"
+              custom={direction}
+              variants={sectionVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="flex items-center justify-center w-full h-full"
+            >
+              <GithubSection onBack={() => navigateToView('home')} />
+            </motion.div>
+          )}
+
+          {currentViewId === 'projects' && (
+            /* 07 PROJECTS (Top-Level Navigation View) */
             <motion.div
               key="scene-projects"
               custom={direction}
@@ -483,53 +528,8 @@ export default function App() {
             </motion.div>
           )}
 
-          {currentSectionIndex === 4 && (
-            /* 05 SKILLS */
-            <motion.div
-              key="scene-skills"
-              custom={direction}
-              variants={sectionVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="flex items-center justify-center w-full h-full"
-            >
-              <SkillsSection />
-            </motion.div>
-          )}
-
-          {currentSectionIndex === 5 && (
-            /* 06 JOURNEY */
-            <motion.div
-              key="scene-journey"
-              custom={direction}
-              variants={sectionVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="flex items-center justify-center w-full h-full"
-            >
-              <JourneySection />
-            </motion.div>
-          )}
-
-          {currentSectionIndex === 6 && (
-            /* 07 GITHUB */
-            <motion.div
-              key="scene-github"
-              custom={direction}
-              variants={sectionVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="flex items-center justify-center w-full h-full"
-            >
-              <GithubSection />
-            </motion.div>
-          )}
-
-          {currentSectionIndex === 7 && (
-            /* 08 CONTACT */
+          {currentViewId === 'contact' && (
+            /* 08 CONTACT (Top-Level Navigation View) */
             <motion.div
               key="scene-contact"
               custom={direction}
@@ -554,19 +554,21 @@ export default function App() {
 
         {/* Small Editorial Horizontal Progress Bar: 01 ━━━ 02 ━━━ 03 ... ━━━ 08 */}
         <div className="hidden lg:flex items-center gap-3 font-mono text-[10px] tracking-widest text-[#626A65] pointer-events-auto">
-          {SECTIONS.map((sec, idx) => (
+          {ALL_VIEWS.map((sec, idx) => (
             <div key={sec.id} className="flex items-center gap-3">
               <button
-                onClick={() => navigateToSection(idx)}
-                className={`transition-colors cursor-pointer ${currentSectionIndex === idx ? 'text-[#65E6D2] font-bold' : 'hover:text-[#F1EFE8]'
-                  }`}
+                onClick={() => navigateToView(sec.id)}
+                className={`transition-colors cursor-pointer ${
+                  currentViewId === sec.id ? 'text-[#65E6D2] font-bold' : 'hover:text-[#F1EFE8]'
+                }`}
               >
                 {sec.num}
               </button>
-              {idx < SECTIONS.length - 1 && (
+              {idx < ALL_VIEWS.length - 1 && (
                 <span
-                  className={`w-4 sm:w-7 h-px transition-colors ${currentSectionIndex >= idx ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'
-                    }`}
+                  className={`w-4 sm:w-7 h-px transition-colors ${
+                    currentIndex >= idx ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'
+                  }`}
                 />
               )}
             </div>

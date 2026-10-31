@@ -38,17 +38,24 @@ const MILESTONES = [
   },
 ];
 
-export default function JourneySection() {
+export default function JourneySection({ onBack }) {
   return (
     <div className="w-full h-full flex flex-col justify-between py-16 px-6 md:px-16 max-w-[1600px] mx-auto select-none">
       {/* Top Section Metadata */}
       <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-4">
         <div className="flex items-center gap-3">
-          <span className="text-[#F1EFE8] font-bold">06 / JOURNEY</span>
+          <span className="text-[#65E6D2] font-bold">04 / JOURNEY</span>
           <span className="text-white/10">•</span>
           <span className="text-[#9EA49F]">HORIZONTAL EVOLUTION TIMELINE</span>
         </div>
-        <div className="hidden sm:block text-[#9EA49F]">2022 ━━━━━ 2026</div>
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="text-[#65E6D2] hover:text-white transition-colors cursor-pointer"
+          >
+            ← BACK TO HOME
+          </button>
+        )}
       </div>
 
       {/* Main Horizontal Timeline Bar and Milestone Columns */}
