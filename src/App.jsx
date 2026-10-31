@@ -262,9 +262,9 @@ export default function App() {
               {introStep >= 2 && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 520, opacity: 1 }}
+                  animate={{ height: 560, opacity: 1 }}
                   transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute w-[3px] bg-gradient-to-b from-transparent via-[#65E6D2] to-transparent rotate-[32deg] z-10"
+                  className="absolute w-[3px] bg-gradient-to-b from-transparent via-[#65E6D2] to-transparent rotate-[32deg] z-10 pointer-events-none"
                 />
               )}
 
@@ -276,7 +276,7 @@ export default function App() {
                   animate={{
                     opacity: introStep >= 1 ? 1 : 0,
                     y: introStep >= 2 ? -48 : 0,
-                    x: introStep >= 2 ? -40 : 0,
+                    x: introStep >= 2 ? -54 : 0,
                   }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                   className="inline-block"
@@ -284,13 +284,13 @@ export default function App() {
                   D
                 </motion.span>
 
-                {/* M Letter - separates down-right */}
+                {/* M Letter - separates down-right with generous breathing room away from the diagonal line */}
                 <motion.span
                   initial={{ opacity: 0, y: 30 }}
                   animate={{
                     opacity: introStep >= 1 ? 1 : 0,
                     y: introStep >= 2 ? 48 : 0,
-                    x: introStep >= 2 ? 40 : 0,
+                    x: introStep >= 2 ? 82 : 0,
                     color: introStep >= 2 ? '#65E6D2' : '#F1EFE8',
                   }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
