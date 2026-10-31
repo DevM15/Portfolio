@@ -9,20 +9,19 @@ export default function HomeSection({
   const containerRef = useRef(null);
   const [activePane, setActivePane] = useState(0);
 
-  // Home Panes:
+  // 4 Horizontal Canvas Zones:
   // 0: HERO (Building Intelligent Systems)
-  // 1: PROFILE ANCHOR (Photo exactly near center surrounded by About, Internship, Skills, Journey, GitHub cards)
-  // 2: PROJECT PREVIEWS & CONTACT CTA
-  const PANES_COUNT = 3;
+  // 1: PROFILE ANCHOR (Center Photograph with Asymmetric Surrounding Image Cards)
+  // 2: HORIZONTAL FLOATING EXHIBITION GALLERY (Spaced 3D Perspective Floating Objects)
+  // 3: SELECTED PROJECTS & CONTACT CTA
+  const PANES_COUNT = 4;
 
-  // Horizontal wheel handler mapping vertical delta to smooth horizontal scroll
   const handleWheel = (e) => {
     if (!containerRef.current) return;
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
     containerRef.current.scrollLeft += delta;
   };
 
-  // Scroll listener to update active pane indicator
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -47,6 +46,70 @@ export default function HomeSection({
     });
   };
 
+  // Image-First Floating Cards Definition
+  const FLOATING_CARDS = [
+    {
+      id: 'about',
+      sectionId: 'about',
+      num: '01',
+      label: '01 / IDENTITY',
+      title: 'PROFILE',
+      meta: 'DEV MISTRY',
+      image: '/img/dev_portrait.jpg',
+      rotation: -2,
+      perspectiveY: 4,
+      offsetY: -25,
+    },
+    {
+      id: 'internship',
+      sectionId: 'internship',
+      num: '02',
+      label: '02 / EXPERIENCE',
+      title: 'WORK HISTORY',
+      meta: 'HORIZON • APPLIED AI',
+      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
+      rotation: 1.5,
+      perspectiveY: -3,
+      offsetY: 35,
+    },
+    {
+      id: 'skills',
+      sectionId: 'skills',
+      num: '03',
+      label: '03 / STACK',
+      title: 'SYSTEM MAP',
+      meta: 'WEB / CLOUD / AI',
+      image: './img/project1.png',
+      rotation: -1,
+      perspectiveY: 5,
+      offsetY: -15,
+    },
+    {
+      id: 'journey',
+      sectionId: 'journey',
+      num: '04',
+      label: '04 / TIMELINE',
+      title: 'EVOLUTION',
+      meta: '2022 ━━━━━ 2026',
+      image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+      rotation: 2.2,
+      perspectiveY: -4,
+      offsetY: 28,
+    },
+    {
+      id: 'github',
+      sectionId: 'github',
+      num: '05',
+      label: '05 / CODE',
+      title: 'OPEN SOURCE',
+      meta: '@DEVM15 • PUBLIC',
+      image: './img/project2.png',
+      rotation: -1.8,
+      perspectiveY: 3,
+      offsetY: -30,
+    },
+  ];
+
   return (
     <div
       onWheel={handleWheel}
@@ -58,7 +121,7 @@ export default function HomeSection({
         className="flex-1 w-full flex flex-row overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth no-scrollbar"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        {/* ==================== PANE 01: INTRO HERO ==================== */}
+        {/* ==================== ZONE 01: HERO ==================== */}
         <section className="relative w-screen h-full flex-shrink-0 snap-start flex flex-col justify-between py-8 px-6 md:px-16 max-w-full">
           {/* Top Section Metadata */}
           <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-3">
@@ -67,7 +130,7 @@ export default function HomeSection({
               <span className="text-white/10">•</span>
               <span className="text-[#9EA49F]">DIGITAL ARCHITECTURE & SYSTEM SPECIFICATIONS</span>
             </div>
-            <div className="hidden sm:block text-[#9EA49F]">HORIZONTAL EXHIBITION [01 / 03]</div>
+            <div className="hidden sm:block text-[#9EA49F]">HORIZONTAL EXHIBITION [01 / 04]</div>
           </div>
 
           {/* Hero Main Graphic Composition */}
@@ -108,230 +171,222 @@ export default function HomeSection({
 
           {/* Prompt to Advance Horizontally */}
           <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-t border-[#2A302C] pt-3">
-            <span>SCROLL OR DRAG TO ENTER PROFILE</span>
+            <span>SCROLL OR DRAG TO ENTER EXHIBITION</span>
             <button
               onClick={() => scrollToPane(1)}
               className="flex items-center gap-2 text-[#65E6D2] hover:text-white transition-colors cursor-pointer font-bold"
             >
-              <span>PROFILE & SYSTEM CARDS</span>
+              <span>PROFILE & ANCHOR</span>
               <span className="text-base">→</span>
             </button>
           </div>
         </section>
 
-        {/* ==================== PANE 02: CENTER PHOTO ANCHOR WITH SURROUNDING CARDS ==================== */}
+        {/* ==================== ZONE 02: PROFILE ANCHOR (CENTER PHOTO + ORBITING EDITORIAL CARDS) ==================== */}
         <section className="relative w-screen h-full flex-shrink-0 snap-start flex flex-col justify-between py-6 md:py-8 px-4 md:px-12 max-w-full">
           {/* Top Section Metadata */}
           <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-3">
             <div className="flex items-center gap-3">
               <span className="text-[#65E6D2] font-bold">02 / PROFILE</span>
               <span className="text-white/10">•</span>
-              <span className="text-[#9EA49F]">CENTRAL ARCHIVE OBJECT & ARCHITECTURAL NODES</span>
+              <span className="text-[#9EA49F]">CENTRAL EXHIBITION OBJECT & ASYMMETRIC SATELLITES</span>
             </div>
-            <div className="hidden sm:block text-[#9EA49F]">EXHIBITION CORE [02 / 03]</div>
+            <div className="hidden sm:block text-[#9EA49F]">GALLERY CORE [02 / 04]</div>
           </div>
 
-          {/* Asymmetrical Spatial Composition: PHOTO EXACTLY NEAR CENTER SURROUNDED BY 5 CARDS */}
-          <div className="relative my-auto w-full max-w-[1300px] mx-auto min-h-[460px] md:min-h-[520px] flex items-center justify-center">
-            {/* ==================== 1. CENTER PHOTOGRAPH ANCHOR ==================== */}
+          {/* Spatial 3D Composition with generous negative space */}
+          <div
+            className="relative my-auto w-full max-w-[1400px] mx-auto min-h-[480px] md:min-h-[540px] flex items-center justify-center"
+            style={{ perspective: '1200px' }}
+          >
+            {/* 1. CENTER PHOTOGRAPH ANCHOR (Medium-Large, Dominant) */}
             <motion.div
-              initial={{ scale: 0.94, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-20 w-[240px] sm:w-[280px] md:w-[320px] aspect-[3/4] bg-[#0D1211] border border-[rgba(241,239,232,0.18)] hover:border-[#65E6D2] rounded-[2px] overflow-hidden group shadow-2xl transition-all duration-500 hover:scale-[1.02]"
+              className="relative z-20 w-[260px] sm:w-[300px] md:w-[340px] aspect-[3/4] bg-[#0D1211] border border-[rgba(241,239,232,0.18)] hover:border-[#65E6D2] rounded-[2px] overflow-hidden group shadow-2xl transition-all duration-500 hover:scale-[1.02]"
             >
               <img
                 src="/img/dev_portrait.jpg"
                 alt="Dev Mistry Portrait"
                 className="w-full h-full object-cover contrast-[1.08] brightness-[0.95] grayscale-[25%] group-hover:grayscale-0 group-hover:contrast-110 group-hover:brightness-100 transition-all duration-700 ease-out"
               />
-
               <div className="absolute top-3 left-3 font-mono text-[8px] tracking-widest text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-[rgba(241,239,232,0.14)] uppercase">
                 ID: 01 // DEV MISTRY
               </div>
-
               <div className="absolute bottom-3 right-3 font-mono text-[8px] tracking-widest text-[#65E6D2] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-[rgba(241,239,232,0.14)] uppercase">
                 LOC: MUMBAI
               </div>
-
-              {/* Subtle hover pulse accent */}
-              <div className="absolute top-3 right-3 w-1.5 h-1.5 rounded-full bg-[#65E6D2] opacity-0 group-hover:opacity-100 transition-opacity animate-ping" />
             </motion.div>
 
-            {/* ==================== 2. CARD 01: ABOUT (Top Left Offset) ==================== */}
+            {/* 2. SATELLITE IMAGE-FIRST EDITORIAL CARDS SURROUNDING THE CENTER PHOTO */}
+
+            {/* Card 01: ABOUT (Top-Left Offset, rotate -2deg) */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30, rotate: -4 }}
+              whileInView={{ opacity: 1, y: 0, rotate: -2 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.08 }}
+              transition={{ duration: 0.7, delay: 0.08 }}
               onClick={() => onOpenSection('about')}
-              className="hidden lg:flex absolute top-2 left-6 xl:left-14 z-10 w-[240px] xl:w-[260px] p-4 bg-[#0F1412]/80 backdrop-blur-md border border-[rgba(241,239,232,0.15)] hover:border-[#65E6D2]/70 rounded-[2px] flex-col justify-between shadow-xl cursor-pointer group hover:-translate-y-1.5 transition-all duration-300"
+              className="hidden lg:flex absolute -top-4 left-8 xl:left-20 z-10 w-[210px] xl:w-[230px] aspect-[3/4] flex-col cursor-pointer group transition-all duration-500"
+              style={{
+                transform: 'rotate(-2deg) translateZ(10px)',
+              }}
             >
-              <div>
-                <div className="flex items-center justify-between pb-2 border-b border-[#2A302C] mb-2 font-mono text-[9px] tracking-widest text-[#626A65] uppercase">
-                  <span className="text-[#65E6D2] font-bold">01 / ABOUT</span>
-                  <span>IDENTITY</span>
+              <div className="relative w-full h-[88%] bg-[#0D1211] border border-[rgba(241,239,232,0.15)] group-hover:border-[#65E6D2]/80 rounded-[2px] overflow-hidden shadow-2xl transition-all duration-300 group-hover:brightness-105 group-hover:scale-[1.02]">
+                <img
+                  src="/img/dev_portrait.jpg"
+                  alt="About"
+                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-700"
+                />
+                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-widest text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase">
+                  01 / ABOUT
                 </div>
-                <h4 className="font-display font-black text-lg text-[#F1EFE8] uppercase leading-none group-hover:text-[#65E6D2] transition-colors mb-1">
-                  DEV MISTRY
-                </h4>
-                <div className="font-mono text-[8px] text-[#9EA49F] uppercase mb-2">
-                  FULL STACK DEVELOPER • MUMBAI
-                </div>
-                <p className="font-sans text-[11px] text-[#9EA49F] leading-snug line-clamp-2">
-                  Building scalable web platforms, cloud backbones, and intelligent AI workflows.
-                </p>
               </div>
-              <div className="pt-2 mt-2 border-t border-[#2A302C] flex items-center justify-between font-mono text-[9px] text-[#F1EFE8] group-hover:text-[#65E6D2] uppercase tracking-wider">
-                <span>VIEW ABOUT</span>
-                <span className="transition-transform group-hover:translate-x-1">→ →</span>
+              <div className="pt-2 text-center">
+                <span className="font-mono text-[9px] tracking-[0.2em] text-[#9EA49F] group-hover:text-[#65E6D2] uppercase transition-colors">
+                  PROFILE →
+                </span>
               </div>
             </motion.div>
 
-            {/* ==================== 3. CARD 02: INTERNSHIP (Middle Left) ==================== */}
+            {/* Card 02: INTERNSHIP (Middle-Left, rotate 1.5deg) */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30, rotate: 3 }}
+              whileInView={{ opacity: 1, y: 0, rotate: 1.5 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.16 }}
+              transition={{ duration: 0.7, delay: 0.16 }}
               onClick={() => onOpenSection('internship')}
-              className="hidden lg:flex absolute bottom-8 left-2 xl:left-8 z-10 w-[240px] xl:w-[260px] p-4 bg-[#0F1412]/80 backdrop-blur-md border border-[rgba(241,239,232,0.15)] hover:border-[#65E6D2]/70 rounded-[2px] flex-col justify-between shadow-xl cursor-pointer group hover:-translate-y-1.5 transition-all duration-300"
+              className="hidden lg:flex absolute bottom-4 left-2 xl:left-10 z-10 w-[210px] xl:w-[230px] aspect-[3/4] flex-col cursor-pointer group transition-all duration-500"
+              style={{
+                transform: 'rotate(1.5deg) translateZ(5px)',
+              }}
             >
-              <div>
-                <div className="flex items-center justify-between pb-2 border-b border-[#2A302C] mb-2 font-mono text-[9px] tracking-widest text-[#626A65] uppercase">
-                  <span className="text-[#65E6D2] font-bold">02 / WORK</span>
-                  <span>HISTORY</span>
+              <div className="relative w-full h-[88%] bg-[#0D1211] border border-[rgba(241,239,232,0.15)] group-hover:border-[#65E6D2]/80 rounded-[2px] overflow-hidden shadow-2xl transition-all duration-300 group-hover:brightness-105 group-hover:scale-[1.02]">
+                <img
+                  src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80"
+                  alt="Internship"
+                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-700"
+                />
+                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-widest text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase">
+                  02 / WORK
                 </div>
-                <h4 className="font-display font-black text-lg text-[#F1EFE8] uppercase leading-none group-hover:text-[#65E6D2] transition-colors mb-1">
-                  INTERNSHIP
-                </h4>
-                <div className="font-mono text-[8px] text-[#9EA49F] uppercase mb-2">
-                  HORIZON VIEW • APPLIED AI LABS
-                </div>
-                <p className="font-sans text-[11px] text-[#9EA49F] leading-snug line-clamp-2">
-                  2024–2025: Software & UI/UX / 2025–Present: Agentic AI & Cloud.
-                </p>
               </div>
-              <div className="pt-2 mt-2 border-t border-[#2A302C] flex items-center justify-between font-mono text-[9px] text-[#F1EFE8] group-hover:text-[#65E6D2] uppercase tracking-wider">
-                <span>VIEW EXPERIENCE</span>
-                <span className="transition-transform group-hover:translate-x-1">→ →</span>
+              <div className="pt-2 text-center">
+                <span className="font-mono text-[9px] tracking-[0.2em] text-[#9EA49F] group-hover:text-[#65E6D2] uppercase transition-colors">
+                  EXPERIENCE →
+                </span>
               </div>
             </motion.div>
 
-            {/* ==================== 4. CARD 03: SKILLS (Bottom Center Offset) ==================== */}
+            {/* Card 03: SKILLS (Bottom-Center Offset, rotate -1deg) */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30, rotate: -2 }}
+              whileInView={{ opacity: 1, y: 0, rotate: -1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.24 }}
+              transition={{ duration: 0.7, delay: 0.24 }}
               onClick={() => onOpenSection('skills')}
-              className="hidden lg:flex absolute -bottom-6 left-1/2 -translate-x-1/2 z-30 w-[260px] p-4 bg-[#0F1412]/85 backdrop-blur-md border border-[rgba(241,239,232,0.15)] hover:border-[#65E6D2]/70 rounded-[2px] flex-col justify-between shadow-2xl cursor-pointer group hover:-translate-y-2 transition-all duration-300"
+              className="hidden lg:flex absolute -bottom-10 left-[48%] -translate-x-1/2 z-30 w-[210px] xl:w-[230px] aspect-[3/4] flex-col cursor-pointer group transition-all duration-500"
+              style={{
+                transform: 'rotate(-1deg) translateZ(15px)',
+              }}
             >
-              <div>
-                <div className="flex items-center justify-between pb-2 border-b border-[#2A302C] mb-2 font-mono text-[9px] tracking-widest text-[#626A65] uppercase">
-                  <span className="text-[#65E6D2] font-bold">03 / STACK</span>
-                  <span>CAPABILITIES</span>
+              <div className="relative w-full h-[88%] bg-[#0D1211] border border-[rgba(241,239,232,0.15)] group-hover:border-[#65E6D2]/80 rounded-[2px] overflow-hidden shadow-2xl transition-all duration-300 group-hover:brightness-105 group-hover:scale-[1.02]">
+                <img
+                  src="./img/project1.png"
+                  alt="Skills"
+                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-700"
+                />
+                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-widest text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase">
+                  03 / SKILLS
                 </div>
-                <h4 className="font-display font-black text-lg text-[#F1EFE8] uppercase leading-none group-hover:text-[#65E6D2] transition-colors mb-1">
-                  SKILLS MAP
-                </h4>
-                <div className="font-mono text-[8px] text-[#9EA49F] uppercase mb-2">
-                  REACT • PYTHON • AWS • LANGGRAPH
-                </div>
-                <p className="font-sans text-[11px] text-[#9EA49F] leading-snug line-clamp-2">
-                  Next.js, FastAPI, Docker, ECS, Terraform, and RAG retrieval networks.
-                </p>
               </div>
-              <div className="pt-2 mt-2 border-t border-[#2A302C] flex items-center justify-between font-mono text-[9px] text-[#F1EFE8] group-hover:text-[#65E6D2] uppercase tracking-wider">
-                <span>VIEW STACK</span>
-                <span className="transition-transform group-hover:translate-x-1">→ →</span>
+              <div className="pt-2 text-center">
+                <span className="font-mono text-[9px] tracking-[0.2em] text-[#9EA49F] group-hover:text-[#65E6D2] uppercase transition-colors">
+                  SYSTEM MAP →
+                </span>
               </div>
             </motion.div>
 
-            {/* ==================== 5. CARD 04: JOURNEY (Top Right Offset) ==================== */}
+            {/* Card 04: JOURNEY (Top-Right Offset, rotate 2deg) */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30, rotate: 4 }}
+              whileInView={{ opacity: 1, y: 0, rotate: 2 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.32 }}
+              transition={{ duration: 0.7, delay: 0.32 }}
               onClick={() => onOpenSection('journey')}
-              className="hidden lg:flex absolute top-4 right-6 xl:right-14 z-10 w-[240px] xl:w-[260px] p-4 bg-[#0F1412]/80 backdrop-blur-md border border-[rgba(241,239,232,0.15)] hover:border-[#65E6D2]/70 rounded-[2px] flex-col justify-between shadow-xl cursor-pointer group hover:-translate-y-1.5 transition-all duration-300"
+              className="hidden lg:flex absolute -top-4 right-8 xl:right-20 z-10 w-[210px] xl:w-[230px] aspect-[3/4] flex-col cursor-pointer group transition-all duration-500"
+              style={{
+                transform: 'rotate(2deg) translateZ(10px)',
+              }}
             >
-              <div>
-                <div className="flex items-center justify-between pb-2 border-b border-[#2A302C] mb-2 font-mono text-[9px] tracking-widest text-[#626A65] uppercase">
-                  <span className="text-[#65E6D2] font-bold">04 / JOURNEY</span>
-                  <span>EVOLUTION</span>
+              <div className="relative w-full h-[88%] bg-[#0D1211] border border-[rgba(241,239,232,0.15)] group-hover:border-[#65E6D2]/80 rounded-[2px] overflow-hidden shadow-2xl transition-all duration-300 group-hover:brightness-105 group-hover:scale-[1.02]">
+                <img
+                  src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80"
+                  alt="Journey"
+                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-700"
+                />
+                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-widest text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase">
+                  04 / JOURNEY
                 </div>
-                <h4 className="font-display font-black text-lg text-[#F1EFE8] uppercase leading-none group-hover:text-[#65E6D2] transition-colors mb-1">
-                  TIMELINE
-                </h4>
-                <div className="font-mono text-[8px] text-[#9EA49F] uppercase mb-2">
-                  2022 ━━━━━ 2026
-                </div>
-                <p className="font-sans text-[11px] text-[#9EA49F] leading-snug line-clamp-2">
-                  From core web fundamentals to multi-region cloud and autonomous reasoning.
-                </p>
               </div>
-              <div className="pt-2 mt-2 border-t border-[#2A302C] flex items-center justify-between font-mono text-[9px] text-[#F1EFE8] group-hover:text-[#65E6D2] uppercase tracking-wider">
-                <span>VIEW JOURNEY</span>
-                <span className="transition-transform group-hover:translate-x-1">→ →</span>
+              <div className="pt-2 text-center">
+                <span className="font-mono text-[9px] tracking-[0.2em] text-[#9EA49F] group-hover:text-[#65E6D2] uppercase transition-colors">
+                  EVOLUTION →
+                </span>
               </div>
             </motion.div>
 
-            {/* ==================== 6. CARD 05: GITHUB (Bottom Right Offset) ==================== */}
+            {/* Card 05: GITHUB (Bottom-Right Offset, rotate -1.5deg) */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30, rotate: -3 }}
+              whileInView={{ opacity: 1, y: 0, rotate: -1.5 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
               onClick={() => onOpenSection('github')}
-              className="hidden lg:flex absolute bottom-8 right-2 xl:right-8 z-10 w-[240px] xl:w-[260px] p-4 bg-[#0F1412]/80 backdrop-blur-md border border-[rgba(241,239,232,0.15)] hover:border-[#65E6D2]/70 rounded-[2px] flex-col justify-between shadow-xl cursor-pointer group hover:-translate-y-1.5 transition-all duration-300"
+              className="hidden lg:flex absolute bottom-4 right-2 xl:right-10 z-10 w-[210px] xl:w-[230px] aspect-[3/4] flex-col cursor-pointer group transition-all duration-500"
+              style={{
+                transform: 'rotate(-1.5deg) translateZ(5px)',
+              }}
             >
-              <div>
-                <div className="flex items-center justify-between pb-2 border-b border-[#2A302C] mb-2 font-mono text-[9px] tracking-widest text-[#626A65] uppercase">
-                  <span className="text-[#65E6D2] font-bold">05 / GITHUB</span>
-                  <span>OPEN SOURCE</span>
+              <div className="relative w-full h-[88%] bg-[#0D1211] border border-[rgba(241,239,232,0.15)] group-hover:border-[#65E6D2]/80 rounded-[2px] overflow-hidden shadow-2xl transition-all duration-300 group-hover:brightness-105 group-hover:scale-[1.02]">
+                <img
+                  src="./img/project2.png"
+                  alt="GitHub"
+                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-700"
+                />
+                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-widest text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase">
+                  05 / GITHUB
                 </div>
-                <h4 className="font-display font-black text-lg text-[#F1EFE8] uppercase leading-none group-hover:text-[#65E6D2] transition-colors mb-1">
-                  CODE ARCHIVE
-                </h4>
-                <div className="font-mono text-[8px] text-[#9EA49F] uppercase mb-2">
-                  @DEVM15 • PUBLIC REPOS
-                </div>
-                <p className="font-sans text-[11px] text-[#9EA49F] leading-snug line-clamp-2">
-                  Arcade, PDFdecoder, Futuredesks, and decentralized multi-agent runtimes.
-                </p>
               </div>
-              <div className="pt-2 mt-2 border-t border-[#2A302C] flex items-center justify-between font-mono text-[9px] text-[#F1EFE8] group-hover:text-[#65E6D2] uppercase tracking-wider">
-                <span>OPEN GITHUB</span>
-                <span className="transition-transform group-hover:translate-x-1">→ →</span>
+              <div className="pt-2 text-center">
+                <span className="font-mono text-[9px] tracking-[0.2em] text-[#9EA49F] group-hover:text-[#65E6D2] uppercase transition-colors">
+                  OPEN SOURCE →
+                </span>
               </div>
             </motion.div>
           </div>
 
-          {/* Mobile Card Row Fallback for Viewports < 1024px */}
+          {/* Mobile Swiper Bar (< 1024px) */}
           <div className="lg:hidden flex items-stretch gap-3 overflow-x-auto pb-2 no-scrollbar scroll-smooth snap-x">
-            {[
-              { id: 'about', title: '01 / ABOUT', sub: 'DEV MISTRY', cta: 'VIEW ABOUT' },
-              { id: 'internship', title: '02 / INTERNSHIP', sub: 'WORK HISTORY', cta: 'VIEW EXP' },
-              { id: 'skills', title: '03 / SKILLS', sub: 'TECH STACK', cta: 'VIEW STACK' },
-              { id: 'journey', title: '04 / JOURNEY', sub: 'TIMELINE', cta: 'VIEW JOURNEY' },
-              { id: 'github', title: '05 / GITHUB', sub: 'CODE ARCHIVE', cta: 'OPEN GITHUB' },
-            ].map((c) => (
+            {FLOATING_CARDS.map((c) => (
               <div
                 key={c.id}
-                onClick={() => onOpenSection(c.id)}
-                className="snap-start flex-shrink-0 w-[180px] p-3 bg-[#0F1412]/80 border border-[#2A302C] rounded-[2px]"
+                onClick={() => onOpenSection(c.sectionId)}
+                className="snap-start flex-shrink-0 w-[160px] aspect-[3/4] bg-[#0D1211] border border-[rgba(241,239,232,0.15)] rounded-[2px] p-2 flex flex-col justify-between"
               >
-                <span className="font-mono text-[8px] text-[#65E6D2] block uppercase">{c.title}</span>
-                <span className="font-display font-bold text-sm text-[#F1EFE8] block uppercase mt-0.5">{c.sub}</span>
-                <span className="font-mono text-[8px] text-[#9EA49F] block mt-2">{c.cta} →</span>
+                <div className="w-full h-[78%] overflow-hidden rounded-[2px]">
+                  <img src={c.image} alt={c.title} className="w-full h-full object-cover grayscale" />
+                </div>
+                <div className="font-mono text-[8px] text-center text-[#65E6D2] uppercase">
+                  {c.title} →
+                </div>
               </div>
             ))}
           </div>
 
-          {/* Horizontal Navigation Footer for Pane 02 */}
+          {/* Navigation Controls */}
           <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-t border-[#2A302C] pt-3">
             <button
               onClick={() => scrollToPane(0)}
@@ -343,22 +398,97 @@ export default function HomeSection({
               onClick={() => scrollToPane(2)}
               className="flex items-center gap-2 text-[#65E6D2] hover:text-white transition-colors cursor-pointer font-bold"
             >
-              <span>PROJECTS & CONTACT</span>
+              <span>FLOATING GALLERY EXHIBITION</span>
               <span className="text-base">→</span>
             </button>
           </div>
         </section>
 
-        {/* ==================== PANE 03: SELECTED PROJECTS PREVIEW & CONTACT CTA ==================== */}
+        {/* ==================== ZONE 03: FLOATING CARD GALLERY (IMAGE-FIRST PERSPECTIVE EXHIBITION) ==================== */}
+        <section className="relative w-screen h-full flex-shrink-0 snap-start flex flex-col justify-between py-6 md:py-8 px-6 md:px-16 max-w-full">
+          {/* Top Section Metadata */}
+          <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-3">
+            <div className="flex items-center gap-3">
+              <span className="text-[#65E6D2] font-bold">03 / EXHIBITION</span>
+              <span className="text-white/10">•</span>
+              <span className="text-[#9EA49F]">IMAGE-FIRST FLOATING OBJECTS & PERSPECTIVE SPACE</span>
+            </div>
+            <div className="hidden sm:block text-[#9EA49F]">DIGITAL GALLERY [03 / 04]</div>
+          </div>
+
+          {/* Generously Spaced 3D Gallery Stream Inspired by Reference */}
+          <div
+            className="my-auto flex items-center justify-center gap-12 xl:gap-20 overflow-x-auto no-scrollbar py-6"
+            style={{ perspective: '1200px' }}
+          >
+            {FLOATING_CARDS.map((card, idx) => (
+              <motion.div
+                key={card.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.75, delay: idx * 0.12 }}
+                onClick={() => onOpenSection(card.sectionId)}
+                className="group relative flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] aspect-[3/4] flex flex-col items-center justify-between cursor-pointer transition-all duration-500 hover:scale-[1.04]"
+                style={{
+                  transform: `translateY(${card.offsetY}px) rotate(${card.rotation}deg) rotateY(${card.perspectiveY}deg)`,
+                }}
+              >
+                {/* 92% Image Area Framed in Technical Border */}
+                <div className="relative w-full h-[90%] bg-[#0D1211] border border-[rgba(241,239,232,0.16)] group-hover:border-[#65E6D2] rounded-[2px] overflow-hidden shadow-2xl transition-all duration-500 group-hover:brightness-105">
+                  <img
+                    src={card.image}
+                    alt={card.title}
+                    className="w-full h-full object-cover grayscale contrast-120 brightness-95 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                  />
+
+                  {/* Micro Section Label Top Edge */}
+                  <div className="absolute top-3 left-3 font-mono text-[8px] tracking-[0.2em] text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase">
+                    {card.label}
+                  </div>
+
+                  {/* Faint Subtle Reflection Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none" />
+                </div>
+
+                {/* Micro Label directly underneath the card */}
+                <div className="pt-2 text-center">
+                  <span className="font-mono text-[10px] tracking-[0.22em] text-[#9EA49F] group-hover:text-[#65E6D2] uppercase transition-colors">
+                    {card.title} →
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Navigation Controls */}
+          <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-t border-[#2A302C] pt-3">
+            <button
+              onClick={() => scrollToPane(1)}
+              className="text-[#9EA49F] hover:text-[#F1EFE8] transition-colors cursor-pointer"
+            >
+              ← PROFILE CORE
+            </button>
+            <button
+              onClick={() => scrollToPane(3)}
+              className="flex items-center gap-2 text-[#65E6D2] hover:text-white transition-colors cursor-pointer font-bold"
+            >
+              <span>PROJECTS & CONTACT CTA</span>
+              <span className="text-base">→</span>
+            </button>
+          </div>
+        </section>
+
+        {/* ==================== ZONE 04: SELECTED PROJECTS PREVIEW & CONTACT CTA ==================== */}
         <section className="relative w-screen h-full flex-shrink-0 snap-start flex flex-col justify-between py-8 px-6 md:px-16 max-w-full">
           {/* Top Section Metadata */}
           <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-3">
             <div className="flex items-center gap-3">
-              <span className="text-[#65E6D2] font-bold">03 / PREVIEWS</span>
+              <span className="text-[#65E6D2] font-bold">04 / PREVIEWS</span>
               <span className="text-white/10">•</span>
               <span className="text-[#9EA49F]">SELECTED CASE STUDIES & CORRESPONDENCE</span>
             </div>
-            <div className="hidden sm:block text-[#9EA49F]">FINAL CANVAS POSITION [03 / 03]</div>
+            <div className="hidden sm:block text-[#9EA49F]">FINAL CANVAS POSITION [04 / 04]</div>
           </div>
 
           {/* Split Content: Left Projects Preview, Right Contact CTA */}
@@ -386,7 +516,11 @@ export default function HomeSection({
                 {[
                   { title: 'ARCADE', tag: 'WEB PLATFORM', img: './img/project1.png' },
                   { title: 'PDF DECODER', tag: 'BINARY PIPELINE', img: './img/project2.png' },
-                  { title: 'AGENTIC SWARM', tag: 'MCP / LANGGRAPH', img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80' },
+                  {
+                    title: 'AGENTIC SWARM',
+                    tag: 'MCP / LANGGRAPH',
+                    img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80',
+                  },
                 ].map((item) => (
                   <div
                     key={item.title}
@@ -437,13 +571,13 @@ export default function HomeSection({
             </div>
           </div>
 
-          {/* Bottom Navigation for Pane 03 */}
+          {/* Bottom Navigation for Pane 04 */}
           <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-t border-[#2A302C] pt-3">
             <button
-              onClick={() => scrollToPane(1)}
+              onClick={() => scrollToPane(2)}
               className="text-[#9EA49F] hover:text-[#F1EFE8] transition-colors cursor-pointer"
             >
-              ← PROFILE & CARDS
+              ← FLOATING GALLERY
             </button>
             <span className="text-[#65E6D2]">DEV MISTRY © 2026</span>
           </div>
@@ -451,7 +585,7 @@ export default function HomeSection({
       </div>
 
       {/* ==================== BOTTOM HORIZONTAL EXHIBITION PROGRESS INDICATOR ==================== */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 font-mono text-[9px] tracking-widest text-[#626A65] bg-[#050706]/80 px-4 py-1.5 rounded-full border border-[#2A302C]/60 backdrop-blur-sm pointer-events-auto">
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 font-mono text-[9px] tracking-widest text-[#626A65] bg-[#050706]/85 px-4 py-1.5 rounded-full border border-[#2A302C]/60 backdrop-blur-sm pointer-events-auto">
         <button
           onClick={() => scrollToPane(0)}
           className={`transition-colors cursor-pointer ${
@@ -460,7 +594,7 @@ export default function HomeSection({
         >
           01 HERO
         </button>
-        <span className={`w-5 h-px transition-colors ${activePane >= 1 ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'}`} />
+        <span className={`w-4 h-px transition-colors ${activePane >= 1 ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'}`} />
         <button
           onClick={() => scrollToPane(1)}
           className={`transition-colors cursor-pointer ${
@@ -469,14 +603,23 @@ export default function HomeSection({
         >
           02 PROFILE
         </button>
-        <span className={`w-5 h-px transition-colors ${activePane >= 2 ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'}`} />
+        <span className={`w-4 h-px transition-colors ${activePane >= 2 ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'}`} />
         <button
           onClick={() => scrollToPane(2)}
           className={`transition-colors cursor-pointer ${
             activePane === 2 ? 'text-[#65E6D2] font-bold' : 'hover:text-[#F1EFE8]'
           }`}
         >
-          03 PREVIEWS
+          03 GALLERY
+        </button>
+        <span className={`w-4 h-px transition-colors ${activePane >= 3 ? 'bg-[#65E6D2]' : 'bg-[#2A302C]'}`} />
+        <button
+          onClick={() => scrollToPane(3)}
+          className={`transition-colors cursor-pointer ${
+            activePane === 3 ? 'text-[#65E6D2] font-bold' : 'hover:text-[#F1EFE8]'
+          }`}
+        >
+          04 PREVIEWS
         </button>
       </div>
     </div>
