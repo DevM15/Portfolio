@@ -1,104 +1,83 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export default function About() {
-  const imageRef = useRef(null);
-
-  const { scrollYProgress } = useScroll({
-    target: imageRef,
-    offset: ['start end', 'end start'],
-  });
-
-  const yRange = useTransform(scrollYProgress, [0, 1], [-50, 50]);
-
   return (
     <section
-      ref={imageRef}
       id="about"
-      className="relative min-h-screen bg-ink py-24 overflow-hidden"
+      className="py-24 px-6 md:px-12 max-w-[1700px] mx-auto bg-[#080809] border-t border-white/10"
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Headline */}
-          <div>
-            <span className="section-num mb-6 block">02_About</span>
-            <motion.h2
-              className="text-display-xl font-display font-bold text-white leading-[0.9]"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            >
-              ENGINEERED
-              <br />
-              WITH
-              <br />
-              CURIOSITY.
-            </motion.h2>
-
-            <motion.p
-              className="mt-8 text-text-muted text-lg leading-relaxed max-w-md"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              I enjoy turning complex technical problems into software that is simple to use, scalable to operate and intelligent enough to automate meaningful work.
-            </motion.p>
-
-            {/* Metadata tags */}
-            <motion.div
-              className="mt-12 flex flex-wrap gap-4"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <div className="flex items-center gap-2 text-xs font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-electric" />
-                <span className="text-text-muted">SOFTWARE ENGINEER</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan" />
-                <span className="text-text-muted">INDIA</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet" />
-                <span className="text-text-muted">FULLSTACK · CLOUD · AI</span>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Photo area - asymmetrical */}
-          <motion.div
-            className="flex justify-end"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.2 }}
-          >
-            <div
-              className="relative w-[280px] h-[420px] lg:w-[320px] lg:h-[480px] rounded-[24px] overflow-hidden border-2 border-electric/20 bg-ink-surface"
-              style={{ y: yRange }}
-              data-cursor="ABOUT"
-            >
-              {/* Photo placeholder - for user to replace later */}
-              <img
-                src="/img/placeholder.svg"
-                alt="DEV MISTRY"
-                className="w-full h-full object-cover opacity-60"
-              />
-              {/* Replace with actual img when available */}
-              {/* <img src="/img/portrait.jpg" alt="Dev Mistry" className="w-full h-full object-cover" /> */}
-            </div>
-          </motion.div>
-        </div>
+      <div className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] text-stone-500 mb-8">
+        <span>[ 02 ]</span>
+        <span>STUDIO PHILOSOPHY & MANIFESTO</span>
       </div>
 
-      {/* Repeated text background */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none">
-        <div className="text-repeat text-[16vw] font-display font-bold opacity-2 text-center">
-          BUILD · SCALE · AUTOMATE · BUILD · SCALE · AUTOMATE
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        {/* Left Column: Architectural Headline */}
+        <div className="lg:col-span-6">
+          <motion.h2
+            className="text-display-section font-display font-medium text-white tracking-tight uppercase leading-[0.95]"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            STRUCTURAL
+            <br />
+            SIMPLICITY.
+            <br />
+            <span className="text-stone-500">MAXIMAL</span>
+            <br />
+            IMPACT.
+          </motion.h2>
+
+          <div className="mt-12 space-y-6 text-stone-400 font-sans text-base md:text-lg leading-relaxed font-light max-w-xl">
+            <p>
+              Just as Shamsudin Kerimov conceives architectural volumes that merge seamlessly into cliff edges and landscapes, digital architecture demands similar purity: structures reduced to their essential intent, stripped of decorative noise.
+            </p>
+            <p>
+              My work treats systems as spatial entities—where data pipelines, agent interactions, and cloud primitives harmonize into scalable, self-healing, and beautifully restrained environments.
+            </p>
+          </div>
+        </div>
+
+        {/* Right Column: Architectural Profile & Specifications */}
+        <div className="lg:col-span-6 space-y-12">
+          {/* Architectural Image Placeholder Frame */}
+          <div className="relative aspect-[4/3] bg-stone-900 border border-white/10 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80"
+              alt="Architectural Lines"
+              className="w-full h-full object-cover grayscale contrast-125 brightness-75 hover:scale-105 transition-transform duration-700"
+            />
+            <div className="absolute bottom-4 left-4 font-mono text-[10px] tracking-widest text-stone-300 bg-black/70 px-3 py-1.5 backdrop-blur-sm border border-white/10">
+              AXIS // MONOLITHIC STRUCTURE & RUNTIME
+            </div>
+          </div>
+
+          {/* Studio Metrics & Attributes */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-white/10 font-mono">
+            <div>
+              <span className="text-[10px] tracking-widest text-stone-600 block mb-1">
+                LOCATION
+              </span>
+              <span className="text-sm text-stone-200">AHMEDABAD, IN</span>
+              <span className="text-[10px] text-stone-500 block">GLOBAL DELIVERY</span>
+            </div>
+            <div>
+              <span className="text-[10px] tracking-widest text-stone-600 block mb-1">
+                DISCIPLINE
+              </span>
+              <span className="text-sm text-stone-200">SYSTEM ENG.</span>
+              <span className="text-[10px] text-stone-500 block">AI & CLOUD INFRA</span>
+            </div>
+            <div>
+              <span className="text-[10px] tracking-widest text-stone-600 block mb-1">
+                METHODOLOGY
+              </span>
+              <span className="text-sm text-stone-200">MONOLITH TO MESH</span>
+              <span className="text-[10px] text-stone-500 block">HIGH RESILIENCE</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

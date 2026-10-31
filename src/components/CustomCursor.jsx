@@ -1,66 +1,44 @@
 import { useEffect, useState } from 'react';
 
 export default function CustomCursor() {
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [label, setLabel] = useState('');
-  const [active, setActive] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [pos, setPos] = useState({ x: -100, y: -100 });
+  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouch) return;
-
-    const onMove = (e) => {
+    const handleMouseMove = (e) => {
       setPos({ x: e.clientX, y: e.clientY });
-      if (!visible) setVisible(true);
     };
 
-    const onOver = (e) => {
-      const target = e.target.closest('[data-cursor]');
-      if (!target) return;
-      const label = target.getAttribute('data-cursor');
-      if (label) {
-        setLabel(label);
-        setActive(true);
+    const handleMouseOver = (e) => {
+      if (e.target.closest('button, a, [data-interactive]')) {
+        setIsHovering(true);
       }
     };
 
-    const onOut = (e) => {
-      const target = e.target.closest('[data-cursor]');
-      if (target) {
-        setLabel('');
-        setActive(false);
+    const handleMouseOut = (e) => {
+      if (e.target.closest('button, a, [data-interactive]')) {
+        setIsHovering(false);
       }
     };
 
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseover', onOver);
-    window.addEventListener('mouseout', onOut);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mouseout', handleMouseOut);
 
     return () => {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseover', onOver);
-      window.removeEventListener('mouseout', onOut);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mouseout', handleMouseOut);
     };
-  }, [visible]);
-
-  if (typeof window === 'undefined') return null;
-  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  if (isTouch) return null;
+  }, []);
 
   return (
-    <>
-      <div
-        className="cursor-circle"
-        style={{ left: pos.x, top: pos.y, width: active ? 40 : 8, height: active ? 40 : 8 }}
-      />
-      <div
-        className="cursor-label"
-        style={{ left: pos.x, top: pos.y - 24 }}
-      >
-        {label}
-      </div>
-    </>
+    <div
+      className={`custom-cursor hidden md:block ${isHovering ? 'hovering' : ''}`}
+      style={{
+        left: `${pos.x}px`,
+        top: `${pos.y}px`,
+      }}
+    />
   );
 }

@@ -1,108 +1,78 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative min-h-screen bg-ink py-20 overflow-hidden"
+      className="py-24 px-6 md:px-12 max-w-[1700px] mx-auto bg-[#080809] border-t border-white/10"
     >
-      {/* Slowly moving gradient background */}
-      <motion.div
-        className="absolute inset-0 opacity-30 pointer-events-none"
-        animate={{
-          backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          repeatType: 'mirror',
-        }}
-        style={{
-          backgroundImage: `radial-gradient(circle at 30% 50%, #3B82F622 0%, transparent 50%), radial-gradient(circle at 70% 50%, #8B5CF622 0%, transparent 50%)`,
-        }}
-      />
+      <div className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] text-stone-500 mb-8">
+        <span>[ 03 ]</span>
+        <span>COMMISSIONS & INQUIRIES</span>
+      </div>
 
-      <div className="relative max-w-7xl mx-auto px-6">
-        <div className="mb-16">
-          <span className="section-num mb-6 block">09_Contact</span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="lg:col-span-8">
+          <h2 className="text-display-section font-display font-medium text-white tracking-tight uppercase leading-[0.95] mb-8">
+            LET'S CONCEIVE
+            <br />
+            <span className="text-stone-500">YOUR NEXT</span> SYSTEM.
+          </h2>
+
+          <p className="text-stone-400 font-sans text-base md:text-xl font-light leading-relaxed max-w-2xl mb-12">
+            Available for architectural consulting, AI agent workflow deployments, and resilient cloud systems.
+          </p>
+
+          <a
+            href="mailto:devmistry1510@gmail.com"
+            className="inline-flex items-center gap-4 text-2xl md:text-4xl font-display text-white border-b-2 border-white pb-2 hover:text-stone-400 hover:border-stone-400 transition-colors"
+          >
+            devmistry1510@gmail.com
+            <span className="text-xl md:text-2xl">↗</span>
+          </a>
         </div>
 
-        {/* Headline */}
-        <motion.h2
-          className="text-display-2xl font-display font-bold text-white leading-[0.95] mb-8"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        >
-          HAVE A
-          <br />
-          SYSTEM
-          <br />
-          TO BUILD?
-        </motion.h2>
+        <div className="lg:col-span-4 flex flex-col justify-between pt-4 lg:border-l border-white/10 lg:pl-12">
+          <div>
+            <span className="font-mono text-[10px] tracking-widest text-stone-600 block uppercase mb-4">
+              STUDIO CHANNELS
+            </span>
+            <div className="flex flex-col space-y-4 font-mono text-xs">
+              <a
+                href="https://github.com/DevM15"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between text-stone-400 hover:text-white transition-colors py-2 border-b border-white/[0.05]"
+              >
+                <span>GITHUB / DEVM15</span>
+                <FontAwesomeIcon icon={faGithub} />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/dev-mistry-828586298/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between text-stone-400 hover:text-white transition-colors py-2 border-b border-white/[0.05]"
+              >
+                <span>LINKEDIN / DEV-MISTRY</span>
+                <FontAwesomeIcon icon={faLinkedin} />
+              </a>
+              <a
+                href="https://x.com/DevM15"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between text-stone-400 hover:text-white transition-colors py-2 border-b border-white/[0.05]"
+              >
+                <span>X / TWITTER</span>
+                <FontAwesomeIcon icon={faXTwitter} />
+              </a>
+            </div>
+          </div>
 
-        <motion.p
-          className="text-text-muted text-lg max-w-xl mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          Let's turn the idea into something intelligent, scalable and
-          deployable.
-        </motion.p>
-
-        {/* Buttons */}
-        <motion.div
-          className="flex flex-col sm:flex-row gap-4 sm:items-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-        >
-          <motion.a
-            href="mailto:devmistry1501@gmail.com"
-            data-cursor="→"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-electric via-violet to-cyan text-white font-display font-semibold rounded-[16px] shadow-2xl shadow-electric/20 text-lg group"
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            START A CONVERSATION
-            <FontAwesomeIcon
-              icon={faArrowRight}
-              className="text-sm group-hover:translate-x-1 transition-transform duration-300"
-            />
-          </motion.a>
-
-          <motion.a
-            href="https://github.com/DevM15"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="GH"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-white/10 hover:border-white/30 rounded-[16px] text-sm font-mono transition-colors duration-200"
-            whileHover={{ y: -2 }}
-          >
-            <FontAwesomeIcon icon={faGithub} className="text-lg" />
-            GITHUB
-          </motion.a>
-
-          <motion.a
-            href="https://www.linkedin.com/in/dev-mistry-828586298/"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="LI"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-white/10 hover:border-white/30 rounded-[16px] text-sm font-mono transition-colors duration-200"
-            whileHover={{ y: -2 }}
-          >
-            <FontAwesomeIcon icon={faLinkedin} className="text-lg text-electric" />
-            LINKEDIN
-          </motion.a>
-        </motion.div>
+          <div className="mt-12 font-mono text-[10px] text-stone-600 tracking-wider">
+            RESPONSE TIMEFRAME: WITHIN 24 HOURS
+          </div>
+        </div>
       </div>
     </section>
   );
