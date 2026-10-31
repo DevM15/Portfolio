@@ -196,7 +196,7 @@ export default function App() {
       if (contactOpen || openInfo) return;
       e.preventDefault();
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      
+
       setRotationAngle((prev) => prev - delta * 0.08);
 
       clearTimeout(snapTimeoutRef.current);
@@ -262,7 +262,7 @@ export default function App() {
       className="relative w-screen h-screen bg-[#10130F] text-[#E8E1D2] overflow-hidden select-none font-sans"
     >
       {/* Pixabay Background Loop Video with Opacity & Soft Blur */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <video
           autoPlay
           loop
@@ -298,17 +298,16 @@ export default function App() {
         </div>
 
         {/* Top-Right Navigation: Prominent bold items */}
-        <nav className="flex items-center gap-6 md:gap-8 pointer-events-auto text-base sm:text-lg font-bold font-sans tracking-tight">
+        <nav className="flex items-center gap-6 font-sans text-base font-bold tracking-tight pointer-events-auto md:gap-8 sm:text-lg">
           <button
             onClick={() => {
               setActivePage('HOME');
               setContactOpen(false);
             }}
-            className={`transition-colors duration-200 ${
-              activePage === 'HOME' && !contactOpen
+            className={`transition-colors duration-200 ${activePage === 'HOME' && !contactOpen
                 ? 'text-[#E8E1D2]'
                 : 'text-[#E8E1D2]/70 hover:text-[#E8E1D2]'
-            }`}
+              }`}
           >
             HOME
           </button>
@@ -317,19 +316,17 @@ export default function App() {
               setActivePage('MY WORK');
               setContactOpen(false);
             }}
-            className={`transition-colors duration-200 ${
-              activePage === 'MY WORK' && !contactOpen
+            className={`transition-colors duration-200 ${activePage === 'MY WORK' && !contactOpen
                 ? 'text-[#E8E1D2]'
                 : 'text-[#E8E1D2]/70 hover:text-[#E8E1D2]'
-            }`}
+              }`}
           >
             MY WORK
           </button>
           <button
             onClick={() => setContactOpen(true)}
-            className={`transition-colors duration-200 ${
-              contactOpen ? 'text-[#E8E1D2]' : 'text-[#E8E1D2]/70 hover:text-[#E8E1D2]'
-            }`}
+            className={`transition-colors duration-200 ${contactOpen ? 'text-[#E8E1D2]' : 'text-[#E8E1D2]/70 hover:text-[#E8E1D2]'
+              }`}
           >
             CONTACT
           </button>
@@ -385,7 +382,7 @@ export default function App() {
 
                   // Increased horizontal spacing between cards (620px step) for generous breathing room
                   const translateX = (diffAngle / stepAngle) * 620;
-                  
+
                   // Pronounced forward curve towards camera:
                   const translateZ = Math.pow(absDiff / 26, 1.65) * 85;
 
@@ -398,7 +395,25 @@ export default function App() {
                   const isCenter = absDiff < 18;
                   const isHovered = hoveredCardId === item.id;
 
-                  const isLandscape = item.aspect.includes('16/10') || item.aspect.includes('4/3');
+                  const isProfile = item.type === 'profile' || item.id === '01';
+
+                  // Card sizing:
+                  // For the Profile Card: significantly smaller curated editorial object (280px × 400px, 20-22% viewport width)
+                  // For other exhibition cards: landscape clamp or portrait clamp
+                  let cardWidth = 'clamp(320px, 28vw, 420px)';
+                  let cardHeightOffset = 'clamp(460px, 58vh, 600px)';
+                  if (isProfile) {
+                    cardWidth = 'clamp(260px, 22vw, 300px)';
+                    cardHeightOffset = '400px';
+                  } else if (isLandscape) {
+                    cardWidth = 'clamp(380px, 36vw, 540px)';
+                  }
+
+                  // Very subtle editorial angle for profile card (±2–4 degrees) as specified
+                  let cardRotateY = rotateY;
+                  if (isProfile) {
+                    cardRotateY = isCenter ? 0 : (diffAngle > 0 ? -3 : 3);
+                  }
 
                   return (
                     <div
@@ -420,85 +435,85 @@ export default function App() {
                       className="absolute flex flex-col items-center justify-center cursor-pointer pointer-events-auto"
                       style={{
                         transformStyle: 'preserve-3d',
-                        transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                        transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${cardRotateY}deg) scale(${scale})`,
                         opacity: opacity,
                         zIndex: Math.round(100 - absDiff),
-                        // Desktop dimensions: Active card occupies 32-38% viewport width & 58-65% height
-                        width: isLandscape ? 'clamp(380px, 36vw, 540px)' : 'clamp(320px, 28vw, 420px)',
-                        left: isLandscape ? 'calc(-1 * clamp(380px, 36vw, 540px) / 2)' : 'calc(-1 * clamp(320px, 28vw, 420px) / 2)',
+                        width: cardWidth,
+                        left: `calc(-1 * ${cardWidth} / 2)`,
                         // Elevated slightly above exact vertical center for optimal optical balance
-                        top: 'calc(-1 * clamp(460px, 58vh, 600px) / 2 - 32px)',
+                        top: `calc(-1 * ${cardHeightOffset} / 2 - 28px)`,
                         transition: isSnapping
                           ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease'
                           : 'none',
                       }}
                     >
-                      {/* 3D Exhibition Artwork Card (Compact photo with blurred backdrop for Profile) */}
+                      {/* Exhibition Card Object */}
                       <div
-                        className={`relative w-full ${item.aspect} bg-[#090A08] border overflow-hidden transition-all duration-400 ease-out`}
+                        className={`relative w-full ${isProfile ? 'aspect-[28/40]' : item.aspect} transition-all duration-400 ease-out rounded-[3px] overflow-hidden`}
                         style={{
-                          transform: isHovered ? 'translateY(-12px)' : 'translateY(0px)',
+                          backgroundColor: isProfile ? '#292B25' : '#090A08',
+                          borderColor: isProfile ? '#4A4C45' : (isCenter ? (isHovered ? 'rgba(232, 225, 210, 0.5)' : 'rgba(232, 225, 210, 0.25)') : 'rgba(255, 255, 255, 0.08)'),
+                          borderWidth: '1px',
+                          borderStyle: 'solid',
+                          transform: isHovered ? 'translateY(-10px)' : 'translateY(0px)',
                           boxShadow: isCenter
                             ? (isHovered
-                                ? '0 35px 70px -15px rgba(0, 0, 0, 0.95), 0 0 35px rgba(232, 225, 210, 0.15)'
-                                : '0 25px 50px -10px rgba(0, 0, 0, 0.85)')
-                            : '0 15px 30px -5px rgba(0, 0, 0, 0.7)',
-                          borderColor: isCenter
-                            ? (isHovered ? 'rgba(232, 225, 210, 0.5)' : 'rgba(232, 225, 210, 0.25)')
-                            : 'rgba(255, 255, 255, 0.08)',
+                                ? '0 20px 40px -10px rgba(0, 0, 0, 0.75)'
+                                : '0 12px 30px -8px rgba(0, 0, 0, 0.65)')
+                            : '0 8px 20px -5px rgba(0, 0, 0, 0.55)',
                         }}
                       >
-                        {item.type === 'profile' || item.id === '01' ? (
-                          /* Profile Card: Scaled photo with blurred depth backdrop and integrated text */
-                          <div className="relative w-full h-full flex flex-col justify-between overflow-hidden">
-                            {/* Blurred Ambient Photo Layer */}
-                            <img
-                              src={item.image}
-                              alt={item.title}
-                              className="absolute inset-0 w-full h-full object-cover scale-125 filter blur-lg opacity-40 brightness-75"
-                            />
-                            
-                            {/* Top Details */}
-                            <div className="relative z-10 p-5 flex items-start justify-between">
-                              <span className="font-mono text-[9px] tracking-[0.2em] text-[#E8E1D2]/90 bg-[#10130F]/80 px-2.5 py-1 backdrop-blur-sm border border-white/10 uppercase">
+                        {isProfile ? (
+                          /* Compact Editorial Profile Object (280x400 approx) */
+                          <div className="relative flex flex-col justify-between w-full h-full p-4 select-none">
+                            {/* Top Micro Metadata & Tiny System Dot */}
+                            <div className="flex items-center justify-between pb-2">
+                              <span className="font-mono text-[9px] tracking-[0.22em] text-[#85867C] uppercase">
                                 01 / PROFILE
                               </span>
-                              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mt-1" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#4AC7A5]" />
                             </div>
 
-                            {/* Centered Compact Portrait Frame with Subtle Washi Tape */}
-                            <div className="relative z-10 mx-auto my-auto w-36 h-44 sm:w-40 sm:h-48 bg-stone-900 border-2 border-white/20 shadow-2xl overflow-hidden rounded-sm group-hover:scale-105 transition-transform duration-500">
+                            {/* Prominent Editorial Photograph (72% of card width, monochrome/olive desaturated) */}
+                            <div className="mx-auto my-1 w-[74%] aspect-[3/4] bg-[#22241F] border border-[#4A4C45] overflow-hidden rounded-[2px] shadow-sm">
                               <img
                                 src={item.image}
                                 alt="Dev Mistry"
-                                className="w-full h-full object-cover contrast-105 brightness-95"
+                                className="object-cover w-full h-full contrast-[1.05] brightness-95 grayscale-[35%] filter"
                               />
                             </div>
 
-                            {/* Bottom Contextual Editorial Typography */}
-                            <div className="relative z-10 p-5 bg-gradient-to-t from-[#090A08] via-[#090A08]/90 to-transparent border-t border-white/[0.08]">
-                              <h3 className="font-display font-black text-xl text-[#E8E1D2] tracking-tight uppercase leading-tight">
+                            {/* Minimal 1px Divider Line */}
+                            <div className="w-full h-px bg-[#4A4C45]/80 my-2" />
+
+                            {/* Compact Name & Single-line Role */}
+                            <div className="text-left">
+                              <h3 className="font-display font-bold text-[19px] sm:text-[21px] text-[#E8E2D5] tracking-tight uppercase leading-none">
                                 DEV MISTRY
                               </h3>
-                              <p className="font-mono text-[10px] text-[#C8C1B2] tracking-wider uppercase mt-1">
-                                SOFTWARE ARCHITECT & DESIGNER
+                              <p className="font-mono text-[9px] text-[#85867C] tracking-[0.18em] uppercase mt-1">
+                                WEB / CLOUD / AGENTIC AI
                               </p>
-                              <p className="font-sans text-[11px] text-[#8E8E93] leading-relaxed mt-1 font-light line-clamp-2">
-                                Building autonomous AI systems, resilient cloud meshes, and minimal digital platforms.
-                              </p>
+                            </div>
+
+                            {/* Subtle Integrated Footer Link (No button, no pill) */}
+                            <div className="pt-2 text-left">
+                              <span className="group/link inline-flex items-center gap-1.5 font-mono text-[9px] tracking-[0.2em] text-[#E8E2D5] hover:text-white uppercase transition-colors">
+                                <span>ABOUT DEV</span>
+                                <span className="transition-transform group-hover/link:translate-x-1">→</span>
+                              </span>
                             </div>
                           </div>
                         ) : (
-                          /* Artwork Cards */
+                          /* Standard Artwork Cards */
                           <>
                             <img
                               src={item.image}
                               alt={item.title}
-                              className={`w-full h-full object-cover transition-all duration-700 ease-out ${
-                                isCenter
+                              className={`w-full h-full object-cover transition-all duration-700 ease-out ${isCenter
                                   ? (isHovered ? 'grayscale-0 contrast-105 brightness-105' : 'grayscale contrast-125 brightness-95')
                                   : 'grayscale contrast-110 brightness-85'
-                              }`}
+                                }`}
                             />
 
                             {/* Top Technical Metadata Tag */}
@@ -512,18 +527,19 @@ export default function App() {
                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
 
-                      {/* Small Editorial Label directly beneath card (warm ivory text, minimal button) */}
-                      <div className="z-10 mt-4 transition-transform duration-300">
-                        <span
-                          className={`font-display font-medium text-xs tracking-widest uppercase px-3.5 py-1.5 transition-all duration-300 border ${
-                            isCenter
-                              ? 'text-[#E8E1D2] bg-[#3B3F34] border-white/20 shadow-md'
-                              : 'text-[#C8C1B2]/70 bg-[#10130F]/90 border-white/5'
-                          }`}
-                        >
-                          {item.badge}
-                        </span>
-                      </div>
+                      {/* Small Editorial Label beneath artwork cards (omitted for profile card since integrated) */}
+                      {!isProfile && (
+                        <div className="z-10 mt-4 transition-transform duration-300">
+                          <span
+                            className={`font-display font-medium text-xs tracking-widest uppercase px-3.5 py-1.5 transition-all duration-300 border ${isCenter
+                                ? 'text-[#E8E1D2] bg-[#3B3F34] border-white/20 shadow-md'
+                                : 'text-[#C8C1B2]/70 bg-[#10130F]/90 border-white/5'
+                              }`}
+                          >
+                            {item.badge}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -554,11 +570,10 @@ export default function App() {
                     <button
                       key={filt}
                       onClick={() => setActiveFilter(filt)}
-                      className={`block text-left transition-colors ${
-                        activeFilter === filt
+                      className={`block text-left transition-colors ${activeFilter === filt
                           ? 'text-[#E8E1D2] font-bold border-b border-white pb-0.5'
                           : 'text-[#686B5C] hover:text-[#E8E1D2]'
-                      }`}
+                        }`}
                     >
                       {filt}
                     </button>
@@ -619,7 +634,7 @@ export default function App() {
       {/* ==================== GLOBAL FIXED FOOTER (Exact Font Sizes from Kerimov Designs) ==================== */}
       <footer className="fixed bottom-0 left-0 right-0 z-50 px-6 md:px-12 py-6 flex items-center justify-between font-sans uppercase text-[#E8E1D2] pointer-events-none">
         <div className="pointer-events-auto">
-          <span className="font-bold text-base sm:text-lg tracking-tight">PORTFOLIO / 2026</span>
+          <span className="text-base font-bold tracking-tight sm:text-lg">PORTFOLIO / 2026</span>
         </div>
 
         <div className="hidden sm:block text-[#686B5C] text-[10px] tracking-[0.2em] font-mono">
@@ -703,7 +718,7 @@ export default function App() {
               style={{
                 perspective: '1200px',
               }}
-              className="relative w-full max-w-xl z-10"
+              className="relative z-10 w-full max-w-xl"
             >
               <div
                 ref={contactCardRef}
@@ -848,14 +863,14 @@ export default function App() {
 
               {/* Main Collage Content Layout (Inspired by Stash Lopes Collage Board) */}
               <div className="relative z-10 grid items-start grid-cols-1 gap-6 md:grid-cols-12">
-                
+
                 {/* Left Column: Lined Paper Title & Intro Sticky Cards */}
                 <div className="space-y-5 md:col-span-7">
                   {/* Torn Lined Paper Title Card */}
                   <div className="relative bg-lined-paper text-[#11140F] p-5 shadow-xl border-l-4 border-red-500 transform -rotate-1 rounded-sm">
                     {/* Washi Tape Strip on Top */}
                     <div className="absolute -top-3 left-10 w-24 h-5 bg-[#E8D9DD]/80 border border-black/10 transform rotate-1 shadow-sm opacity-90" />
-                    
+
                     <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-[#090A08] uppercase leading-none font-display">
                       DEV MISTRY
                     </h2>
@@ -910,7 +925,7 @@ export default function App() {
                   <div className="relative bg-white text-[#11140F] p-3.5 pb-5 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-300 w-full max-w-[280px]">
                     {/* Translucent washi tape at top */}
                     <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-6 bg-[#C8C1B2]/60 backdrop-blur-sm border border-black/10 transform -rotate-1 shadow-sm" />
-                    
+
                     {/* Portrait Photo with Blurred Background Treatment */}
                     <div className="relative mb-3 overflow-hidden border aspect-square bg-stone-900 border-stone-200">
                       {/* Blurred Ambient Backdrop Layer */}
