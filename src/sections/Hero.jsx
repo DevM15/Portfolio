@@ -1,100 +1,287 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useAnimation } from 'framer-motion';
+import SystemNodes from '../components/SystemNodes';
+
+const WORDS = ['BUILDING', 'INTELLIGENT', 'SYSTEMS.'];
 
 export default function Hero() {
-    const [isVisible, setIsVisible] = useState(false);
+  const controls = useAnimation();
+  const [ready, setReady] = useState(false);
+  const [photoLoaded, setPhotoLoaded] = useState(false);
+  const heroRef = useRef(null);
 
-    useEffect(() => {
-        setIsVisible(true);
-    }, []);
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 1200);
+    // Entrance sequence
+    controls.start({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+    });
+    return () => clearTimeout(t);
+  }, [controls]);
 
-    const roles = ['Website Developer', 'UI/UX Designer', 'Creative Coder'];
-    const [currentRole, setCurrentRole] = useState(0);
+  // Repeated text background
+  const repeatedWords = ['WEB', 'CLOUD', 'AI', 'AGENT', 'SYSTEM', 'CODE'];
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentRole((prev) => (prev + 1) % roles.length);
-        }, 3000);
-        return () => clearInterval(interval);
-    }, []);
+  return (
+    <section
+      ref={heroRef}
+      className="relative min-h-screen flex items-center bg-ink overflow-hidden"
+    >
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-ink to-[#030406]" />
 
-    return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-20 relative overflow-hidden">
-            {/* Animated gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/10 to-blue-900/20 pointer-events-none" />
-
-            {/* Floating particles effect */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {[...Array(20)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute w-1 h-1 bg-orange-200/30 rounded-full animate-pulse"
-                        style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                            animationDelay: `${Math.random() * 3}s`,
-                            animationDuration: `${2 + Math.random() * 3}s`
-                        }}
-                    />
-                ))}
-            </div>
-
-            <div className={`max-w-5xl w-full text-center space-y-8 transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}>
-                {/* Greeting badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-orange-200/30 rounded-full text-orange-100 text-sm font-medium animate-bounce">
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    Available for work
-                </div>
-
-                {/* Main heading with gradient text */}
-                <div className="space-y-4">
-                    <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold">
-                        <span className="inline-block animate-pulse">👋</span>
-                        <span className="block mt-2 bg-gradient-to-r from-orange-200 via-orange-100 to-white bg-clip-text text-transparent drop-shadow-lg">
-                            Hi, I'm Dev
-                        </span>
-                    </h1>
-
-                    {/* Animated role text */}
-                    <div className="h-12 flex items-center justify-center">
-                        <p className="text-xl sm:text-2xl lg:text-3xl text-orange-100/90 font-light">
-                            A <span className="font-semibold text-white transition-all duration-500 inline-block transform hover:scale-110">
-                                {roles[currentRole]}
-                            </span>
-                        </p>
-                    </div>
-
-                    <p className="text-base sm:text-lg lg:text-xl text-orange-100/80 max-w-2xl mx-auto leading-relaxed">
-                        from India 🇮🇳
-                    </p>
-                </div>
-
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
-                    <a
-                        href="#Contact"
-                        className="group relative px-8 py-4 bg-gradient-to-r from-orange-400 to-orange-600 text-white text-lg font-semibold rounded-full shadow-2xl hover:shadow-orange-500/50 transform hover:scale-105 transition-all duration-300 overflow-hidden"
-                    >
-                        <span className="relative z-10">Let's Connect</span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-700 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
-                    </a>
-
-                    <a
-                        href="#Projects"
-                        className="px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-orange-200/50 text-orange-100 text-lg font-semibold rounded-full hover:bg-white/20 hover:border-orange-200 transform hover:scale-105 transition-all duration-300 shadow-lg"
-                    >
-                        View My Work
-                    </a>
-                </div>
-
-                {/* Scroll indicator */}
-                <div className="pt-12 animate-bounce">
-                    <div className="w-6 h-10 border-2 border-orange-200/50 rounded-full mx-auto flex justify-center">
-                        <div className="w-1 h-3 bg-orange-200 rounded-full mt-2 animate-pulse" />
-                    </div>
-                    <p className="text-orange-200/70 text-sm mt-2">Scroll to explore</p>
-                </div>
-            </div>
+      {/* Repeated text background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 text-repeat text-[12vw] font-display font-bold opacity-5">
+          WEB
         </div>
-    );
+        <div className="absolute top-40 right-10 text-repeat text-[10vw] font-display font-bold opacity-5 rotate-180">
+          AGENT
+        </div>
+        <div className="absolute bottom-20 left-16 text-repeat text-[14vw] font-display font-bold opacity-5">
+          SYSTEM
+        </div>
+        <div className="absolute top-60 left-1/2 -translate-x-1/2 text-repeat text-[8vw] font-display font-bold opacity-5">
+          CLOUD
+        </div>
+        <div className="absolute bottom-10 right-20 text-repeat text-[9vw] font-display font-bold opacity-5">
+          CODE
+        </div>
+      </div>
+
+      {/* Gradient line travel */}
+      <motion.div
+        className="absolute top-0 left-0 h-px bg-gradient-to-r from-transparent via-electric to-transparent"
+        initial={{ width: '0%', opacity: 0 }}
+        animate={{ width: '100%', opacity: 0.4 }}
+        transition={{ duration: 1.5, delay: 3.5, ease: 'easeInOut' }}
+      />
+
+      {/* Content */}
+      <div className="relative max-w-7xl mx-auto px-6 pt-20 pb-32 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+        <div>
+          {/* Name */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mb-8"
+          >
+            <span className="section-num mb-4 block">DEV MISTRY</span>
+            <div className="flex items-center gap-3 mb-12">
+              <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+              <span className="text-xs font-mono text-success">AVAILABLE FOR WORK</span>
+            </div>
+          </motion.div>
+
+          {/* Headline - word by word */}
+          <motion.h1
+            className="text-display-2xl font-display font-bold text-white leading-[0.9] mb-8"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <motion.span
+              className="block"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.2 }}
+            >
+              BUILDING
+            </motion.span>
+            <motion.span
+              className="block"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.6 }}
+            >
+              INTELLIGENT
+            </motion.span>
+            <motion.span
+              className="block"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 2.0 }}
+            >
+              SYSTEMS.
+            </motion.span>
+          </motion.h1>
+
+          {/* Subhead */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 2.2 }}
+            className="mb-8"
+          >
+            <p className="text-text-muted text-lg mb-6">
+              Software Engineer — Web Development · Cloud · Agentic AI
+            </p>
+            <p className="text-text-muted text-base max-w-md leading-relaxed">
+              I build scalable web applications, cloud infrastructure and autonomous AI systems.
+            </p>
+          </motion.div>
+
+          {/* Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 2.4 }}
+            className="flex items-center gap-8 mb-12"
+          >
+            <a
+              href="#selected-systems"
+              data-cursor="VIEW"
+              className="inline-flex items-center gap-2 text-sm font-mono text-electric hover:text-white transition-colors duration-200 group"
+            >
+              <span className="w-5 h-px bg-electric group-hover:w-10 transition-all duration-300" />
+              VIEW WORK
+            </a>
+            <a
+              href="#agent-lab"
+              data-cursor="AGENT"
+              className="inline-flex items-center gap-2 text-sm font-mono text-electric hover:text-white transition-colors duration-200 group"
+            >
+              <span className="w-5 h-px bg-electric group-hover:w-10 transition-all duration-300" />
+              EXPLORE AGENTS
+            </a>
+          </motion.div>
+
+          {/* Status bar */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 2.6 }}
+            className="mb-8"
+          >
+            <div className="flex items-center gap-8 text-xs font-mono text-text-muted">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
+                <span>SYSTEM ONLINE</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-cyan">03</span>
+                <span>ACTIVE SERVICES</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-violet">99.9</span>
+                <span>UPTIME</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* System nodes */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 2.8 }}
+            className="hidden lg:block"
+          >
+            <SystemNodes />
+          </motion.div>
+        </div>
+
+        {/* Photo area */}
+        <div className="relative flex items-start justify-end">
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 2 }}
+            className="relative"
+          >
+            {/* Technical labels around photo */}
+            <div className="absolute -top-4 -left-8 text-xs font-mono text-text-muted">
+              DEV MISTRY
+            </div>
+            <div className="absolute -top-4 -right-4 text-xs font-mono text-text-muted">
+              SOFTWARE ENGINEER
+            </div>
+            <div className="absolute -bottom-4 -left-4 text-xs font-mono text-text-muted">
+              INDIA
+            </div>
+            <div className="absolute -bottom-4 -right-8 text-xs font-mono text-text-muted">
+              2026
+            </div>
+
+            {/* Photo container */}
+            <div
+              className={`relative w-[320px] h-[480px] lg:w-[380px] lg:h-[560px] rounded-[24px] overflow-hidden border-2 transition-all duration-700 ${
+                photoLoaded
+                  ? 'border-electric/30 opacity-100'
+                  : 'border-transparent opacity-50'
+              }`}
+            >
+              {/* Animated gradient border */}
+              <div className="absolute -inset-0.5 rounded-[25px] z-0 opacity-0 transition-opacity duration-700 peer-hover:opacity-100">
+                <div className="absolute -inset-0.5 rounded-[24px] bg-gradient-to-r from-electric via-violet to-cyan opacity-40 blur" />
+              </div>
+
+              {/* Image placeholder */}
+              <div
+                className="absolute inset-2 rounded-[22px] overflow-hidden bg-ink-surface border border-white/5 flex items-center justify-center transition-all duration-700"
+              >
+                {!photoLoaded && (
+                  <div className="text-center p-8">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full border border-white/10 flex items-center justify-center">
+                      <span className="text-xs font-mono text-text-muted">📷</span>
+                    </div>
+                    <p className="text-xs font-mono text-text-muted">
+                      [ PERSONAL PORTRAIT ]
+                    </p>
+                  </div>
+                )}
+                <img
+                  src="/img/placeholder.svg"
+                  alt="DEV MISTRY"
+                  onLoad={() => setPhotoLoaded(true)}
+                  className={`w-full h-full object-cover transition-opacity duration-700 ${
+                    photoLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{ display: photoLoaded ? 'block' : 'none' }}
+                />
+              </div>
+            </div>
+
+            {/* Coordinate-style metadata */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 3.2 }}
+              className="absolute top-1/2 -right-16 lg:-right-20 transform -translate-y-1/2 writing-mode-vertical text-xs font-mono text-text-muted"
+            >
+              <div className="flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-electric" />
+                <span>COORD: 22.5726° N, 88.3612° E</span>
+              </div>
+            </motion.div>
+
+            {/* Gradient line travels */}
+            <motion.div
+              className="absolute -bottom-40 left-1/2 -translate-x-1/2 w-px h-40 bg-gradient-to-b from-electric to-transparent opacity-40"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: '10rem', opacity: 0.4 }}
+              transition={{ duration: 1.5, delay: 3.5 }}
+            />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Scroll hint */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-text-muted"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 3.5 }}
+      >
+        <span className="text-[10px] font-mono mb-2">SCROLL TO EXPLORE</span>
+        <motion.div
+          className="w-px h-10 bg-gradient-to-b from-electric to-transparent"
+          animate={{ opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+      </motion.div>
+    </section>
+  );
 }

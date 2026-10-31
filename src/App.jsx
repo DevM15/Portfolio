@@ -1,36 +1,70 @@
-import About from "./sections/About"
-import Hero from "./sections/Hero"
-import Navbar from "./components/Navbar"
-import Platform from "./Platform"
-import Skills from "./sections/Skills"
-import Projects from "./sections/Projects"
-import Education from "./sections/Education"
-import Contact from "./sections/Contact"
-import Footer from "./components/Footer"
+import { useState, useEffect, useRef } from 'react';
+import Navbar from './components/Navbar';
+import CustomCursor from './components/CustomCursor';
+import Hero from './sections/Hero';
+import HorizontalProjects from './components/HorizontalProjects';
+import WhatIBuild from './sections/WhatIBuild';
+import AgentLab from './sections/AgentLab';
+import Cloud from './sections/Cloud';
+import Experience from './sections/Experience';
+import Terminal from './sections/Terminal';
+import Skills from './sections/Skills';
+import About from './sections/About';
+import Contact from './sections/Contact';
+import Footer from './components/Footer';
+import './styles/index.css';
 
 export default function App() {
+  const horizontalRef = useRef(null);
+
   return (
     <>
-      <div className="h-screen relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full"><img src="./img/bg.png" alt="" className="object-fit w-full h-full" /></div>
+      {/* Custom cursor */}
+      <CustomCursor />
+
+      {/* Root container with scroll tracking */}
+      <div
+        className="min-h-screen bg-ink overflow-x-hidden"
+      >
         <Navbar />
+
+        {/* Section 01: Hero */}
         <Hero />
-      </div>
-      <div className="bg-[#00314e] h-full w-full text-white">
-        <div className="max-w-2xl lg:max-w-7xl w-full m-auto flex flex-col lg:flex-row gap-10 p-10 md:py-20" id="About">
-          <div className="lg:border-r-2 lg:border-gray-300 lg:pr-10 lg:w-1/2">
-            <About />
-            <Education />
-          </div>
-          <div className="flex flex-col justify-between lg:w-1/2">
-            <Skills />
-            <Platform />
-          </div>
+
+        {/* Section 02: About + Photo */}
+        <About />
+
+        {/* Section 03: What I Build */}
+        <WhatIBuild />
+
+        {/* Section 04: Skills */}
+        <Skills />
+
+        {/* Section 05: Selected Systems (Horizontal) */}
+        <div
+          ref={horizontalRef}
+          className="relative h-screen w-full overflow-hidden bg-ink"
+        >
+          <HorizontalProjects targetRef={horizontalRef} />
         </div>
+
+        {/* Section 06: Agent Lab */}
+        <AgentLab />
+
+        {/* Section 07: Cloud / Infrastructure */}
+        <Cloud />
+
+        {/* Section 08: Experience */}
+        <Experience />
+
+        {/* Section 09: Terminal */}
+        <Terminal />
+
+        {/* Section 10: Contact */}
+        <Contact />
+
+        <Footer />
       </div>
-      <Projects />
-      <Contact />
-      <Footer />
     </>
-  )
+  );
 }

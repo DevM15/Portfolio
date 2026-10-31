@@ -1,47 +1,64 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUser, faBriefcase, faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 export default function Navbar() {
-    const [active, setActive] = useState('home');
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState('');
 
-    const navItems = [
-        { id: 'home', icon: faHome, label: 'Home', href: '#' },
-        { id: 'about', icon: faUser, label: 'About', href: '#About' },
-        { id: 'projects', icon: faBriefcase, label: 'Projects', href: '#Projects' },
-        { id: 'contact', icon: faEnvelope, label: 'Contact', href: '#Contact' }
-    ];
+  const navItems = [
+    { label: 'Work', href: '#selected-systems' },
+    { label: 'Agent Lab', href: '#agent-lab' },
+    { label: 'Cloud', href: '#cloud' },
+    { label: 'About', href: '#about' },
+    { label: 'Contact', href: '#contact' },
+  ];
 
-    return (
-        <div className="w-full flex justify-center fixed bottom-8 left-0 right-0 z-50 px-4">
-            <nav className="backdrop-blur-md bg-white/80 dark:bg-gray-900/80 rounded-full shadow-2xl border border-orange-200/50 dark:border-orange-500/30 px-6 py-3 transition-all duration-300 hover:shadow-orange-200/50 hover:shadow-2xl">
-                <ul className="flex items-center gap-2 md:gap-4">
-                    {navItems.map((item, index) => (
-                        <li key={item.id} className="flex items-center">
-                            <a
-                                href={item.href}
-                                onClick={() => setActive(item.id)}
-                                className={`group flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${active === item.id
-                                        ? 'bg-gradient-to-r from-orange-400 to-orange-600 text-white shadow-lg scale-105'
-                                        : 'text-gray-700 dark:text-gray-300 hover:bg-orange-100 dark:hover:bg-orange-900/30 hover:text-orange-600 dark:hover:text-orange-400'
-                                    }`}
-                            >
-                                <FontAwesomeIcon
-                                    icon={item.icon}
-                                    className={`text-sm md:text-base transition-transform duration-300 ${active === item.id ? 'scale-110' : 'group-hover:scale-110'
-                                        }`}
-                                />
-                                <span className="hidden sm:inline text-sm md:text-base font-medium whitespace-nowrap">
-                                    {item.label}
-                                </span>
-                            </a>
-                            {index < navItems.length - 1 && (
-                                <div className="hidden md:block w-px h-6 bg-gradient-to-b from-transparent via-orange-300 to-transparent mx-2" />
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            </nav>
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${
+        scrolled ? 'py-3 bg-ink/80 backdrop-blur-md border-b border-white/5' : 'py-5 bg-transparent'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <a href="#" className="font-display font-bold text-lg tracking-tight">
+          <span className="text-gradient">DM</span>
+        </a>
+
+        <div className="hidden md:flex items-center gap-8">
+          {navItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              onClick={() => setActive(item.label)}
+              className="text-sm text-text-muted hover:text-text transition-colors duration-200 relative group"
+            >
+              {item.label}
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-electric transition-all duration-300 group-hover:w-full" />
+            </a>
+          ))}
         </div>
-    );
+
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10 border border-success/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+            <span className="text-xs font-mono text-success/90">ONLINE</span>
+          </div>
+          <a
+            href="#contact"
+            className="hidden sm:inline-block text-xs font-mono px-4 py-2 rounded-full border border-white/15 hover:border-electric/50 hover:text-electric transition-colors duration-200"
+          >
+            CONTACT
+          </a>
+        </div>
+      </div>
+    </nav>
+  );
 }

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ---------- Reset ---------- */
 * {
   margin: 0;
   padding: 0;
@@ -10,9 +14,132 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background-color: #00314e;
-  color: white;
+  background-color: #050609;
+  color: #F5F7FA;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ---------- Selection ---------- */
+::selection {
+  background: #3B82F6;
+  color: #F5F7FA;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050609;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a2230;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3540;
+}
+
+/* ---------- Custom cursor ---------- */
+.cursor-circle {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3B82F6;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s ease, height 0.25s ease, background 0.25s ease;
+  mix-blend-mode: difference;
+}
+.cursor-circle.active {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid #3B82F6;
+}
+.cursor-label {
+  position: fixed;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #F5F7FA;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.cursor-circle.active + .cursor-label {
+  opacity: 1;
+}
+
+/* ---------- Horizontal scroll track ---------- */
+.horizontal-track {
+  display: flex;
+  will-change: transform;
+}
+
+/* ---------- Section number ---------- */
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #3B82F6;
+  letter-spacing: 0.1em;
+}
+
+/* ---------- Gradient text ---------- */
+.text-gradient {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #22D3EE 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-aws {
+  background: linear-gradient(135deg, #FF9900 0%, #FF9900 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- Repeated text background ---------- */
+.text-repeat {
+  position: absolute;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.025);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- Glow line ---------- */
+.glow-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #3B82F6, #8B5CF6, #22D3EE, transparent);
+  opacity: 0.6;
+}
+
+/* ---------- Card ---------- */
+.glass-card {
+  background: rgba(11, 14, 19, 0.6);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  backdrop-filter: blur(12px);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
