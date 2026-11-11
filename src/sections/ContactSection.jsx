@@ -88,47 +88,8 @@ export default function ContactSection({ onOpenMessage }) {
         </div>
       </div>
 
-        {/* Right Column: Direct Channels */}
-        <div className="lg:col-span-5 space-y-4 font-mono text-xs">
-          <div className="p-6 bg-[#111513] border border-[#2A302C] rounded-[2px] space-y-4 shadow-lg">
-            <span className="text-[9px] tracking-[0.25em] text-[#626A65] uppercase block mb-2">
-              DIRECT CHANNELS
-            </span>
-            <a
-              href="mailto:devmistry1510@gmail.com"
-              className="flex items-center justify-between py-2 border-b border-[#2A302C] text-[#F1EFE8] hover:text-[#65E6D2] transition-colors"
-            >
-              <span>EMAIL</span>
-              <span className="text-[#9EA49F]">DEVMISTRY1510@GMAIL.COM ↗</span>
-            </a>
-            <a
-              href="https://github.com/DevM15"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between py-2 border-b border-[#2A302C] text-[#F1EFE8] hover:text-[#65E6D2] transition-colors"
-            >
-              <span>GITHUB</span>
-              <span className="text-[#9EA49F]">/DEVM15 ↗</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/dev-mistry-828586298/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between py-2 border-b border-[#2A302C] text-[#F1EFE8] hover:text-[#65E6D2] transition-colors"
-            >
-              <span>LINKEDIN</span>
-              <span className="text-[#9EA49F]">/DEV-MISTRY ↗</span>
-            </a>
-          </div>
-
-          <div className="p-4 bg-[#171B19] border border-[#2A302C] rounded-[2px] text-[10px] text-[#9EA49F] tracking-wider uppercase">
-            RESPONSE TIMEFRAME: WITHIN 24 HOURS • WORLDWIDE
-          </div>
-        </div>
-      </div>
-
       {/* Bottom Technical Note */}
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-[#626A65] uppercase border-t border-[#2A302C] pt-4">
+      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[#788477] uppercase border-t border-[#DED9CE] pt-4">
         <span>08 / 08 FINAL EXHIBITION SCENE</span>
         <span>DEV MISTRY © 2026</span>
       </div>

@@ -86,37 +86,9 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
           ))}
         </div>
       </div>
-              <div className="relative aspect-[16/10] bg-[#0B0D0C] border border-[#2A302C] overflow-hidden rounded-[2px]">
-                <img
-                  src={p.image}
-                  alt={p.title}
-                  className="w-full h-full object-cover grayscale contrast-110 group-hover:scale-105 group-hover:grayscale-0 transition-all duration-700 ease-out"
-                />
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#0B0D0C]/60 backdrop-blur-[2px]">
-                  <span className="font-mono font-bold text-xs tracking-widest uppercase bg-[#65E6D2] text-[#0B0D0C] px-4 py-2 border border-[#65E6D2] shadow-lg">
-                    {p.badge}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-4 flex items-baseline gap-3">
-                <span className="font-mono text-xs text-[#65E6D2]">{p.num}</span>
-                <h4 className="font-display font-bold text-base md:text-lg text-[#F1EFE8] tracking-tight group-hover:text-[#65E6D2] uppercase transition-colors">
-                  {p.title}
-                </h4>
-              </div>
-
-              <div className="mt-2 flex items-center justify-between font-mono text-[10px] text-[#9EA49F] uppercase border-t border-[#2A302C]/60 pt-2">
-                <span>{p.type}</span>
-                <span className="text-[#626A65]">{p.year}</span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
 
       {/* Bottom Technical Note */}
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-[#626A65] uppercase border-t border-[#2A302C] pt-4 flex-shrink-0">
+      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[#788477] uppercase border-t border-[#DED9CE] pt-4 flex-shrink-0">
         <span>04 / 08 ARCHITECTURAL SYSTEMS</span>
         <span>NEXT: TECHNICAL SKILLS →</span>
       </div>

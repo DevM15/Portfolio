@@ -82,49 +82,9 @@ export default function InternshipSection({ onBack }) {
           </motion.div>
         ))}
       </div>
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: idx * 0.12 }}
-            className="group relative bg-[#111513] border border-[#2A302C] p-8 rounded-[2px] shadow-xl hover:border-[#65E6D2]/40 transition-colors"
-          >
-            {/* Top Micro Label */}
-            <div className="flex items-center justify-between font-mono text-[9px] tracking-[0.2em] text-[#626A65] uppercase pb-4 border-b border-[#2A302C] mb-6">
-              <span className="text-[#65E6D2]">{intern.badge}</span>
-              <span>{intern.period}</span>
-            </div>
-
-            {/* Company Name in Large Typography */}
-            <h3 className="text-3xl sm:text-4xl font-display font-black text-[#F1EFE8] uppercase tracking-tight leading-none mb-2 group-hover:text-[#65E6D2] transition-colors">
-              {intern.company}
-            </h3>
-
-            {/* Role & Location */}
-            <p className="font-mono text-[11px] text-[#9EA49F] tracking-wider uppercase mb-5">
-              {intern.role} • {intern.location}
-            </p>
-
-            {/* 1-2 Line Crisp Description */}
-            <p className="font-sans text-xs sm:text-sm text-[#9EA49F] leading-relaxed font-light mb-6">
-              {intern.description}
-            </p>
-
-            {/* Technology Tags */}
-            <div className="flex flex-wrap gap-2 pt-4 border-t border-[#2A302C]">
-              {intern.technologies.map((t) => (
-                <span
-                  key={t}
-                  className="font-mono text-[9px] px-2.5 py-1 bg-[#171B19] border border-[#2A302C] text-[#9EA49F] uppercase rounded-[2px]"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
-      </div>
 
       {/* Bottom Technical Note */}
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-[#626A65] uppercase border-t border-[#2A302C] pt-4">
+      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[#788477] uppercase border-t border-[#DED9CE] pt-4">
         <span>03 / 08 INDUSTRY ARCHIVE</span>
         <span>NEXT: FEATURED PROJECTS →</span>
       </div>

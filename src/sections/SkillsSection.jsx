@@ -81,17 +81,9 @@ export default function SkillsSection({ onBack }) {
           </motion.div>
         ))}
       </div>
-                  <span>{skill}</span>
-                  <span className="text-[9px] text-[#65E6D2]">●</span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        ))}
-      </div>
 
       {/* Bottom Technical Note */}
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-[#626A65] uppercase border-t border-[#2A302C] pt-4">
+      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[#788477] uppercase border-t border-[#DED9CE] pt-4">
         <span>05 / 08 TECHNICAL SPECIFICATIONS</span>
         <span>NEXT: JOURNEY TIMELINE →</span>
       </div>
