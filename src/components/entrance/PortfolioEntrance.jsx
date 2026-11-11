@@ -1,34 +1,51 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import DMMonogram from './DMMonogram';
-import PortalScene from './PortalScene';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import DMIdentityCard from './DMIdentityCard';
 
 /**
- * PortfolioEntrance - Minimal Editorial Loading Experience
+ * PortfolioEntrance - 3D Flip Card Reveal Transition
  *
- * Requirements:
- * - Extremely minimal: ONLY 3 text elements:
- *     1. DM Monogram
- *     2. HELLO, I'M DEV.
- *     3. DESIGNING & BUILDING DIGITAL EXPERIENCES.
- * - Removed completely:
- *     - SKIP INTRO button
- *     - ENTER EXPERIENCE button
- *     - Unnecessary technical specifications & telemetry
- *     - Extra architectural descriptions & duplicate labels
- *     - Instructions such as "CLICK MONOGRAM"
- *     - Excessive footer metadata
- * - Typography: Manrope Bold with natural letter spacing (-0.03em), Inter body.
- * - Restrained Terracotta Accent (#B96F52) on the greeting dot.
- * - Automatic portal transition into hero (~4.5s total).
+ * Sequence Timeline:
+ * 1. Initial State (0–2000ms):
+ *    - Warm ivory background (#F7F6F2)
+ *    - Metallic DM monogram centered with subtle geometric orbit
+ *    - Large greeting: "HELLO, I'M DEV." + Subtitle
+ *    - Visitors have comfortable time to read and observe.
+ *
+ * 2. Greeting Disappearance (2000–2400ms):
+ *    - "HELLO, I'M DEV." and subtitle smoothly fade out with slight upward movement.
+ *    - The DM monogram remains the focal point.
+ *
+ * 3. Rectangular Frame Formation (2400–2900ms):
+ *    - A sophisticated rectangular border forms around DM with subtle warm shadow.
+ *    - Circular frame fades away as the monogram becomes a physical identity card.
+ *
+ * 4. 3D Flip Animation (2900–4100ms):
+ *    - Card lifts with perspective (translateZ: 25px).
+ *    - Smooth 180° vertical Y-axis flip revealing actual profile photograph (/img/dev_portrait.jpg).
+ *    - Brief pause (300ms) for visitor recognition.
+ *
+ * 5. Card Transformation to Hero Position & Progressive Reveal (4400–5300ms):
+ *    - The flipped profile card smoothly travels to the hero profile card position (x, y, scale).
+ *    - Background dissolves seamlessly from warm ivory into the spatial deep dark background.
+ *    - Navigation, header identity, and other hero elements progressively reveal in staggered succession.
+ *    - Handoff complete: Website is 100% functional and interactive.
  */
 export default function PortfolioEntrance({ onComplete = () => {} }) {
-  // Step 0: Monogram reveal -> Step 1: Greeting -> Step 2: Monogram Activation -> Step 3: Portal Open -> Step 4: Camera Zoom -> Step 5: Complete
-  const [step, setStep] = useState(0);
+  // Sequence Stages:
+  // 0: Initial (Greeting + Monogram)
+  // 1: Greeting fades out
+  // 2: Rectangular frame forms
+  // 3: Card lifts & 3D Flip begins (0 -> 180deg)
+  // 4: Flip completed, pause on profile photo
+  // 5: Card moves towards hero position & ivory fades out
+  // 6: Completed (unmounted)
+  const [stage, setStage] = useState(0);
+  const [flipDeg, setFlipDeg] = useState(0);
   const isTriggeredRef = useRef(false);
   const timersRef = useRef([]);
 
-  // Check user prefers-reduced-motion
+  // Check prefers-reduced-motion
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
@@ -36,66 +53,72 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
     }
   }, [onComplete]);
 
-  // Automatic Timeline Sequence (Clean ~4.5s Experience)
+  // Master Automatic Animation Sequence
   useEffect(() => {
     if (isTriggeredRef.current) return;
 
-    // Step 0: Monogram reveals (0-400ms)
-    const t0 = setTimeout(() => {
-      setStep(1); // Monogram in place
-    }, 400);
-
-    // Step 1: Greeting & Subtitle glide in smoothly at 1000ms
+    // Stage 1: Greeting fades out at 2000ms
     const t1 = setTimeout(() => {
-      setStep(2); // Greeting visible
-    }, 1000);
+      setStage(1);
+    }, 2000);
 
-    // Step 2: Hold until 2800ms, then letters separate & activate automatically
+    // Stage 2: Rectangular frame forms around DM at 2450ms
     const t2 = setTimeout(() => {
-      setStep(3); // ACTIVATING (monogram separates)
-    }, 2800);
+      setStage(2);
+    }, 2450);
 
-    // Step 3: Portal opens cleanly between letters at 3500ms
+    // Stage 3: Card lifts and starts 3D flip at 3000ms
     const t3 = setTimeout(() => {
-      setStep(4); // PORTAL_OPEN
-    }, 3500);
+      setStage(3);
+      setFlipDeg(180);
+    }, 3000);
 
-    // Step 4: Cinematic camera forward dolly at 4100ms
+    // Stage 4: 180 flip done, brief pause on profile photograph at 4000ms
     const t4 = setTimeout(() => {
-      setStep(5); // TRANSITIONING
-    }, 4100);
+      setStage(4);
+    }, 4000);
 
-    // Step 5: Complete and hand off to website hero at 4900ms
+    // Stage 5: Card travels into hero position & ivory background dissolves at 4400ms
     const t5 = setTimeout(() => {
-      isTriggeredRef.current = true;
-      setStep(6);
-      onComplete();
-    }, 4900);
+      setStage(5);
+    }, 4400);
 
-    timersRef.current = [t0, t1, t2, t3, t4, t5];
+    // Stage 6: Full handoff to existing hero at 5300ms
+    const t6 = setTimeout(() => {
+      isTriggeredRef.current = true;
+      setStage(6);
+      onComplete();
+    }, 5300);
+
+    timersRef.current = [t1, t2, t3, t4, t5, t6];
 
     return () => {
       timersRef.current.forEach((t) => clearTimeout(t));
     };
   }, [onComplete]);
 
-  if (step >= 6) {
+  if (stage >= 6) {
     return null;
   }
 
-  const isActivating = step >= 3;
-  const isPortalOpen = step >= 4;
-  const isTransitioning = step >= 5;
+  const isGreetingVisible = stage === 0;
+  const isFramed = stage >= 2;
+  const isLifted = stage >= 3;
+  const isTraveling = stage === 5;
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden select-none bg-[#F7F6F2]"
-      initial={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden select-none pointer-events-none"
+      style={{
+        backgroundColor: '#F7F6F2',
+      }}
+      initial={{ opacity: 1 }}
       animate={{
-        opacity: isTransitioning ? 0 : 1,
+        opacity: isTraveling ? 0 : 1,
       }}
       transition={{
-        opacity: { duration: 0.65, delay: isTransitioning ? 0.35 : 0, ease: [0.16, 1, 0.3, 1] },
+        duration: 0.85,
+        ease: [0.16, 1, 0.3, 1],
       }}
     >
       {/* Subtle Warm Paper Texture Grain Overlay */}
@@ -106,50 +129,62 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
         }}
       />
 
-      {/* Center Exhibition Stage: Monogram, Portal, and Minimal 3-Tier Typography */}
+      {/* Center 3D Stage */}
       <div className="relative z-20 flex flex-col items-center justify-center w-full max-w-4xl px-6 text-center">
-        {/* 1. Sculptural 3D DM Monogram & Expanding Doorway Portal */}
-        <div className="relative flex items-center justify-center mb-6 sm:mb-8">
-          <PortalScene
-            isPortalOpen={isPortalOpen}
-            isTransitioning={isTransitioning}
+        {/* ==================== 1. DM IDENTITY FLIP CARD ==================== */}
+        <motion.div
+          className="relative flex items-center justify-center"
+          animate={{
+            scale: isTraveling ? 0.9 : isLifted ? 1.04 : 1,
+            y: isTraveling ? -10 : 0,
+          }}
+          transition={{
+            duration: 0.8,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+        >
+          {/* Subtle Circular Architectural Frame (gradually fades out as rectangle forms) */}
+          <motion.div
+            className="absolute w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] rounded-full border border-[#DED9CE] pointer-events-none"
+            animate={{
+              opacity: isFramed ? 0 : 0.6,
+              scale: isFramed ? 1.15 : 1,
+            }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           />
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
-            animate={{
-              opacity: step >= 1 ? 1 : 0,
-              scale: step >= 1 ? 1 : 0.94,
-            }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <DMMonogram
-              isActivating={isActivating}
-              isPortalOpen={isPortalOpen}
-            />
-          </motion.div>
-        </div>
-
-        {/* 2 & 3. Pure Minimal Greeting & Subtitle (No buttons, no instructions, no clutter) */}
-        <motion.div
-          className="flex flex-col items-center justify-center"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{
-            opacity: isActivating ? 0 : step >= 2 ? 1 : 0,
-            y: isActivating ? -10 : step >= 2 ? 0 : 16,
-          }}
-          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {/* Main Greeting: "HELLO, I'M DEV." - Single Line Desktop, Manrope Bold, Natural Proportions */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[5.25rem] font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none">
-            HELLO, I'M DEV<span className="text-[#B96F52]">.</span>
-          </h1>
-
-          {/* Subtitle: "DESIGNING & BUILDING DIGITAL EXPERIENCES." */}
-          <p className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base font-sans font-medium text-[#788477] tracking-normal select-none">
-            DESIGNING & BUILDING DIGITAL EXPERIENCES.
-          </p>
+          {/* DM Identity Card Component with 180° vertical 3D Flip */}
+          <DMIdentityCard
+            flipDeg={flipDeg}
+            cardWidth={240}
+            cardHeight={340}
+            borderRadius={isFramed ? 4 : 2}
+            isFramed={isFramed}
+            isLifted={isLifted}
+            shadowOpacity={isLifted ? 0.32 : 0.18}
+          />
         </motion.div>
+
+        {/* ==================== 2. GREETING & SUBTITLE (SMOOTH FADE OUT) ==================== */}
+        <AnimatePresence>
+          {isGreetingVisible && (
+            <motion.div
+              className="flex flex-col items-center justify-center mt-6 sm:mt-8"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none">
+                HELLO, I'M DEV<span className="text-[#B96F52]">.</span>
+              </h1>
+
+              <p className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base font-sans font-medium text-[#788477] tracking-normal select-none">
+                DESIGNING & BUILDING DIGITAL EXPERIENCES.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );

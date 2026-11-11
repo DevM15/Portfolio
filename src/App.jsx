@@ -219,7 +219,12 @@ export default function App() {
       </AnimatePresence>
 
       {/* ==================== GLOBAL FIXED HEADER (HUD FLOATING TRANSPARENT) ==================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#F7F6F2] pointer-events-none bg-transparent">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: showIntro ? 0 : 1, y: showIntro ? -20 : 0 }}
+        transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#F7F6F2] pointer-events-none bg-transparent"
+      >
         <div className="flex items-center gap-6 pointer-events-auto md:gap-12">
           <div className="flex items-baseline gap-2">
             <span className="font-mono text-xs tracking-wider text-[#788477]">NAME /</span>
@@ -266,7 +271,7 @@ export default function App() {
             );
           })}
         </nav>
-      </header>
+      </motion.header>
 
       {/* ==================== HORIZONTAL EXHIBITION STAGE ==================== */}
       <main className="relative w-full h-[calc(100vh-160px)] mt-20 mb-[80px] z-10 overflow-hidden flex items-center justify-center">
@@ -404,7 +409,12 @@ export default function App() {
       </main>
 
       {/* ==================== GLOBAL FIXED FOOTER (FLOATING MINIMAL HUD) ==================== */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-wider uppercase text-[#788477] pointer-events-none bg-transparent">
+      <motion.footer
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: showIntro ? 0 : 1, y: showIntro ? 20 : 0 }}
+        transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-wider uppercase text-[#788477] pointer-events-none bg-transparent"
+      >
         <div className="flex items-center gap-3 pointer-events-auto">
           <span className="text-[#F7F6F2] font-semibold text-xs sm:text-sm tracking-wider font-mono">
             PORTFOLIO <span className="text-[#B96F52]">/</span> 2026
@@ -422,7 +432,7 @@ export default function App() {
             </span>
           </button>
         </div>
-      </footer>
+      </motion.footer>
 
       {/* ==================== CONTACT MODAL DIALOG ==================== */}
       <AnimatePresence>
