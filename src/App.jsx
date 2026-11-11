@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomCursor from './components/CustomCursor';
 import SpatialCanvasBackground from './components/SpatialCanvasBackground';
+import BookIntro from './components/BookIntro';
 import HomeSection from './sections/HomeSection';
 import AboutSection from './sections/AboutSection';
 import InternshipSection from './sections/InternshipSection';
@@ -146,44 +147,11 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState('ALL WORK');
   const [openInfo, setOpenInfo] = useState(false);
 
-  // DM Opening Intro Animation (runs only once on page load)
+  // Cinematic 3D Book Landing Intro Animation
   const [showIntro, setShowIntro] = useState(true);
-  const [introStep, setIntroStep] = useState(0); // 0: plain, 1: DM appears, 2: diagonal separate, 3: reveal portfolio
 
-  // Check prefers-reduced-motion
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      setShowIntro(false);
-      return;
-    }
-
-    // Step 0 -> Step 1 at 800ms: Centered DM appears with graceful fade-in
-    const timer1 = setTimeout(() => {
-      setIntroStep(1);
-    }, 800);
-
-    // Step 1 -> Step 2 at 1800ms: Slicing - Letters separate diagonally with expanding line
-    const timer2 = setTimeout(() => {
-      setIntroStep(2);
-    }, 1800);
-
-    // Step 2 -> Step 3 at 2700ms: Columns lift upward in patterned staggered waves
-    const timer3 = setTimeout(() => {
-      setIntroStep(3);
-    }, 2700);
-
-    // Complete intro at 3900ms after columns exit
-    const timer4 = setTimeout(() => {
-      setShowIntro(false);
-    }, 3900);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(timer4);
-    };
+  const handleBookComplete = useCallback(() => {
+    setShowIntro(false);
   }, []);
 
   const navigateToView = (viewId) => {
@@ -281,91 +249,10 @@ export default function App() {
 
       <CustomCursor />
 
-      {/* ==================== ONE-TIME DM OPENING INTRO ANIMATION ==================== */}
+      {/* ==================== CINEMATIC 3D BOOK LANDING INTRO ==================== */}
       <AnimatePresence>
         {showIntro && (
-          <div className="fixed inset-0 z-[100] pointer-events-none flex">
-            {/* 6 Vertical Shutter Columns that lift upward with staggered delay pattern */}
-            {[0, 1, 2, 3, 4, 5].map((colIndex) => {
-              // Create an outward symmetrical pattern: inner columns lift first, outer follow (or progressive wave)
-              const delays = [0.18, 0.08, 0, 0.04, 0.12, 0.22];
-              return (
-                <motion.div
-                  key={colIndex}
-                  initial={{ y: 0 }}
-                  animate={{
-                    y: introStep >= 3 ? '-100%' : 0,
-                  }}
-                  transition={{
-                    duration: 0.85,
-                    delay: delays[colIndex],
-                    ease: [0.76, 0, 0.24, 1],
-                  }}
-                  className="relative h-full flex-1 bg-[#080B0A] border-r border-[#2A302C]/10 last:border-r-0"
-                >
-                  <div className="absolute inset-0 pointer-events-none bg-subtle-grain opacity-60" />
-                </motion.div>
-              );
-            })}
-
-            {/* Floating Centered Monogram & Slit on top of the columns */}
-            <motion.div
-              initial={{ opacity: 1 }}
-              animate={{
-                opacity: introStep >= 3 ? 0 : 1,
-                y: introStep >= 3 ? -90 : 0,
-              }}
-              transition={{
-                duration: 0.65,
-                ease: [0.76, 0, 0.24, 1],
-              }}
-              className="absolute inset-0 flex items-center justify-center pointer-events-auto"
-            >
-              <div className="relative flex items-center justify-center select-none">
-                {/* Expanding diagonal slit line */}
-                {introStep >= 2 && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 560, opacity: 1 }}
-                    transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute w-[3px] bg-gradient-to-b from-transparent via-[#65E6D2] to-transparent rotate-[32deg] z-10 pointer-events-none"
-                  />
-                )}
-
-                {/* Centered DM Monogram - Grand Scale */}
-                <div className="flex items-center text-8xl sm:text-[14rem] md:text-[18rem] lg:text-[22rem] font-display font-black tracking-tighter text-[#F1EFE8] leading-none select-none">
-                  {/* D Letter - separates up-left */}
-                  <motion.span
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{
-                      opacity: introStep >= 1 ? 1 : 0,
-                      y: introStep >= 2 ? -48 : 0,
-                      x: introStep >= 2 ? -15 : 0,
-                    }}
-                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                    className="inline-block"
-                  >
-                    D
-                  </motion.span>
-
-                  {/* M Letter - separates down-right */}
-                  <motion.span
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{
-                      opacity: introStep >= 1 ? 1 : 0,
-                      y: introStep >= 2 ? 48 : 0,
-                      x: introStep >= 2 ? 82 : 0,
-                      color: introStep >= 2 ? '#65E6D2' : '#F1EFE8',
-                    }}
-                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                    className="inline-block"
-                  >
-                    M
-                  </motion.span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          <BookIntro onComplete={handleBookComplete} />
         )}
       </AnimatePresence>
 
@@ -403,11 +290,10 @@ export default function App() {
               <button
                 key={sec.id}
                 onClick={() => navigateToView(sec.id)}
-                className={`flip-nav-link text-sm sm:text-base md:text-lg font-bold tracking-tight transition-all duration-200 cursor-pointer ${
-                  isActive && !contactOpen
+                className={`flip-nav-link text-sm sm:text-base md:text-lg font-bold tracking-tight transition-all duration-200 cursor-pointer ${isActive && !contactOpen
                     ? 'active text-[#65E6D2] font-black'
                     : 'text-[#9EA49F] hover:text-[#F1EFE8]'
-                }`}
+                  }`}
               >
                 <span className="flip-nav-inner">
                   <span className="flip-nav-front">{sec.label}</span>
