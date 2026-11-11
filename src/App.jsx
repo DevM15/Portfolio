@@ -257,11 +257,10 @@ export default function App() {
               <button
                 key={sec.id}
                 onClick={() => navigateToView(sec.id)}
-                className={`flip-nav-link text-sm sm:text-base font-medium tracking-normal transition-all duration-200 cursor-pointer ${
-                  isActive && !contactOpen
+                className={`flip-nav-link text-sm sm:text-base font-medium tracking-normal transition-all duration-200 cursor-pointer ${isActive && !contactOpen
                     ? 'active text-[#B96F52] font-bold'
                     : 'text-[#788477] hover:text-[#F7F6F2]'
-                }`}
+                  }`}
               >
                 <span className="flip-nav-inner">
                   <span className="flip-nav-front">{sec.label}</span>
