@@ -1,652 +1,454 @@
-import { useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DMIdentityCard from '../components/entrance/DMIdentityCard';
 
 /**
- * 12 Curated Exhibition Objects arranged in a continuous, infinite 3D cylinder:
- *
- * Geometry & Convex Curve:
- * - Camera is fixed at center (0, 0, 0)
- * - Curve bends TOWARD the camera:
- *   angle = diffAngle (in radians)
- *   x = radiusX * sin(angle)
- *   z = cos(angle) * depthAmp - depthOffset (center has +150px, edges recede to -500px)
- *   rotateY = -angle (in degrees)
- * - High-performance direct DOM matrix interpolation (no setState per frame)
- * - Velocity + friction + lerp momentum physics
- * - Smooth liquid hover displacement (target lerp)
+ * Curated Exhibition Projects:
+ * Replaces the 12 floating cards with an art-directed editorial curation.
+ * Features 2 primary prominent exhibition pieces (Left & Right),
+ * 2 subtle ambient pieces in the backdrop,
+ * and quick-switch tabs to explore all 6 key disciplines.
  */
-const EXHIBITION_ITEMS = [
+const CURATED_PROJECTS = [
   {
-    id: 'about',
-    sectionId: 'about',
-    num: '01',
-    label: '01 / PROFILE',
-    btnText: 'ABOUT DEV →',
-    btnPosition: 'bottom-right',
-    image: '/img/dev_portrait.jpg',
-    isProfile: true,
-  },
-  {
-    id: 'internship',
-    sectionId: 'internship',
-    num: '02',
-    label: '02 / EXPERIENCE',
-    btnText: 'WORK →',
-    btnPosition: 'top-left',
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'skills',
-    sectionId: 'skills',
-    num: '03',
-    label: '03 / ARCHITECTURE',
-    btnText: 'STACK →',
-    btnPosition: 'middle-right',
+    id: '01',
+    num: '01 / SYSTEM',
+    title: 'Arcade System Platform',
+    role: 'Lead Architect',
+    type: 'Interactive Canvas Runtime & State Fabric',
+    year: '2026',
+    category: 'WEB ARCHITECTURE',
+    tech: ['REACT', 'CANVAS API', 'WEB WORKERS'],
     image: './img/project1.png',
+    sectionId: 'projects',
+    accent: '#B96F52',
+    position: 'left', // Primary Left Anchor
   },
   {
-    id: 'journey',
-    sectionId: 'journey',
-    num: '04',
-    label: '04 / TIMELINE',
-    btnText: '2022 → 2026',
-    btnPosition: 'bottom-left',
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+    id: '02',
+    num: '02 / AGENTIC',
+    title: 'Autonomous Swarm Fabric',
+    role: 'Systems Engineer',
+    type: 'Distributed Reasoning & MCP Protocol Network',
+    year: '2026',
+    category: 'AGENTIC AI',
+    tech: ['LANGGRAPH', 'FASTAPI', 'MCP CLIENT'],
+    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
+    sectionId: 'skills',
+    accent: '#788477',
+    position: 'right', // Primary Right Anchor
   },
   {
-    id: 'github',
-    sectionId: 'github',
-    num: '05',
-    label: '05 / CODE',
-    btnText: 'GITHUB ↗',
-    btnPosition: 'top-right',
+    id: '03',
+    num: '03 / CLOUD',
+    title: 'Multi-Region Mesh Cluster',
+    role: 'Cloud Architect',
+    type: 'Terraform IaC & AWS ECS Fargate Mesh',
+    year: '2025',
+    category: 'CLOUD / AWS',
+    tech: ['AWS ECS', 'TERRAFORM', 'DOCKER'],
+    image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=80',
+    sectionId: 'skills',
+    accent: '#B96F52',
+    position: 'bg-left', // Ambient background left
+  },
+  {
+    id: '04',
+    num: '04 / RUNTIME',
+    title: 'PDF Decoder Binary Engine',
+    role: 'Core Developer',
+    type: 'Client-Side Binary Extraction & Parsing',
+    year: '2026',
+    category: 'SYSTEM TOOLS',
+    tech: ['JAVASCRIPT', 'WEBASSEMBLY', 'BUFFERS'],
     image: './img/project2.png',
-  },
-  {
-    id: 'projects',
-    sectionId: 'projects',
-    num: '06',
-    label: '06 / WORK',
-    btnText: 'PROJECTS →',
-    btnPosition: 'middle-left',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'web',
-    sectionId: 'projects',
-    num: '07',
-    label: '07 / WEB',
-    btnText: 'RUNTIME →',
-    btnPosition: 'bottom-right',
-    image: './img/project3.png',
-  },
-  {
-    id: 'cloud',
-    sectionId: 'skills',
-    num: '08',
-    label: '08 / CLOUD',
-    btnText: 'AWS / ECS →',
-    btnPosition: 'top-left',
-    image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'ai',
-    sectionId: 'skills',
-    num: '09',
-    label: '09 / AGENTIC',
-    btnText: 'LANGGRAPH ↗',
-    btnPosition: 'middle-right',
-    image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'lab',
-    sectionId: 'github',
-    num: '10',
-    label: '10 / EXPERIMENTS',
-    btnText: 'LAB →',
-    btnPosition: 'bottom-left',
-    image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'systems',
-    sectionId: 'skills',
-    num: '11',
-    label: '11 / SYSTEMS',
-    btnText: 'DIAGRAM →',
-    btnPosition: 'top-right',
-    image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'archive',
     sectionId: 'journey',
-    num: '12',
-    label: '12 / ARCHIVE',
-    btnText: 'SPEC →',
-    btnPosition: 'middle-left',
-    image: './img/navjeevan.png',
+    accent: '#788477',
+    position: 'bg-right', // Ambient background right
   },
 ];
 
 export default function HomeSection({
   onOpenSection,
+  onNavigateToProjects,
   transitionPhase = 'COMPLETED',
   phaseIndex = 10,
-  timelineStart = null,
 }) {
+  const [selectedExhibitionIndex, setSelectedExhibitionIndex] = useState(0);
   const containerRef = useRef(null);
-  const cardElementsRef = useRef([]);
-  const cardImgRefs = useRef([]);
-  const reticleRef = useRef(null);
 
-  const transitionPropsRef = useRef({ transitionPhase, phaseIndex, timelineStart });
-  useEffect(() => {
-    transitionPropsRef.current = { transitionPhase, phaseIndex, timelineStart };
-  }, [transitionPhase, phaseIndex, timelineStart]);
+  // Discrete Phase Indicators matching useTransitionTimeline
+  const isGreetingPhase = phaseIndex < 1;       // INTRO
+  const isGreetingExit = phaseIndex >= 1;       // GREETING_EXIT
+  const isCardFormed = phaseIndex >= 2;         // CARD_FORMATION
+  const isCardFlipped = phaseIndex >= 3;        // CARD_FLIP (180deg flip)
+  const isBgTransformed = phaseIndex >= 4;      // BACKGROUND_TRANSFORM
+  const isProfileTrans = phaseIndex >= 6;       // PROFILE_TRANSITION
+  const isHeroRevealed = phaseIndex >= 7;       // HERO_REVEAL (Intro text glides in)
+  const isProjectsRevealed = phaseIndex >= 8;   // PROJECT_REVEAL (Editorial projects reveal)
+  const isFullySettled = phaseIndex >= 9;       // DECORATION_SETTLEMENT & COMPLETED
 
-  // Physics animation variables in refs (eliminates 60fps React re-renders)
-  const physicsRef = useRef({
-    currentRotation: 0,
-    targetRotation: 0,
-    velocity: 0,
-    friction: 0.915,
-    smoothing: 0.085,
-    wheelSensitivity: 0.012,
-    isDragging: false,
-    dragStartX: 0,
-    dragStartRotation: 0,
-    touchStartX: 0,
-    lastTouchX: 0,
-    hoveredIndex: -1,
-    targetPointerX: 0,
-    targetPointerY: 0,
-    currentPointerX: 0,
-    currentPointerY: 0,
-    cameraReticleX: 0,
-    cameraReticleY: 0,
-    targetReticleX: 0,
-    targetReticleY: 0,
-    reticleOpacity: phaseIndex >= 7 ? 0.3 : 0,
-    reticleScale: phaseIndex >= 7 ? 1 : 0.4,
-    cardStates: EXHIBITION_ITEMS.map(() => ({
-      x: 0,
-      y: 0,
-      z: -600,
-      rotY: 0,
-      rotX: 0,
-      scale: 0.7,
-      opacity: 0,
-      brightness: 0.6,
-      imgScale: 1,
-    })),
-  });
-
-  const totalCards = EXHIBITION_ITEMS.length;
-  const stepAngle = 360 / totalCards; // 30° per card
-
-  // Main 60fps RequestAnimationFrame Render Loop
-  useEffect(() => {
-    let animId;
-    const p = physicsRef.current;
-
-    // Linear interpolation helper
-    const lerp = (start, end, factor) => start + (end - start) * factor;
-
-    const tick = () => {
-      // 1. Velocity + Momentum Physics
-      if (!p.isDragging) {
-        p.velocity *= p.friction;
-        p.targetRotation += p.velocity;
-      }
-
-      // Smooth rotation interpolation
-      p.currentRotation = lerp(p.currentRotation, p.targetRotation, p.smoothing);
-
-      // Smooth pointer & camera reticle interpolation
-      p.currentPointerX = lerp(p.currentPointerX, p.targetPointerX, 0.08);
-      p.currentPointerY = lerp(p.currentPointerY, p.targetPointerY, 0.08);
-      p.cameraReticleX = lerp(p.cameraReticleX, p.targetReticleX, 0.08);
-      p.cameraReticleY = lerp(p.cameraReticleY, p.targetReticleY, 0.08);
-
-      const { phaseIndex: currPhase, timelineStart } = transitionPropsRef.current;
-      const tStart = timelineStart || performance.now();
-      const elapsed = performance.now() - tStart;
-      const currUnfold = Math.min(Math.max(0, (elapsed - 5600) / 700), 1);
-
-      // Update camera reticle DOM transform (animates scale & opacity at HERO_REVEAL)
-      if (reticleRef.current) {
-        const isReticleRevealed = currPhase >= 7;
-        const targetReticleOpacity = isReticleRevealed ? 0.3 : 0;
-        const targetReticleScale = isReticleRevealed ? 1 : 0.4;
-        p.reticleOpacity = lerp(p.reticleOpacity || 0, targetReticleOpacity, 0.08);
-        p.reticleScale = lerp(p.reticleScale || 0.4, targetReticleScale, 0.08);
-
-        reticleRef.current.style.transform = `translate3d(${p.cameraReticleX.toFixed(1)}px, ${p.cameraReticleY.toFixed(1)}px, 0) scale(${p.reticleScale.toFixed(3)})`;
-        reticleRef.current.style.opacity = p.reticleOpacity.toFixed(3);
-      }
-
-      // 2. Calculate Every Card's 3D Cylindrical Geometry
-      for (let i = 0; i < totalCards; i++) {
-        const el = cardElementsRef.current[i];
-        if (!el) continue;
-
-        const cardTheta = i * stepAngle;
-        let diffAngle = (cardTheta + p.currentRotation) % 360;
-        if (diffAngle > 180) diffAngle -= 360;
-        if (diffAngle < -180) diffAngle += 360;
-
-        const absDiff = Math.abs(diffAngle);
-        const cardState = p.cardStates[i];
-
-        // ==================== CONVEX CYLINDER DEPTH PROFILE ====================
-        const rad = (diffAngle * Math.PI) / 180;
-        const targetX = Math.sin(rad) * 660; // radiusX
-        const targetZ = Math.cos(rad) * 450 - 300; // Convex Z depth (+150px at center, -500px at edges)
-        const targetRotY = -diffAngle * 0.58; // Cards wrap around camera
-
-        // Continuous Normalized Distance Falloffs
-        const normDist = Math.min(absDiff / 85, 1);
-        const targetScale = lerp(1.08, 0.68, normDist);
-        const targetOpacity = lerp(1.0, 0.45, normDist);
-
-        // Hover offset
-        const isHovered = p.hoveredIndex === i;
-        const hoverTz = isHovered ? 24 : 0;
-        const hoverTx = isHovered ? p.currentPointerX * 8 : 0;
-        const hoverTy = isHovered ? p.currentPointerY * 8 : 0;
-        const hoverRotX = isHovered ? p.currentPointerY * -2.5 : 0;
-        const hoverRotY = isHovered ? p.currentPointerX * 2.5 : 0;
-        const hoverScaleFactor = isHovered ? 1.04 : 1.0;
-
-        // Specific Transition Choreography per Card Type
-        if (i === 0) {
-          // Card 0: Profile Card (Central DM Flip Card shared transition)
-          if (currPhase < 6) {
-            // Stay centered in 2D plane during INTRO, GREETING_EXIT, CARD_FORMATION, CARD_FLIP
-            const isLifted = currPhase >= 3 && currPhase < 6;
-            cardState.x = 0;
-            cardState.y = 0;
-            cardState.z = isLifted ? 30 : 0;
-            cardState.rotY = 0;
-            cardState.rotX = 0;
-            cardState.scale = isLifted ? 1.03 : 1.0;
-            cardState.opacity = 1.0;
-          } else if (currPhase === 6) {
-            // PROFILE_TRANSITION: Card smoothly moves into 3D cylinder depth (+150px Z, 1.08 scale)
-            cardState.x = lerp(cardState.x, targetX, 0.08);
-            cardState.y = lerp(cardState.y, hoverTy, 0.08);
-            cardState.z = lerp(cardState.z, targetZ, 0.08);
-            cardState.rotY = lerp(cardState.rotY, targetRotY, 0.08);
-            cardState.scale = lerp(cardState.scale, targetScale, 0.08);
-            cardState.opacity = 1.0;
-          } else {
-            // currPhase >= 7: fully in interactive cylinder physics
-            cardState.x = lerp(cardState.x, targetX + hoverTx, 0.08);
-            cardState.y = lerp(cardState.y, hoverTy, 0.08);
-            cardState.z = lerp(cardState.z, targetZ + hoverTz, 0.08);
-            cardState.rotY = lerp(cardState.rotY, targetRotY + hoverRotY, 0.08);
-            cardState.rotX = lerp(cardState.rotX, hoverRotX, 0.08);
-            cardState.scale = lerp(cardState.scale, targetScale * hoverScaleFactor, 0.08);
-            cardState.opacity = lerp(cardState.opacity, targetOpacity, 0.08);
-          }
-        } else {
-          // Cards 1..11: Project Gallery Cards
-          if (currPhase < 8) {
-            // Completely hidden before PROJECT_REVEAL
-            cardState.opacity = 0;
-            el.style.opacity = '0';
-            el.style.pointerEvents = 'none';
-            el.style.transform = 'translate3d(-50%, -50%, -500px) scale(0.6)';
-            continue;
-          } else if (currPhase < 10) {
-            // PROJECT_REVEAL: Symmetrical fan-out along cylindrical arc
-            const k = Math.min(i, 12 - i); // Distance from center (1..6)
-            const t_card = Math.max(0, Math.min(1, (currUnfold - (k - 1) * 0.10) / 0.40));
-            const easeOut = 1 - Math.pow(1 - t_card, 3);
-
-            cardState.x = lerp(0, targetX, easeOut);
-            cardState.y = lerp(0, hoverTy, easeOut);
-            cardState.z = lerp(-250, targetZ, easeOut);
-            cardState.rotY = lerp(0, targetRotY, easeOut);
-            cardState.rotX = lerp(0, hoverRotX, easeOut);
-            cardState.scale = lerp(0.55, targetScale, easeOut);
-            cardState.opacity = lerp(0, targetOpacity, easeOut);
-
-            const img = cardImgRefs.current[i];
-            if (img) {
-              img.style.clipPath = easeOut < 0.98 ? `inset(0% ${((1 - easeOut) * 50).toFixed(1)}% 0% ${((1 - easeOut) * 50).toFixed(1)}%)` : 'none';
-            }
-          } else {
-            // COMPLETED: normal interactive physics
-            if (absDiff > 85) {
-              cardState.opacity = lerp(cardState.opacity, 0, 0.15);
-              if (cardState.opacity < 0.01) {
-                if (el.style.opacity !== '0') {
-                  el.style.opacity = '0';
-                  el.style.pointerEvents = 'none';
-                }
-                continue;
-              }
-            }
-
-            cardState.x = lerp(cardState.x, targetX + hoverTx, 0.08);
-            cardState.y = lerp(cardState.y, hoverTy, 0.08);
-            cardState.z = lerp(cardState.z, targetZ + hoverTz, 0.08);
-            cardState.rotY = lerp(cardState.rotY, targetRotY + hoverRotY, 0.08);
-            cardState.rotX = lerp(cardState.rotX, hoverRotX, 0.08);
-            cardState.scale = lerp(cardState.scale, targetScale * hoverScaleFactor, 0.08);
-            cardState.opacity = lerp(cardState.opacity, targetOpacity, 0.08);
-
-            const img = cardImgRefs.current[i];
-            if (img && img.style.clipPath !== 'none') {
-              img.style.clipPath = 'none';
-            }
-          }
-        }
-
-        // Update card DOM transforms directly (GPU-friendly translate3d)
-        el.style.transform = `
-          translate3d(calc(-50% + ${cardState.x.toFixed(1)}px), calc(-50% + ${cardState.y.toFixed(1)}px), ${cardState.z.toFixed(1)}px)
-          rotateY(${cardState.rotY.toFixed(1)}deg)
-          rotateX(${cardState.rotX.toFixed(1)}deg)
-          scale(${cardState.scale.toFixed(3)})
-        `;
-        el.style.opacity = cardState.opacity.toFixed(3);
-        el.style.zIndex = Math.round(100 - absDiff);
-        el.style.pointerEvents = (currPhase >= 10 && cardState.opacity > 0.2) ? 'auto' : (i === 0 && currPhase >= 10 ? 'auto' : 'none');
-
-        // Update image hover scale only on hovered card
-        const img = cardImgRefs.current[i];
-        if (img) {
-          const targetImgScale = isHovered ? 'scale(1.03)' : 'scale(1)';
-          if (img.style.transform !== targetImgScale) {
-            img.style.transform = targetImgScale;
-          }
-        }
-      }
-
-      animId = requestAnimationFrame(tick);
-    };
-
-    // Pause animation when page tab is hidden
-    const handleVisibility = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(animId);
-      } else {
-        animId = requestAnimationFrame(tick);
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    animId = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(animId);
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
-  }, [totalCards, stepAngle]);
-
-  // Wheel listener: feeding smooth velocity
-  useEffect(() => {
-    const handleWheel = (e) => {
-      if (transitionPropsRef.current.phaseIndex < 10) return;
-      e.preventDefault();
-      const p = physicsRef.current;
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      // Add velocity smoothly without instant position jumps
-      p.velocity -= delta * p.wheelSensitivity;
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, []);
-
-  // Viewport Mouse Move for Camera Reticle
-  const handleMouseMove = (e) => {
-    const p = physicsRef.current;
-    const halfW = window.innerWidth / 2;
-    const halfH = window.innerHeight / 2;
-    p.targetReticleX = ((e.clientX - halfW) / halfW) * 14;
-    p.targetReticleY = ((e.clientY - halfH) / halfH) * 12;
-
-    if (p.isDragging && transitionPropsRef.current.phaseIndex >= 10) {
-      const diff = e.clientX - p.dragStartX;
-      p.targetRotation = p.dragStartRotation + diff * 0.16;
-    }
-  };
-
-  const handleMouseDown = (e) => {
-    if (transitionPropsRef.current.phaseIndex < 10) return;
-    if (e.target.closest('button, a')) return;
-    const p = physicsRef.current;
-    p.isDragging = true;
-    p.dragStartX = e.clientX;
-    p.dragStartRotation = p.targetRotation;
-    p.velocity = 0;
-  };
-
-  const handleMouseUp = () => {
-    physicsRef.current.isDragging = false;
-  };
-
-  // Touch Swipe Integration
-  const handleTouchStart = (e) => {
-    if (transitionPropsRef.current.phaseIndex < 10) return;
-    if (e.touches.length !== 1) return;
-    const p = physicsRef.current;
-    p.isDragging = true;
-    p.touchStartX = e.touches[0].clientX;
-    p.lastTouchX = e.touches[0].clientX;
-    p.dragStartRotation = p.targetRotation;
-    p.velocity = 0;
-  };
-
-  const handleTouchMove = (e) => {
-    if (e.touches.length !== 1) return;
-    const p = physicsRef.current;
-    const currentX = e.touches[0].clientX;
-    const diff = currentX - p.touchStartX;
-    p.targetRotation = p.dragStartRotation + diff * 0.22;
-    p.velocity = (currentX - p.lastTouchX) * 0.12;
-    p.lastTouchX = currentX;
-  };
-
-  const handleTouchEnd = () => {
-    physicsRef.current.isDragging = false;
-  };
-
-  // Smooth Liquid Pointer Hover Handler
-  const handleCardMouseMove = (e, index) => {
-    const p = physicsRef.current;
-    p.hoveredIndex = index;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const nx = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-    const ny = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-    p.targetPointerX = nx;
-    p.targetPointerY = ny;
-  };
-
-  const handleCardMouseLeave = () => {
-    const p = physicsRef.current;
-    p.hoveredIndex = -1;
-    p.targetPointerX = 0;
-    p.targetPointerY = 0;
-  };
-
-  // Helper for deterministic button positioning classes
-  const getButtonPositionClass = (pos) => {
-    switch (pos) {
-      case 'top-left':
-        return 'top-3 left-3';
-      case 'top-right':
-        return 'top-3 right-3';
-      case 'middle-left':
-        return 'top-1/2 -translate-y-1/2 left-2.5';
-      case 'middle-right':
-        return 'top-1/2 -translate-y-1/2 right-2.5';
-      case 'bottom-left':
-        return 'bottom-3 left-3';
-      case 'bottom-right':
-      default:
-        return 'bottom-3 right-3';
-    }
-  };
+  // Featured pair based on selected index
+  const leftProject = CURATED_PROJECTS[selectedExhibitionIndex % CURATED_PROJECTS.length];
+  const rightProject = CURATED_PROJECTS[(selectedExhibitionIndex + 1) % CURATED_PROJECTS.length];
+  const bgLeftProject = CURATED_PROJECTS[(selectedExhibitionIndex + 2) % CURATED_PROJECTS.length];
+  const bgRightProject = CURATED_PROJECTS[(selectedExhibitionIndex + 3) % CURATED_PROJECTS.length];
 
   return (
     <div
-      onMouseMove={handleMouseMove}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      className={`relative w-full h-full flex flex-col justify-center items-center select-none overflow-hidden outline-none ${
-        phaseIndex >= 10 ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'
-      }`}
+      ref={containerRef}
+      className="relative w-full h-full flex flex-col items-center justify-center select-none overflow-hidden outline-none px-4 sm:px-8 md:px-12"
     >
-      {/* 3D Exhibition Stage: Perspective 1800px with Fixed Stationary Camera Center */}
-      <div
-        ref={containerRef}
-        className="relative w-full h-[580px] sm:h-[620px] md:h-[660px] flex items-center justify-center overflow-visible"
-        style={{
-          perspective: '1800px',
-          perspectiveOrigin: '50% 50%',
-        }}
-      >
-        {/* ==================== 1. FIXED CAMERA RETICLE (VIEWPOINT = 0,0,0) ==================== */}
+      {/* ==================== 1. INITIAL ENTRANCE GREETING ==================== */}
+      <AnimatePresence>
+        {!isGreetingExit && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{
+              opacity: isGreetingPhase ? 1 : 0,
+              y: isGreetingPhase ? 0 : -16,
+            }}
+            exit={{ opacity: 0, y: -20, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+            className="absolute top-[calc(50%+165px)] sm:top-[calc(50%+185px)] md:top-[calc(50%+205px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
+          >
+            <motion.h1
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.85,
+                delay: 1.0,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none"
+            >
+              HELLO, I'M DEV<span className="text-[#B96F52]">.</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.75,
+                delay: 1.3,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-sans font-medium text-[#788477] tracking-normal select-none"
+            >
+              DESIGNING & BUILDING DIGITAL EXPERIENCES.
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ==================== 2. EDITORIAL HERO EXHIBITION STAGE ==================== */}
+      <div className="relative w-full max-w-[1420px] h-full flex flex-col justify-center items-center py-4">
+
+        {/* Ambient Subtle Geometric Horizon Guides (supportive, low-contrast) */}
         <div
-          ref={reticleRef}
-          className="absolute z-10 flex items-center justify-center pointer-events-none"
-          style={{ willChange: 'transform, opacity', opacity: 0 }}
+          className={`absolute inset-x-0 top-1/2 -translate-y-1/2 h-[480px] pointer-events-none transition-opacity duration-1000 ${
+            isBgTransformed ? 'opacity-100' : 'opacity-0'
+          }`}
         >
-          <div className="relative flex items-center justify-center w-8 h-8">
-            <div className="w-4 h-4 rounded-full border border-[#B96F52]" />
-            <div className="w-1.5 h-1.5 rounded-full bg-[#B96F52]" />
-            <div className="absolute top-0 w-px h-1.5 bg-[#B96F52]" />
-            <div className="absolute bottom-0 w-px h-1.5 bg-[#B96F52]" />
-            <div className="absolute left-0 h-px w-1.5 bg-[#B96F52]" />
-            <div className="absolute right-0 h-px w-1.5 bg-[#B96F52]" />
-          </div>
+          <div className="absolute left-0 right-0 top-0 h-px bg-[#DED9CE]/60" />
+          <div className="absolute left-0 right-0 bottom-0 h-px bg-[#DED9CE]/60" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-[#DED9CE]/30 border-dashed" />
         </div>
 
-        {/* ==================== 2. CONVEX CYLINDRICAL CARDS (BENDING TOWARD CAMERA) ==================== */}
-        {EXHIBITION_ITEMS.map((item, index) => {
-          const isProfile = item.isProfile;
+        {/* --- MAIN HERO ROW: 3-ZONE BALANCED EDITORIAL COMPOSITION --- */}
+        <div className="relative z-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
 
-          return (
-            <div
-              key={item.id}
-              ref={(el) => (cardElementsRef.current[index] = el)}
-              onClick={() => {
-                if (phaseIndex >= 10) onOpenSection(item.sectionId);
-              }}
-              onMouseMove={(e) => handleCardMouseMove(e, index)}
-              onMouseLeave={handleCardMouseLeave}
-              className="absolute z-20 w-[190px] sm:w-[210px] md:w-[225px] aspect-[0.71] flex flex-col justify-between cursor-pointer"
-              style={{
-                transformStyle: 'preserve-3d',
-                left: '50%',
-                top: '50%',
-                transform: 'translate3d(-50%, -50%, 0)',
-                opacity: isProfile ? 1 : 0,
-                pointerEvents: isProfile && phaseIndex >= 10 ? 'auto' : 'none',
-                willChange: 'transform, opacity',
-              }}
-            >
-              {isProfile ? (
-                /* Card 0: Profile Card (Central DM Flip Card shared transition) */
-                <DMIdentityCard
-                  flipDeg={phaseIndex >= 3 ? 180 : 0}
-                  isFramed={phaseIndex >= 2}
-                  isLifted={phaseIndex >= 3 && phaseIndex < 6}
-                  onOpenSection={phaseIndex >= 10 ? onOpenSection : null}
-                />
-              ) : (
-                /* Cards 1..11: Image-First Editorial Card (Light Editorial Theme) */
-                <div className="relative w-full h-full bg-[#FFFFFF] rounded-[2px] overflow-hidden border border-[#DED9CE] hover:border-[#B96F52] shadow-[0_12px_32px_rgba(37,42,39,0.08)] hover:shadow-[0_20px_45px_rgba(185,111,82,0.16)] transition-all duration-300">
-                  <div className="relative w-full h-full overflow-hidden">
-                    <img
-                      ref={(img) => (cardImgRefs.current[index] = img)}
-                      src={item.image}
-                      alt={item.label}
-                      loading="lazy"
-                      decoding="async"
-                      className="object-cover w-full h-full transition-transform duration-300 contrast-[1.03]"
-                    />
-
-                    {/* Micro Section Label */}
-                    <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2] px-2 py-0.5 border border-[#DED9CE] uppercase pointer-events-none rounded-[1px] shadow-xs">
-                      {item.label}
-                    </div>
-
-                    {/* Deterministic Button Placement Inside Card */}
-                    <div className={`absolute z-30 pointer-events-auto ${getButtonPositionClass(item.btnPosition)}`}>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (phaseIndex >= 10) onOpenSection(item.sectionId);
-                        }}
-                        className="font-mono text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-[1px] border border-[#DED9CE] bg-[#F7F6F2]/90 text-[#252A27] hover:border-[#B96F52] hover:bg-[#B96F52] hover:text-[#F7F6F2] hover:font-semibold transition-all shadow-sm cursor-pointer flex items-center gap-1"
-                      >
-                        <span>{item.btnText}</span>
-                      </button>
-                    </div>
-
-                    {/* Subtle surface reflection overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.05] to-transparent pointer-events-none" />
-                  </div>
-                </div>
-              )}
+          {/* ==================== ZONE 1: TYPOGRAPHIC IDENTITY & INTRO (COL 1-4) ==================== */}
+          <motion.div
+            initial={{ opacity: 0, x: -36, filter: 'blur(4px)' }}
+            animate={{
+              opacity: isHeroRevealed ? 1 : 0,
+              x: isHeroRevealed ? 0 : -36,
+              filter: isHeroRevealed ? 'blur(0px)' : 'blur(4px)',
+            }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className={`flex flex-col justify-center space-y-6 lg:col-span-4 order-2 lg:order-1 ${
+              isHeroRevealed ? 'pointer-events-auto' : 'pointer-events-none'
+            }`}
+          >
+            {/* Fine Header Meta */}
+            <div className="flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full bg-[#B96F52]" />
+              <span className="font-mono text-[10px] tracking-wider text-[#788477] uppercase font-medium">
+                PROFILE & EXHIBITION / 2026
+              </span>
             </div>
-          );
-        })}
 
-        {/* Initial Entrance Greeting: Hello, I'm Dev */}
-        <AnimatePresence>
-          {phaseIndex < 2 && (
+            {/* Main Typographic Hierarchy: Natural Proportions, Clean Sans-Serif */}
+            <div className="space-y-2">
+              <span className="font-mono text-xs tracking-wider text-[#B96F52] uppercase block font-semibold">
+                FULL STACK DEVELOPER
+              </span>
+              <h1 className="text-4xl sm:text-5xl xl:text-6xl font-display font-extrabold text-[#252A27] tracking-tight leading-[1.0] uppercase">
+                DEV MISTRY
+              </h1>
+            </div>
+
+            {/* Contemporary Editorial Statement */}
+            <p className="font-sans text-sm sm:text-base text-[#788477] font-normal leading-relaxed max-w-md">
+              Designing and building digital experiences. Specialized in deterministic cloud architecture, high-availability web platforms, and autonomous agentic swarms.
+            </p>
+
+            {/* Restrained Metadata Strip */}
+            <div className="flex items-center gap-6 pt-1 font-mono text-[11px] text-[#788477] border-t border-[#DED9CE] pt-4">
+              <div className="flex flex-col">
+                <span className="text-[9px] text-[#A2A9A1] uppercase tracking-wider">BASE LOCATION</span>
+                <span className="font-semibold text-[#252A27] mt-0.5">MUMBAI, INDIA</span>
+              </div>
+              <div className="w-px h-8 bg-[#DED9CE]" />
+              <div className="flex flex-col">
+                <span className="text-[9px] text-[#A2A9A1] uppercase tracking-wider">STATUS</span>
+                <span className="font-semibold text-[#B96F52] mt-0.5">OPEN FOR SELECT CONTRACTS</span>
+              </div>
+            </div>
+
+            {/* Primary Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                onClick={() => onOpenSection && onOpenSection('about')}
+                className="group px-5 py-2.5 bg-[#252A27] hover:bg-[#B96F52] text-[#F7F6F2] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] shadow-sm hover:shadow-md flex items-center gap-2 cursor-pointer"
+              >
+                <span>ABOUT SPECIFICATION</span>
+                <span className="transition-transform group-hover:translate-x-1 duration-200">→</span>
+              </button>
+
+              <button
+                onClick={() => onNavigateToProjects && onNavigateToProjects()}
+                className="px-4 py-2.5 bg-[#FFFFFF] hover:bg-[#F7F6F2] text-[#252A27] hover:text-[#B96F52] border border-[#DED9CE] hover:border-[#B96F52] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] cursor-pointer"
+              >
+                VIEW ARCHIVE
+              </button>
+            </div>
+          </motion.div>
+
+          {/* ==================== ZONE 2: CENTRAL PROFILE IDENTITY (COL 5-8) ==================== */}
+          <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2">
+            <div className="relative w-[230px] sm:w-[260px] md:w-[280px] aspect-[0.70] flex items-center justify-center">
+
+              {/* Background ambient framing glow */}
+              <div
+                className={`absolute -inset-4 bg-gradient-to-b from-[#DED9CE]/30 via-transparent to-[#DED9CE]/20 rounded-lg pointer-events-none transition-opacity duration-700 ${
+                  isCardFlipped ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+
+              {/* The Central DM Identity Card (Transitions smoothly in 3D into the hero portrait) */}
+              <motion.div
+                layoutId="dm-central-anchor"
+                animate={{
+                  y: isProfileTrans ? 0 : isGreetingExit ? -8 : 0,
+                  scale: isProfileTrans ? 1 : isCardFormed ? 1.02 : 1.0,
+                }}
+                transition={{
+                  duration: 0.9,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="relative w-full h-full cursor-pointer z-30"
+                onClick={() => {
+                  if (isFullySettled && onOpenSection) onOpenSection('about');
+                }}
+              >
+                <DMIdentityCard
+                  flipDeg={isCardFlipped ? 180 : 0}
+                  isFramed={isCardFormed}
+                  isLifted={isCardFlipped && !isFullySettled}
+                  onOpenSection={isFullySettled ? onOpenSection : null}
+                />
+              </motion.div>
+
+              {/* Subtle Editorial Caption Tag underneath Portrait */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{
+                  opacity: isHeroRevealed ? 1 : 0,
+                  y: isHeroRevealed ? 0 : 10,
+                }}
+                transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute -bottom-8 flex items-center justify-between w-full px-1 font-mono text-[9px] tracking-wider text-[#788477] uppercase pointer-events-none"
+              >
+                <span>DEV MISTRY // PORTRAIT</span>
+                <span className="text-[#B96F52] font-semibold">FIG. 01</span>
+              </motion.div>
+            </div>
+          </div>
+
+          {/* ==================== ZONE 3: SURROUNDING CURATED PROJECT EXHIBITION (COL 9-12) ==================== */}
+          <div className="lg:col-span-4 flex flex-col justify-center space-y-4 order-3">
+
+            {/* Section Header for the Exhibition */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: -12 }}
               animate={{
-                opacity: phaseIndex === 0 ? 1 : 0,
-                y: phaseIndex === 0 ? 0 : -16,
+                opacity: isProjectsRevealed ? 1 : 0,
+                y: isProjectsRevealed ? 0 : -12,
               }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute top-[calc(50%+165px)] sm:top-[calc(50%+180px)] md:top-[calc(50%+195px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-30"
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="flex items-center justify-between border-b border-[#DED9CE] pb-2 font-mono text-[10px] tracking-wider text-[#788477] uppercase"
             >
-              <motion.h1
-                initial={{ opacity: 0, y: 18 }}
-                animate={{
-                  opacity: phaseIndex === 0 ? 1 : 0,
-                  y: phaseIndex === 0 ? 0 : -18,
-                }}
-                transition={{
-                  duration: 0.85,
-                  delay: phaseIndex === 0 ? 1.0 : 0,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none"
-              >
-                HELLO, I'M DEV<span className="text-[#B96F52]">.</span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 14 }}
-                animate={{
-                  opacity: phaseIndex === 0 ? 1 : 0,
-                  y: phaseIndex === 0 ? 0 : -14,
-                }}
-                transition={{
-                  duration: 0.75,
-                  delay: phaseIndex === 0 ? 1.3 : 0,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-sans font-medium text-[#788477] tracking-normal select-none"
-              >
-                DESIGNING & BUILDING DIGITAL EXPERIENCES.
-              </motion.p>
+              <div className="flex items-center gap-2">
+                <span className="text-[#B96F52] font-semibold">SELECTED EXHIBITION</span>
+                <span>•</span>
+                <span>WORKS</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {CURATED_PROJECTS.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedExhibitionIndex(i)}
+                    className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                      i === selectedExhibitionIndex % CURATED_PROJECTS.length
+                        ? 'bg-[#B96F52] scale-125'
+                        : 'bg-[#DED9CE] hover:bg-[#788477]'
+                    }`}
+                    title={`View Exhibition Piece 0${i + 1}`}
+                  />
+                ))}
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
+
+            {/* Curated Piece 01 (Prominent Right Card) */}
+            <motion.div
+              initial={{ opacity: 0, x: 36, scale: 0.95 }}
+              animate={{
+                opacity: isProjectsRevealed ? 1 : 0,
+                x: isProjectsRevealed ? 0 : 36,
+                scale: isProjectsRevealed ? 1 : 0.95,
+              }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              onClick={() => onOpenSection && onOpenSection(rightProject.sectionId)}
+              className="group relative bg-[#FFFFFF] border border-[#DED9CE] hover:border-[#B96F52] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(37,42,39,0.06)] hover:shadow-[0_16px_40px_rgba(185,111,82,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
+            >
+              <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[#ECE8DE] bg-[#F7F6F2]">
+                <img
+                  src={rightProject.image}
+                  alt={rightProject.title}
+                  className="w-full h-full object-cover contrast-[1.03] transition-transform duration-500 group-hover:scale-108"
+                />
+                <div className="absolute top-1 left-1 font-mono text-[7px] text-[#252A27] bg-[#F7F6F2] px-1 py-0.2 rounded-[1px] border border-[#DED9CE]">
+                  {rightProject.category}
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-between flex-grow min-w-0 py-0.5">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-[9px] text-[#788477]">
+                    <span>{rightProject.num}</span>
+                    <span>{rightProject.year}</span>
+                  </div>
+                  <h3 className="font-display font-bold text-sm sm:text-base text-[#252A27] group-hover:text-[#B96F52] tracking-tight leading-snug truncate mt-1 transition-colors">
+                    {rightProject.title}
+                  </h3>
+                  <p className="font-sans text-[11px] text-[#788477] line-clamp-1 mt-0.5">
+                    {rightProject.type}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 mt-2 border-t border-[#F2EFE8] font-mono text-[9px]">
+                  <div className="flex gap-1.5 text-[#788477] text-[8px]">
+                    {rightProject.tech.slice(0, 2).map((t) => (
+                      <span key={t} className="px-1.5 py-0.5 bg-[#F7F6F2] rounded-[1px] border border-[#ECE8DE]">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  <span className="text-[#B96F52] font-semibold group-hover:translate-x-1 transition-transform duration-200">
+                    OPEN →
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Curated Piece 02 (Secondary Curated Piece) */}
+            <motion.div
+              initial={{ opacity: 0, x: 36, scale: 0.95 }}
+              animate={{
+                opacity: isProjectsRevealed ? 1 : 0,
+                x: isProjectsRevealed ? 0 : 36,
+                scale: isProjectsRevealed ? 1 : 0.95,
+              }}
+              transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              onClick={() => onOpenSection && onOpenSection(leftProject.sectionId)}
+              className="group relative bg-[#FFFFFF] border border-[#DED9CE] hover:border-[#B96F52] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(37,42,39,0.06)] hover:shadow-[0_16px_40px_rgba(185,111,82,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
+            >
+              <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[#ECE8DE] bg-[#F7F6F2]">
+                <img
+                  src={leftProject.image}
+                  alt={leftProject.title}
+                  className="w-full h-full object-cover contrast-[1.03] transition-transform duration-500 group-hover:scale-108"
+                />
+                <div className="absolute top-1 left-1 font-mono text-[7px] text-[#252A27] bg-[#F7F6F2] px-1 py-0.2 rounded-[1px] border border-[#DED9CE]">
+                  {leftProject.category}
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-between flex-grow min-w-0 py-0.5">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-[9px] text-[#788477]">
+                    <span>{leftProject.num}</span>
+                    <span>{leftProject.year}</span>
+                  </div>
+                  <h3 className="font-display font-bold text-sm sm:text-base text-[#252A27] group-hover:text-[#B96F52] tracking-tight leading-snug truncate mt-1 transition-colors">
+                    {leftProject.title}
+                  </h3>
+                  <p className="font-sans text-[11px] text-[#788477] line-clamp-1 mt-0.5">
+                    {leftProject.type}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 mt-2 border-t border-[#F2EFE8] font-mono text-[9px]">
+                  <div className="flex gap-1.5 text-[#788477] text-[8px]">
+                    {leftProject.tech.slice(0, 2).map((t) => (
+                      <span key={t} className="px-1.5 py-0.5 bg-[#F7F6F2] rounded-[1px] border border-[#ECE8DE]">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  <span className="text-[#B96F52] font-semibold group-hover:translate-x-1 transition-transform duration-200">
+                    OPEN →
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Additional Subtle Ambient Thumbnails */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{
+                opacity: isFullySettled ? 1 : 0,
+                y: isFullySettled ? 0 : 12,
+              }}
+              transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="flex items-center justify-between p-2.5 bg-[#FFFFFF]/70 border border-[#ECE8DE] rounded-[2px] font-mono text-[9px] text-[#788477]"
+            >
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#788477]" />
+                <span className="text-[#252A27] font-medium">MORE ARCHIVED WORKS:</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => onOpenSection && onOpenSection(bgLeftProject.sectionId)}
+                  className="hover:text-[#B96F52] transition-colors cursor-pointer"
+                >
+                  {bgLeftProject.title.split(' ')[0]} ↗
+                </button>
+                <span>/</span>
+                <button
+                  onClick={() => onOpenSection && onOpenSection(bgRightProject.sectionId)}
+                  className="hover:text-[#B96F52] transition-colors cursor-pointer"
+                >
+                  {bgRightProject.title.split(' ')[0]} ↗
+                </button>
+              </div>
+            </motion.div>
+
+          </div>
+
+        </div>
+
       </div>
     </div>
   );
