@@ -149,6 +149,7 @@ export default function App() {
 
   // Premium Cinematic Portfolio Entrance - DM Experience
   const [showIntro, setShowIntro] = useState(true);
+  const [introStep, setIntroStep] = useState(0); // 0: plain, 1: DM appears, 2: diagonal separate, 3: reveal portfolio
 
   const handleEntranceComplete = useCallback(() => {
     setShowIntro(false);
@@ -257,23 +258,23 @@ export default function App() {
       </AnimatePresence>
 
       {/* ==================== GLOBAL FIXED HEADER (HUD FLOATING TRANSPARENT) ==================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#F1EFE8] pointer-events-none bg-transparent">
+      <header className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#F7F6F2] pointer-events-none bg-transparent">
         <div className="flex items-center gap-6 pointer-events-auto md:gap-12">
           <div className="flex items-baseline gap-2">
-            <span className="font-mono text-xs sm:text-sm tracking-widest text-[#626A65]">NAME /</span>
-            <span className="text-lg sm:text-[21px] md:text-[23px] font-black tracking-tight text-[#F1EFE8] font-display">
+            <span className="font-mono text-xs sm:text-sm tracking-widest text-[#788477]">NAME /</span>
+            <span className="text-lg sm:text-[21px] md:text-[23px] font-black tracking-tight text-[#F7F6F2] font-display">
               DEV MISTRY
             </span>
           </div>
           <div className="items-baseline hidden gap-2 lg:flex">
-            <span className="font-mono text-xs sm:text-sm tracking-widest text-[#626A65]">OCCUPATION /</span>
-            <span className="text-base sm:text-lg md:text-[19px] font-bold tracking-tight text-[#F1EFE8]">
+            <span className="font-mono text-xs sm:text-sm tracking-widest text-[#788477]">OCCUPATION /</span>
+            <span className="text-base sm:text-lg md:text-[19px] font-bold tracking-tight text-[#F7F6F2]">
               FULL STACK DEVELOPER
             </span>
           </div>
           <div className="items-baseline hidden gap-2 xl:flex">
-            <span className="font-mono text-xs sm:text-sm tracking-widest text-[#626A65]">LOCATION /</span>
-            <span className="text-base sm:text-lg md:text-[19px] font-bold tracking-tight text-[#9EA49F]">
+            <span className="font-mono text-xs sm:text-sm tracking-widest text-[#788477]">LOCATION /</span>
+            <span className="text-base sm:text-lg md:text-[19px] font-bold tracking-tight text-[#788477]">
               MUMBAI
             </span>
           </div>
@@ -290,10 +291,11 @@ export default function App() {
               <button
                 key={sec.id}
                 onClick={() => navigateToView(sec.id)}
-                className={`flip-nav-link text-sm sm:text-base md:text-lg font-bold tracking-tight transition-all duration-200 cursor-pointer ${isActive && !contactOpen
-                    ? 'active text-[#65E6D2] font-black'
-                    : 'text-[#9EA49F] hover:text-[#F1EFE8]'
-                  }`}
+                className={`flip-nav-link text-sm sm:text-base md:text-lg font-bold tracking-tight transition-all duration-200 cursor-pointer ${
+                  isActive && !contactOpen
+                    ? 'active text-[#788477] font-black'
+                    : 'text-[#788477]/80 hover:text-[#F7F6F2]'
+                }`}
               >
                 <span className="flip-nav-inner">
                   <span className="flip-nav-front">{sec.label}</span>
@@ -441,9 +443,9 @@ export default function App() {
       </main>
 
       {/* ==================== GLOBAL FIXED FOOTER (FLOATING MINIMAL HUD) ==================== */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-[0.25em] uppercase text-[#626A65] pointer-events-none bg-transparent">
+      <footer className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-[0.25em] uppercase text-[#788477] pointer-events-none bg-transparent">
         <div className="flex items-center gap-3 pointer-events-auto">
-          <span className="text-[#F1EFE8] font-black text-xs sm:text-sm md:text-base tracking-widest font-mono">
+          <span className="text-[#F7F6F2] font-black text-xs sm:text-sm md:text-base tracking-widest font-mono">
             PORTFOLIO / 2026
           </span>
         </div>
@@ -451,7 +453,7 @@ export default function App() {
         <div className="flex items-center gap-6 pointer-events-auto">
           <button
             onClick={() => setOpenInfo(true)}
-            className="flip-nav-link text-xs sm:text-sm md:text-base font-bold tracking-widest text-[#F1EFE8] hover:text-[#65E6D2] transition-colors cursor-pointer"
+            className="flip-nav-link text-xs sm:text-sm md:text-base font-bold tracking-widest text-[#F7F6F2] hover:text-[#788477] transition-colors cursor-pointer"
           >
             <span className="flip-nav-inner">
               <span className="flip-nav-front">INFO</span>
@@ -494,16 +496,16 @@ export default function App() {
               >
                 <div className="flex items-center justify-between pb-6 border-b border-[#2A302C]">
                   <div>
-                    <span className="font-mono text-[9px] tracking-[0.25em] text-[#65E6D2] uppercase block mb-1">
+                    <span className="font-mono text-[9px] tracking-[0.25em] text-[#788477] uppercase block mb-1">
                       DIRECT INQUIRY
                     </span>
-                    <h2 className="text-2xl font-black tracking-tight text-[#F1EFE8] uppercase md:text-3xl font-display">
+                    <h2 className="text-2xl font-black tracking-tight text-[#F7F6F2] uppercase md:text-3xl font-display">
                       SEND A MESSAGE
                     </h2>
                   </div>
                   <button
                     onClick={() => setContactOpen(false)}
-                    className="font-mono text-xs tracking-widest text-[#9EA49F] uppercase transition-colors hover:text-[#65E6D2] cursor-pointer"
+                    className="font-mono text-xs tracking-widest text-[#788477] uppercase transition-colors hover:text-[#F7F6F2] cursor-pointer"
                   >
                     CLOSE [✕]
                   </button>
@@ -512,75 +514,75 @@ export default function App() {
                 <form onSubmit={(e) => e.preventDefault()} className="mt-8 space-y-6">
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div>
-                      <label className="font-mono text-[10px] tracking-widest text-[#626A65] block uppercase mb-1 font-bold">
+                      <label className="font-mono text-[10px] tracking-widest text-[#788477] block uppercase mb-1 font-bold">
                         YOUR NAME
                       </label>
                       <input
                         type="text"
                         placeholder="Name"
-                        className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F1EFE8] placeholder-[#626A65] focus:outline-none focus:border-[#65E6D2] transition-all font-sans rounded-none"
+                        className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F7F6F2] placeholder-[#788477]/60 focus:outline-none focus:border-[#788477] transition-all font-sans rounded-none"
                       />
                     </div>
                     <div>
-                      <label className="font-mono text-[10px] tracking-widest text-[#626A65] block uppercase mb-1 font-bold">
+                      <label className="font-mono text-[10px] tracking-widest text-[#788477] block uppercase mb-1 font-bold">
                         YOUR EMAIL
                       </label>
                       <input
                         type="email"
                         placeholder="Email address"
-                        className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F1EFE8] placeholder-[#626A65] focus:outline-none focus:border-[#65E6D2] transition-all font-sans rounded-none"
+                        className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F7F6F2] placeholder-[#788477]/60 focus:outline-none focus:border-[#788477] transition-all font-sans rounded-none"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div>
-                      <label className="font-mono text-[10px] tracking-widest text-[#626A65] block uppercase mb-1 font-bold">
+                      <label className="font-mono text-[10px] tracking-widest text-[#788477] block uppercase mb-1 font-bold">
                         COMPANY / ORGANIZATION
                       </label>
                       <input
                         type="text"
                         placeholder="Company name"
-                        className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F1EFE8] placeholder-[#626A65] focus:outline-none focus:border-[#65E6D2] transition-all font-sans rounded-none"
+                        className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F7F6F2] placeholder-[#788477]/60 focus:outline-none focus:border-[#788477] transition-all font-sans rounded-none"
                       />
                     </div>
                     <div>
-                      <label className="font-mono text-[10px] tracking-widest text-[#626A65] block uppercase mb-1 font-bold">
+                      <label className="font-mono text-[10px] tracking-widest text-[#788477] block uppercase mb-1 font-bold">
                         PROJECT SCOPE
                       </label>
                       <input
                         type="text"
                         placeholder="Full-Stack, Cloud, AI Swarm..."
-                        className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F1EFE8] placeholder-[#626A65] focus:outline-none focus:border-[#65E6D2] transition-all font-sans rounded-none"
+                        className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F7F6F2] placeholder-[#788477]/60 focus:outline-none focus:border-[#788477] transition-all font-sans rounded-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="font-mono text-[10px] tracking-widest text-[#626A65] block uppercase mb-1 font-bold">
+                    <label className="font-mono text-[10px] tracking-widest text-[#788477] block uppercase mb-1 font-bold">
                       PROJECT SPECIFICATIONS
                     </label>
                     <textarea
                       rows={3}
                       placeholder="Project details, timeline, and architectural targets..."
-                      className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F1EFE8] placeholder-[#626A65] focus:outline-none focus:border-[#65E6D2] transition-all font-sans resize-none rounded-none"
+                      className="w-full bg-[#0B0D0C] border-b border-[#2A302C] px-3 py-2 text-sm text-[#F7F6F2] placeholder-[#788477]/60 focus:outline-none focus:border-[#788477] transition-all font-sans resize-none rounded-none"
                     />
                   </div>
 
                   <div className="flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row">
-                    <div className="flex items-center gap-4 font-mono text-[10px] tracking-wider text-[#9EA49F] uppercase">
-                      <a href="https://www.linkedin.com/in/dev-mistry-828586298/" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[#65E6D2]">
+                    <div className="flex items-center gap-4 font-mono text-[10px] tracking-wider text-[#788477] uppercase">
+                      <a href="https://www.linkedin.com/in/dev-mistry-828586298/" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[#F7F6F2]">
                         LINKEDIN
                       </a>
                       <span>•</span>
-                      <a href="https://github.com/DevM15" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[#65E6D2]">
+                      <a href="https://github.com/DevM15" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[#F7F6F2]">
                         GITHUB
                       </a>
                     </div>
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto font-mono text-xs uppercase tracking-widest bg-[#65E6D2] text-[#0B0D0C] px-6 py-3 font-bold transition-all shadow-md hover:bg-[#7788FF] hover:text-white cursor-pointer"
+                      className="w-full sm:w-auto font-mono text-xs uppercase tracking-widest bg-[#788477] hover:bg-[#8E9C8D] text-[#F7F6F2] px-6 py-3 font-bold transition-all shadow-md cursor-pointer"
                     >
                       TRANSMIT MESSAGE
                     </button>
@@ -684,7 +686,7 @@ export default function App() {
                         setOpenInfo(false);
                         navigateToView('projects'); // Jump to Projects
                       }}
-                      className="w-full py-2.5 bg-[#65E6D2] text-[#0B0D0C] font-mono text-xs tracking-widest uppercase font-bold shadow-lg transition-all hover:bg-[#7788FF] hover:text-white flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-2.5 bg-[#788477] hover:bg-[#8E9C8D] text-[#F7F6F2] font-mono text-xs tracking-widest uppercase font-bold shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>SEE ARCHITECTURAL PROJECTS</span>
                       <span>→</span>
@@ -694,7 +696,7 @@ export default function App() {
                         setOpenInfo(false);
                         navigateToView('contact');
                       }}
-                      className="w-full py-2 bg-[#171B19] hover:bg-[#2A302C] text-[#F1EFE8] font-mono text-xs tracking-widest uppercase transition-colors border border-[#2A302C] cursor-pointer"
+                      className="w-full py-2 bg-[#171B19] hover:bg-[#2A302C] text-[#F7F6F2] font-mono text-xs tracking-widest uppercase transition-colors border border-[#2A302C] cursor-pointer"
                     >
                       TRANSMIT INQUIRY ✉
                     </button>
@@ -702,14 +704,14 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="relative z-10 flex flex-col items-center justify-between gap-2 pt-4 mt-6 text-[11px] font-mono border-t border-[#2A302C] sm:flex-row text-[#626A65]">
+              <div className="relative z-10 flex flex-col items-center justify-between gap-2 pt-4 mt-6 text-[11px] font-mono border-t border-[#2A302C] sm:flex-row text-[#788477]">
                 <span>LOCATION: MUMBAI, INDIA • REMOTE WORLDWIDE</span>
-                <div className="flex gap-4 text-[#9EA49F]">
-                  <a href="https://github.com/DevM15" target="_blank" rel="noopener noreferrer" className="hover:text-[#65E6D2]">GITHUB</a>
+                <div className="flex gap-4 text-[#788477]">
+                  <a href="https://github.com/DevM15" target="_blank" rel="noopener noreferrer" className="hover:text-[#F7F6F2]">GITHUB</a>
                   <span>•</span>
-                  <a href="https://www.linkedin.com/in/dev-mistry-828586298/" target="_blank" rel="noopener noreferrer" className="hover:text-[#65E6D2]">LINKEDIN</a>
+                  <a href="https://www.linkedin.com/in/dev-mistry-828586298/" target="_blank" rel="noopener noreferrer" className="hover:text-[#F7F6F2]">LINKEDIN</a>
                   <span>•</span>
-                  <a href="mailto:devmistry1510@gmail.com" className="hover:text-[#65E6D2]">EMAIL</a>
+                  <a href="mailto:devmistry1510@gmail.com" className="hover:text-[#F7F6F2]">EMAIL</a>
                 </div>
               </div>
             </motion.div>

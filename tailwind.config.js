@@ -6,17 +6,26 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        canvas: '#11140F',
-        black: '#090A08',
+        canvas: '#050706',
         ivory: {
-          DEFAULT: '#E8E1D2',
-          secondary: '#C8C1B2',
-          muted: '#8A867B',
+          DEFAULT: '#F7F6F2', // Warm Ivory (User specification)
+          surface: '#EFECE6',
+          muted: '#E5E1D8',
+          border: '#DED9CE',
         },
-        olive: '#686B5C',
-        teal: '#176D6C',
-        burgundy: '#582C2B',
-        pink: '#E8D9DD',
+        charcoal: {
+          DEFAULT: '#252A27', // Deep Charcoal (User specification)
+          light: '#353C38',
+          muted: '#4B544F',
+        },
+        sage: {
+          DEFAULT: '#788477', // Muted Sage (User specification)
+          light: '#8E9C8D',
+          dark: '#5C665B',
+        },
+        accent: {
+          cyan: '#65E6D2', // Legacy highlight
+        },
       },
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],

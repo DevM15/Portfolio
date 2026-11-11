@@ -27,7 +27,7 @@ export default function PortalScene({
           height: isTransitioning ? '100vh' : isPortalOpen ? '440px' : '0px',
           borderRadius: isTransitioning ? '0px' : '4px',
           boxShadow: isPortalOpen
-            ? '0 30px 90px -20px rgba(28, 30, 29, 0.25), 0 0 0 1px rgba(209, 206, 196, 0.85), inset 0 0 0 1px rgba(255, 255, 255, 0.6)'
+            ? '0 30px 90px -20px rgba(37, 42, 39, 0.25), 0 0 0 1px rgba(209, 206, 196, 0.85), inset 0 0 0 1px rgba(255, 255, 255, 0.6)'
             : 'none',
         }}
         transition={{
@@ -37,30 +37,30 @@ export default function PortalScene({
           boxShadow: { duration: 0.8 },
         }}
         style={{
-          background: '#080B0A', // Seamlessly matches the actual portfolio background
+          background: '#050706', // Seamlessly matches the actual portfolio background
         }}
       >
         {/* Fine Architectural Precision Corner Brackets on the Portal */}
-        <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-[#65E6D2]/60 z-30" />
-        <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-[#65E6D2]/60 z-30" />
-        <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-[#65E6D2]/60 z-30" />
-        <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#65E6D2]/60 z-30" />
+        <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-[#788477]/80 z-30" />
+        <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-[#788477]/80 z-30" />
+        <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-[#788477]/80 z-30" />
+        <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#788477]/80 z-30" />
 
-        {/* Portal Atmosphere - Atmospheric cyan horizon glow */}
+        {/* Portal Atmosphere - Atmospheric horizon glow */}
         <div
           className="absolute inset-0 pointer-events-none z-10 opacity-70"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(101, 230, 210, 0.12) 0%, rgba(8, 11, 10, 0.95) 75%)',
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(120, 132, 119, 0.16) 0%, rgba(5, 7, 6, 0.95) 75%)',
           }}
         />
 
         {/* Real Portfolio Content Miniature Preview inside the Portal */}
-        <div className="absolute inset-0 flex flex-col justify-between p-6 z-20 select-none overflow-hidden text-[#F1EFE8]">
+        <div className="absolute inset-0 flex flex-col justify-between p-6 z-20 select-none overflow-hidden text-[#F7F6F2]">
           {/* Header Preview */}
-          <div className="flex items-center justify-between text-[8px] font-mono tracking-widest text-[#9EA49F] border-b border-[#2A302C]/60 pb-2">
+          <div className="flex items-center justify-between text-[8px] font-mono tracking-widest text-[#788477] border-b border-[#2A302C]/60 pb-2">
             <span>DEV MISTRY // 2026</span>
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#65E6D2] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#788477] animate-pulse" />
               <span>LIVE CORE</span>
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function PortalScene({
           <div className="relative flex-1 flex items-center justify-center my-4">
             {/* Left Card Silhouette */}
             <div
-              className="absolute left-2 w-20 h-28 bg-[#121614] border border-[#2A302C] rounded-sm opacity-60 overflow-hidden"
+              className="absolute left-2 w-20 h-28 bg-[#111513] border border-[#2A302C] rounded-sm opacity-60 overflow-hidden"
               style={{
                 transform: 'perspective(400px) rotateY(24deg) scale(0.85)',
               }}
@@ -83,12 +83,12 @@ export default function PortalScene({
 
             {/* Center Dev Portrait Hero Card */}
             <div
-              className="relative w-28 h-40 bg-[#161B18] border border-[#65E6D2]/50 rounded-sm shadow-2xl z-10 overflow-hidden flex flex-col justify-between p-2"
+              className="relative w-28 h-40 bg-[#161B18] border border-[#788477]/60 rounded-sm shadow-2xl z-10 overflow-hidden flex flex-col justify-between p-2"
               style={{
                 transform: 'perspective(500px) translateZ(20px)',
               }}
             >
-              <div className="text-[7px] font-mono text-[#65E6D2] tracking-wider">
+              <div className="text-[7px] font-mono text-[#788477] tracking-wider">
                 01 / PROFILE
               </div>
               <div className="relative w-full h-24 overflow-hidden rounded-[1px] my-1 bg-black/40">
@@ -98,9 +98,9 @@ export default function PortalScene({
                   className="w-full h-full object-cover filter contrast-110"
                 />
               </div>
-              <div className="text-[7px] font-mono text-[#F1EFE8] flex items-center justify-between">
+              <div className="text-[7px] font-mono text-[#F7F6F2] flex items-center justify-between">
                 <span>DEV MISTRY</span>
-                <span className="text-[#65E6D2]">→</span>
+                <span className="text-[#788477]">→</span>
               </div>
             </div>
 
@@ -120,7 +120,7 @@ export default function PortalScene({
           </div>
 
           {/* Footer Preview */}
-          <div className="flex items-center justify-between text-[7px] font-mono text-[#626A65] tracking-[0.2em] border-t border-[#2A302C]/60 pt-2">
+          <div className="flex items-center justify-between text-[7px] font-mono text-[#788477] tracking-[0.2em] border-t border-[#2A302C]/60 pt-2">
             <span>MUMBAI • FULL STACK</span>
             <span>CYLINDER 3D</span>
           </div>
@@ -131,7 +131,7 @@ export default function PortalScene({
           className="absolute inset-0 pointer-events-none z-30"
           style={{
             border: '1px solid rgba(255, 255, 255, 0.4)',
-            boxShadow: 'inset 0 0 24px rgba(101, 230, 210, 0.2)',
+            boxShadow: 'inset 0 0 24px rgba(120, 132, 119, 0.2)',
           }}
           animate={{
             opacity: [0.4, 0.8, 0.4],

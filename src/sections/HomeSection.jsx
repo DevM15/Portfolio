@@ -411,12 +411,12 @@ export default function HomeSection({ onOpenSection }) {
           style={{ willChange: 'transform' }}
         >
           <div className="relative w-8 h-8 flex items-center justify-center">
-            <div className="w-4 h-4 rounded-full border border-[#65E6D2]" />
-            <div className="w-1.5 h-1.5 rounded-full bg-[#65E6D2]" />
-            <div className="absolute top-0 w-px h-1.5 bg-[#65E6D2]" />
-            <div className="absolute bottom-0 w-px h-1.5 bg-[#65E6D2]" />
-            <div className="absolute left-0 h-px w-1.5 bg-[#65E6D2]" />
-            <div className="absolute right-0 h-px w-1.5 bg-[#65E6D2]" />
+            <div className="w-4 h-4 rounded-full border border-[#788477]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#788477]" />
+            <div className="absolute top-0 w-px h-1.5 bg-[#788477]" />
+            <div className="absolute bottom-0 w-px h-1.5 bg-[#788477]" />
+            <div className="absolute left-0 h-px w-1.5 bg-[#788477]" />
+            <div className="absolute right-0 h-px w-1.5 bg-[#788477]" />
           </div>
         </div>
 
@@ -437,7 +437,7 @@ export default function HomeSection({ onOpenSection }) {
             }}
           >
             {/* Image-First Editorial Card (1-2 elements strictly) */}
-            <div className="relative w-full h-full bg-[#0D1211] rounded-[2px] overflow-hidden border border-[rgba(241,239,232,0.15)] hover:border-[#65E6D2] shadow-[0_20px_50px_rgba(0,0,0,0.92)] transition-colors duration-300">
+            <div className="relative w-full h-full bg-[#0D1211] rounded-[2px] overflow-hidden border border-[rgba(247,246,242,0.15)] hover:border-[#788477] shadow-[0_20px_50px_rgba(0,0,0,0.92)] transition-colors duration-300">
               {/* Visual Area */}
               <div className={`relative w-full h-full overflow-hidden ${item.isProfile ? 'p-3 flex flex-col justify-between' : ''}`}>
                 <img
@@ -448,7 +448,7 @@ export default function HomeSection({ onOpenSection }) {
                 />
 
                 {/* Micro Section Label */}
-                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-[0.2em] text-[#F1EFE8] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase pointer-events-none">
+                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-[0.2em] text-[#F7F6F2] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase pointer-events-none">
                   {item.label}
                 </div>
 
@@ -459,7 +459,7 @@ export default function HomeSection({ onOpenSection }) {
                       e.stopPropagation();
                       onOpenSection(item.sectionId);
                     }}
-                    className="font-mono text-[8px] tracking-widest uppercase px-2 py-0.5 rounded-[1px] border border-white/20 bg-[#050706]/80 text-[#F1EFE8] hover:border-[#65E6D2] hover:bg-[#65E6D2] hover:text-[#050706] hover:font-bold transition-all shadow-md cursor-pointer flex items-center gap-1"
+                    className="font-mono text-[8px] tracking-widest uppercase px-2 py-0.5 rounded-[1px] border border-white/20 bg-[#050706]/80 text-[#F7F6F2] hover:border-[#788477] hover:bg-[#788477] hover:text-[#050706] hover:font-bold transition-all shadow-md cursor-pointer flex items-center gap-1"
                   >
                     <span>{item.btnText}</span>
                   </button>

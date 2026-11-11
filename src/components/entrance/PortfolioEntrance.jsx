@@ -1,28 +1,31 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import DMMonogram from './DMMonogram';
 import PortalScene from './PortalScene';
 import EntranceWorkspaceDetails from './EntranceWorkspaceDetails';
 
 /**
- * State Machine for PortfolioEntrance:
- * INITIAL -> ACTIVATING -> PORTAL_OPEN -> TRANSITIONING -> COMPLETED
+ * PortfolioEntrance - Automatic Cinematic Entrance Experience
  *
- * Visual Direction:
- * Light, Minimal, Warm Ivory (#F5F4F0), Editorial, Apple-Style Precision.
+ * Sequence Timeline (Fully Automatic, no click needed):
+ * - 0–500ms: Background and architectural layout appear.
+ * - 500–1200ms: 3D DM monogram reveals and settles into position.
+ * - 1200–2200ms: Prominent greeting "HELLO, I'M DEV." fades in with subtle upward glide.
+ * - 2200–3500ms: Hold composition so visitors comfortably read it.
+ * - 3500ms: DM letters naturally separate & rotate, opening the architectural portal.
+ * - 4400ms: Cinematic camera moves forward smoothly through the portal into the hero.
+ * - 5500ms: Transition completes into the live portfolio hero.
  *
- * Sequence Timeline:
- * - Scene 01: Warm ivory background, architectural crosshairs, 3D DM monogram emerges.
- * - Scene 02: On click / Enter: D & M letters gently separate in 3D, catching light reflections.
- * - Scene 03: Minimal architectural portal doorway forms between D & M showing real hero core.
- * - Scene 04: Cinematic forward camera zoom smoothly magnifies portal to 100vw x 100vh.
- * - Scene 05: Seamless handoff to the existing dark portfolio hero without abrupt cut.
+ * Color System:
+ * - Primary Background: #F7F6F2 (Warm Ivory)
+ * - Primary Typography: #252A27 (Deep Charcoal)
+ * - Secondary Typography & Accents: #788477 (Muted Sage)
  */
 export default function PortfolioEntrance({ onComplete = () => {} }) {
-  // State Machine
-  const [stage, setStage] = useState('INITIAL'); // 'INITIAL' | 'ACTIVATING' | 'PORTAL_OPEN' | 'TRANSITIONING' | 'COMPLETED'
-  const [isHovered, setIsHovered] = useState(false);
+  // Sequence State: 'BG' -> 'MONOGRAM' -> 'GREETING' -> 'ACTIVATING' -> 'PORTAL_OPEN' -> 'TRANSITIONING' -> 'COMPLETED'
+  const [step, setStep] = useState(0); 
   const isTriggeredRef = useRef(false);
+  const timersRef = useRef([]);
 
   // Check user prefers-reduced-motion
   useEffect(() => {
@@ -32,43 +35,59 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
     }
   }, [onComplete]);
 
-  // Activate Entrance Sequence
-  const handleActivate = useCallback(() => {
-    if (isTriggeredRef.current || stage !== 'INITIAL') return;
-    isTriggeredRef.current = true;
-    setStage('ACTIVATING');
-
-    // 1. Monogram activation (letters separate & rotate) -> Portal Opens at 700ms
-    const t1 = setTimeout(() => {
-      setStage('PORTAL_OPEN');
-    }, 700);
-
-    // 2. Portal formed and viewed -> Camera zoom begins at 1700ms
-    const t2 = setTimeout(() => {
-      setStage('TRANSITIONING');
-    }, 1750);
-
-    // 3. Camera reaches 100vw, seamless reveal of hero section at 2950ms
-    const t3 = setTimeout(() => {
-      setStage('COMPLETED');
-      onComplete();
-    }, 2950);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-    };
-  }, [stage, onComplete]);
-
   // Skip Intro immediately
   const handleSkip = useCallback(() => {
+    if (isTriggeredRef.current) return;
     isTriggeredRef.current = true;
-    setStage('COMPLETED');
+    timersRef.current.forEach((t) => clearTimeout(t));
+    setStep(6);
     onComplete();
   }, [onComplete]);
 
-  // Keyboard navigation support (Esc to skip, Enter / Space handled on button)
+  // Automatic Timeline Sequence Setup
+  useEffect(() => {
+    if (isTriggeredRef.current) return;
+
+    // Step 1: Monogram reveal at 500ms
+    const t1 = setTimeout(() => {
+      setStep(1);
+    }, 500);
+
+    // Step 2: Large Greeting appears at 1300ms
+    const t2 = setTimeout(() => {
+      setStep(2);
+    }, 1300);
+
+    // Step 3: Hold until 3500ms, then automatically start activation
+    const t3 = setTimeout(() => {
+      setStep(3); // ACTIVATING (monogram separates)
+    }, 3500);
+
+    // Step 4: Portal opens at 4200ms
+    const t4 = setTimeout(() => {
+      setStep(4); // PORTAL_OPEN
+    }, 4200);
+
+    // Step 5: Camera zooms forward at 4900ms
+    const t5 = setTimeout(() => {
+      setStep(5); // TRANSITIONING
+    }, 4900);
+
+    // Step 6: Complete entrance at 5900ms
+    const t6 = setTimeout(() => {
+      isTriggeredRef.current = true;
+      setStep(6);
+      onComplete();
+    }, 5900);
+
+    timersRef.current = [t1, t2, t3, t4, t5, t6];
+
+    return () => {
+      timersRef.current.forEach((t) => clearTimeout(t));
+    };
+  }, [onComplete]);
+
+  // Keyboard navigation (Esc to skip)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -79,127 +98,146 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleSkip]);
 
-  if (stage === 'COMPLETED') {
+  if (step >= 6) {
     return null;
   }
 
-  const isActivating = stage === 'ACTIVATING' || stage === 'PORTAL_OPEN' || stage === 'TRANSITIONING';
-  const isPortalOpen = stage === 'PORTAL_OPEN' || stage === 'TRANSITIONING';
-  const isTransitioning = stage === 'TRANSITIONING';
+  const isActivating = step >= 3;
+  const isPortalOpen = step >= 4;
+  const isTransitioning = step >= 5;
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-between overflow-hidden select-none"
+      className="fixed inset-0 z-[100] flex flex-col justify-between overflow-hidden select-none"
       style={{
-        backgroundColor: '#F5F4F0', // Warm off-white / ivory architectural background
+        backgroundColor: '#F7F6F2', // Warm Ivory (Primary background)
       }}
       initial={{ opacity: 0 }}
       animate={{
         opacity: isTransitioning ? 0 : 1,
       }}
       transition={{
-        opacity: { duration: 0.6, delay: isTransitioning ? 0.65 : 0, ease: [0.16, 1, 0.3, 1] },
+        opacity: { duration: 0.7, delay: isTransitioning ? 0.45 : 0, ease: [0.16, 1, 0.3, 1] },
       }}
     >
       {/* Subtle Warm Paper Texture Grain Overlay */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-40 mix-blend-multiply"
+        className="absolute inset-0 pointer-events-none opacity-30 mix-blend-multiply"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
         }}
       />
 
-      {/* Thin Architectural Horizon and Vertical Grid Guide Lines */}
+      {/* Thin Architectural Horizon Guidelines */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Horizontal Alignment Guides */}
-        <div className="absolute top-20 left-8 right-8 h-px bg-[#E2DFD6]" />
-        <div className="absolute bottom-20 left-8 right-8 h-px bg-[#E2DFD6]" />
-
-        {/* Vertical Center Grid Line */}
-        <div className="absolute top-0 bottom-0 left-1/2 w-px bg-[#ECE9E1] -translate-x-1/2" />
-
-        {/* Corner Precision Crosshair Coordinates */}
-        <div className="absolute top-20 left-8 w-2 h-2 -translate-x-1/2 -translate-y-1/2 border-t border-l border-[#A6A296]" />
-        <div className="absolute top-20 right-8 w-2 h-2 translate-x-1/2 -translate-y-1/2 border-t border-r border-[#A6A296]" />
-        <div className="absolute bottom-20 left-8 w-2 h-2 -translate-x-1/2 translate-y-1/2 border-b border-l border-[#A6A296]" />
-        <div className="absolute bottom-20 right-8 w-2 h-2 translate-x-1/2 translate-y-1/2 border-b border-r border-[#A6A296]" />
+        <div className="absolute top-[88px] left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80" />
+        <div className="absolute bottom-[80px] left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80" />
+        <div className="absolute top-0 bottom-0 left-1/2 w-px bg-[#EFECE6] -translate-x-1/2" />
       </div>
 
-      {/* Subtle Digital Workspace Telemetry */}
+      {/* Subtle Digital Workspace Telemetry (Non-overlapping) */}
       <EntranceWorkspaceDetails
         isActivating={isActivating}
         isPortalOpen={isPortalOpen}
       />
 
-      {/* Top Editorial Bar */}
-      <header className="relative z-20 w-full px-8 py-7 flex items-center justify-between text-[11px] font-mono tracking-[0.25em] uppercase text-[#1C1E1D]">
-        <div className="flex items-center gap-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#1C1E1D]" />
-          <span className="font-bold">DEV MISTRY</span>
-          <span className="text-[#8C877B] hidden sm:inline">• PORTFOLIO</span>
+      {/* ==================== 1. CLEAN TWO-COLUMN HEADER ==================== */}
+      <header className="relative z-20 w-full px-6 md:px-12 pt-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono select-none">
+        {/* Left Column: Identity & Subtitle */}
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#252A27]" />
+            <span className="text-xs sm:text-sm font-bold tracking-[0.22em] text-[#252A27] uppercase">
+              DEV MISTRY / PORTFOLIO
+            </span>
+          </div>
+          <span className="text-[10px] tracking-[0.2em] text-[#788477] uppercase mt-1 pl-4">
+            DESIGN & CODE ARCHIVES
+          </span>
         </div>
 
-        {/* Skip Intro Button */}
-        <button
-          onClick={handleSkip}
-          className="group flex items-center gap-2 py-1.5 px-3 rounded-full border border-[#D5D2C7] bg-[#EFECE3]/70 hover:bg-[#E3DFD3] text-[#545148] hover:text-[#1C1E1D] transition-all cursor-pointer font-mono text-[10px] tracking-widest"
-          title="Skip intro to hero (Esc)"
-        >
-          <span>SKIP INTRO</span>
-          <span className="group-hover:translate-x-0.5 transition-transform text-[#8C877B]">→</span>
-        </button>
+        {/* Right Column: Specification & Skip Action */}
+        <div className="flex items-center justify-between sm:justify-end gap-6 md:gap-8">
+          <div className="hidden md:flex flex-col text-right">
+            <span className="text-[11px] font-bold tracking-[0.22em] text-[#252A27] uppercase">
+              DIMENSIONAL PORTFOLIO
+            </span>
+            <span className="text-[10px] tracking-[0.2em] text-[#788477] uppercase mt-0.5">
+              SPEC / 2026 EDITION
+            </span>
+          </div>
+
+          <button
+            onClick={handleSkip}
+            className="group flex items-center gap-2 py-1.5 px-4 rounded-full border border-[#DED9CE] bg-[#EFECE6]/80 hover:bg-[#E5E1D8] text-[#252A27] transition-all cursor-pointer font-mono text-[10px] sm:text-xs tracking-widest font-semibold"
+            title="Skip intro to hero (Esc)"
+          >
+            <span>SKIP INTRO</span>
+            <span className="group-hover:translate-x-0.5 transition-transform text-[#788477]">→</span>
+          </button>
+        </div>
       </header>
 
-      {/* Center 3D Stage (Monogram + Portal) */}
-      <main className="relative z-20 flex-1 flex flex-col items-center justify-center w-full px-6">
-        <div
-          className="relative flex items-center justify-center"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {/* Architectural Digital Portal */}
+      {/* ==================== 2. CENTER STAGE: MONOGRAM, GREETING & PORTAL ==================== */}
+      <main className="relative z-20 flex-1 flex flex-col items-center justify-center w-full px-6 py-4">
+        {/* Portal and 3D DM Monogram */}
+        <div className="relative flex items-center justify-center">
           <PortalScene
             isPortalOpen={isPortalOpen}
             isTransitioning={isTransitioning}
           />
 
-          {/* 3D DM Sculptural Monogram */}
-          <DMMonogram
-            isActivating={isActivating}
-            isPortalOpen={isPortalOpen}
-            isHovered={isHovered}
-            onActivate={handleActivate}
-          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{
+              opacity: step >= 1 ? 1 : 0,
+              scale: step >= 1 ? 1 : 0.95,
+            }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <DMMonogram
+              isActivating={isActivating}
+              isPortalOpen={isPortalOpen}
+            />
+          </motion.div>
         </div>
 
-        {/* Editorial Subtitle & Enter Instruction (Fades out once clicked) */}
-        <div
-          className={`flex flex-col items-center justify-center mt-6 text-center transition-all duration-500 ${
-            isActivating ? 'opacity-0 -translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'
-          }`}
+        {/* Prominent Editorial Greeting: "HELLO, I'M DEV." */}
+        <motion.div
+          className="flex flex-col items-center justify-center text-center mt-3 sm:mt-5 max-w-2xl px-4"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{
+            opacity: isActivating ? 0 : step >= 2 ? 1 : 0,
+            y: isActivating ? -12 : step >= 2 ? 0 : 18,
+          }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-[#6E6B62] font-medium max-w-md">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-black tracking-tight text-[#252A27] leading-[0.95] select-none">
+            HELLO, I'M DEV.
+          </h1>
+
+          <p className="mt-3 sm:mt-4 text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.28em] uppercase text-[#788477] font-semibold">
             DESIGNING & BUILDING DIGITAL EXPERIENCES
           </p>
 
-          <button
-            onClick={handleActivate}
-            className="mt-6 flex items-center gap-3 px-6 py-2.5 rounded-full border border-[#C8C5B9] bg-[#EAE7DC]/80 hover:bg-[#DDD8CB] text-[#1C1E1D] font-mono text-[11px] tracking-[0.25em] uppercase font-bold transition-all shadow-sm hover:shadow-md cursor-pointer group"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#1C1E1D] group-hover:scale-125 transition-transform" />
-            <span>ENTER EXPERIENCE</span>
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </button>
-        </div>
+          {/* Automatic Progress Indicator */}
+          <div className="mt-5 flex items-center gap-2 text-[9px] font-mono tracking-[0.2em] text-[#788477] uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#788477] animate-pulse" />
+            <span>TRANSITIONING TO EXHIBITION</span>
+          </div>
+        </motion.div>
       </main>
 
-      {/* Bottom Architectural Metadata Bar */}
-      <footer className="relative z-20 w-full px-8 py-7 flex items-center justify-between text-[10px] font-mono tracking-[0.25em] uppercase text-[#8C877B]">
-        <div className="flex items-center gap-3">
+      {/* ==================== 3. CLEAN TWO-COLUMN FOOTER ==================== */}
+      <footer className="relative z-20 w-full px-6 md:px-12 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-[10px] sm:text-[11px] tracking-[0.25em] uppercase select-none">
+        <div className="flex items-center gap-2 text-[#252A27] font-semibold">
+          <span className="w-1 h-1 rounded-full bg-[#788477]" />
           <span>ARCHITECTURAL 3D PORTAL</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span>CLICK MONOGRAM TO INITIATE</span>
+
+        <div className="flex items-center gap-2 text-[#788477]">
+          <span>AUTOMATIC PORTFOLIO TRANSITION</span>
+          <span className="hidden sm:inline">→</span>
         </div>
       </footer>
     </motion.div>

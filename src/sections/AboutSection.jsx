@@ -4,16 +4,16 @@ export default function AboutSection({ onBack }) {
   return (
     <div className="w-full h-full flex flex-col justify-between py-12 px-6 md:px-16 max-w-[1500px] mx-auto select-none">
       {/* Top Section Metadata */}
-      <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-4">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#788477] uppercase border-b border-[#2A302C] pb-4">
         <div className="flex items-center gap-3">
-          <span className="text-[#65E6D2] font-bold">01 / ABOUT</span>
+          <span className="text-[#F7F6F2] font-bold">01 / ABOUT</span>
           <span className="text-white/10">•</span>
-          <span className="text-[#9EA49F]">IDENTITY & ENGINEERING SPECIFICATION</span>
+          <span className="text-[#788477]">IDENTITY & ENGINEERING SPECIFICATION</span>
         </div>
         {onBack && (
           <button
             onClick={onBack}
-            className="text-[#65E6D2] hover:text-white transition-colors cursor-pointer"
+            className="text-[#788477] hover:text-[#F7F6F2] transition-colors cursor-pointer"
           >
             ← BACK TO HOME
           </button>
@@ -29,18 +29,18 @@ export default function AboutSection({ onBack }) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="font-mono text-[10px] tracking-[0.25em] text-[#65E6D2] uppercase block mb-3">
+            <span className="font-mono text-[10px] tracking-[0.25em] text-[#788477] uppercase block mb-3">
               PROFILE SPECIFICATION
             </span>
-            <h2 className="text-4xl sm:text-6xl md:text-7xl font-display font-black text-[#F1EFE8] uppercase tracking-tight leading-[0.9] mb-6">
+            <h2 className="text-4xl sm:text-6xl md:text-7xl font-display font-black text-[#F7F6F2] uppercase tracking-tight leading-[0.9] mb-6">
               DEV MISTRY
               <br />
-              <span className="text-[#9EA49F]">SOFTWARE</span>
+              <span className="text-[#788477]">SOFTWARE</span>
               <br />
               CLOUD • AI
             </h2>
 
-            <p className="font-sans text-base sm:text-lg text-[#9EA49F] font-light leading-relaxed max-w-xl mb-6">
+            <p className="font-sans text-base sm:text-lg text-[#788477] font-light leading-relaxed max-w-xl mb-6">
               Building intelligent digital systems across web, cloud, and autonomous AI swarms. Clean architecture, high availability, and deterministic execution.
             </p>
           </motion.div>
