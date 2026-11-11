@@ -26,7 +26,7 @@ export default function CustomCursor() {
 
     const handleMouseDown = (e) => {
       setIsClicking(true);
-      const colors = ['#788477', '#8E9C8D', '#5C665B', '#F7F6F2', '#252A27'];
+      const colors = ['#B96F52', '#788477', '#8E9C8D', '#F7F6F2', '#252A27'];
       const count = 14;
       const newParticles = [];
 
@@ -123,17 +123,17 @@ export default function CustomCursor() {
           />
 
           {/* Precision 4-Axis Reticle Ticks */}
-          <line x1="20" y1="2" x2="20" y2="7" stroke="#788477" strokeWidth="1.2" strokeLinecap="round" />
-          <line x1="20" y1="33" x2="20" y2="38" stroke="#788477" strokeWidth="1.2" strokeLinecap="round" />
-          <line x1="2" y1="20" x2="7" y2="20" stroke="#788477" strokeWidth="1.2" strokeLinecap="round" />
-          <line x1="33" y1="20" x2="38" y2="20" stroke="#788477" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="20" y1="2" x2="20" y2="7" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="20" y1="33" x2="20" y2="38" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="2" y1="20" x2="7" y2="20" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="33" y1="20" x2="38" y2="20" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
 
           {/* Central Target Reticle */}
           <circle
             cx="20"
             cy="20"
             r={isClicking ? 3.5 : isHovering ? 4 : 2.5}
-            fill={isClicking ? '#788477' : '#F7F6F2'}
+            fill={isClicking ? '#B96F52' : '#F7F6F2'}
             className="transition-all duration-150"
           />
 
@@ -142,7 +142,7 @@ export default function CustomCursor() {
             cx="32"
             cy="8"
             r="1.5"
-            fill="#788477"
+            fill="#B96F52"
             stroke="rgba(247, 246, 242, 0.7)"
             strokeWidth="0.8"
           />

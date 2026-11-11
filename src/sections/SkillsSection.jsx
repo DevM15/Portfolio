@@ -27,16 +27,16 @@ export default function SkillsSection({ onBack }) {
   return (
     <div className="w-full h-full flex flex-col justify-between py-16 px-6 md:px-16 max-w-[1500px] mx-auto select-none">
       {/* Top Section Metadata */}
-      <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#788477] uppercase border-b border-[#2A302C] pb-4">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[#788477] uppercase border-b border-[#2A302C] pb-4">
         <div className="flex items-center gap-3">
-          <span className="text-[#F7F6F2] font-bold">03 / SKILLS</span>
+          <span className="text-[#B96F52] font-semibold">03 / SKILLS</span>
           <span className="text-white/10">•</span>
           <span className="text-[#788477]">DIGITAL TECHNICAL MAP & CAPABILITIES</span>
         </div>
         {onBack && (
           <button
             onClick={onBack}
-            className="text-[#788477] hover:text-[#F7F6F2] transition-colors cursor-pointer"
+            className="text-[#B96F52] hover:text-[#F7F6F2] transition-colors cursor-pointer"
           >
             ← BACK TO HOME
           </button>

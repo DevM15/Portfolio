@@ -20,15 +20,15 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
       {/* Main Layout: Filters & Technical Cards Grid */}
       <div className="my-auto py-8">
         {/* Filters Strip */}
-        <div className="flex flex-wrap items-center gap-3 font-mono text-xs tracking-wider uppercase mb-8">
+        <div className="flex flex-wrap items-center gap-3 font-mono text-xs tracking-normal uppercase mb-8">
           <span className="text-[#788477] text-[10px] mr-2">CATEGORY:</span>
           {filters.map((f) => (
             <button
               key={f}
               onClick={() => onFilterChange(f)}
-              className={`px-3 py-1 transition-all rounded-[2px] ${
+              className={`px-3 py-1 transition-all rounded-[2px] cursor-pointer ${
                 activeFilter === f
-                  ? 'bg-[#788477] text-[#F7F6F2] font-bold'
+                  ? 'bg-[#B96F52] text-[#F7F6F2] font-semibold'
                   : 'text-[#788477] hover:text-[#F7F6F2] bg-[#171B19] border border-[#2A302C]'
               }`}
             >
@@ -46,7 +46,7 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
               onClick={() => onOpenProject(p)}
-              className="group cursor-pointer flex flex-col bg-[#111513] border border-[#2A302C] rounded-[2px] p-5 hover:border-[#788477] transition-all shadow-lg"
+              className="group cursor-pointer flex flex-col bg-[#111513] border border-[#2A302C] rounded-[2px] p-5 hover:border-[#B96F52] transition-all shadow-lg"
             >
               <div className="relative aspect-[16/10] bg-[#0B0D0C] border border-[#2A302C] overflow-hidden rounded-[2px]">
                 <img

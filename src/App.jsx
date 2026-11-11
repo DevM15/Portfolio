@@ -222,20 +222,20 @@ export default function App() {
       <header className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#F7F6F2] pointer-events-none bg-transparent">
         <div className="flex items-center gap-6 pointer-events-auto md:gap-12">
           <div className="flex items-baseline gap-2">
-            <span className="font-mono text-xs sm:text-sm tracking-widest text-[#788477]">NAME /</span>
-            <span className="text-lg sm:text-[21px] md:text-[23px] font-black tracking-tight text-[#F7F6F2] font-display">
+            <span className="font-mono text-xs tracking-wider text-[#788477]">NAME /</span>
+            <span className="text-lg sm:text-[20px] font-bold tracking-tight text-[#F7F6F2] font-display">
               DEV MISTRY
             </span>
           </div>
           <div className="items-baseline hidden gap-2 lg:flex">
-            <span className="font-mono text-xs sm:text-sm tracking-widest text-[#788477]">OCCUPATION /</span>
-            <span className="text-base sm:text-lg md:text-[19px] font-bold tracking-tight text-[#F7F6F2]">
+            <span className="font-mono text-xs tracking-wider text-[#788477]">OCCUPATION /</span>
+            <span className="text-sm sm:text-base font-semibold tracking-tight text-[#F7F6F2]">
               FULL STACK DEVELOPER
             </span>
           </div>
           <div className="items-baseline hidden gap-2 xl:flex">
-            <span className="font-mono text-xs sm:text-sm tracking-widest text-[#788477]">LOCATION /</span>
-            <span className="text-base sm:text-lg md:text-[19px] font-bold tracking-tight text-[#788477]">
+            <span className="font-mono text-xs tracking-wider text-[#788477]">LOCATION /</span>
+            <span className="text-sm sm:text-base font-semibold tracking-tight text-[#788477]">
               MUMBAI
             </span>
           </div>
@@ -252,10 +252,10 @@ export default function App() {
               <button
                 key={sec.id}
                 onClick={() => navigateToView(sec.id)}
-                className={`flip-nav-link text-sm sm:text-base md:text-lg font-bold tracking-tight transition-all duration-200 cursor-pointer ${
+                className={`flip-nav-link text-sm sm:text-base font-medium tracking-normal transition-all duration-200 cursor-pointer ${
                   isActive && !contactOpen
-                    ? 'active text-[#788477] font-black'
-                    : 'text-[#788477]/80 hover:text-[#F7F6F2]'
+                    ? 'active text-[#B96F52] font-bold'
+                    : 'text-[#788477] hover:text-[#F7F6F2]'
                 }`}
               >
                 <span className="flip-nav-inner">
@@ -404,17 +404,17 @@ export default function App() {
       </main>
 
       {/* ==================== GLOBAL FIXED FOOTER (FLOATING MINIMAL HUD) ==================== */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-[0.25em] uppercase text-[#788477] pointer-events-none bg-transparent">
+      <footer className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-wider uppercase text-[#788477] pointer-events-none bg-transparent">
         <div className="flex items-center gap-3 pointer-events-auto">
-          <span className="text-[#F7F6F2] font-black text-xs sm:text-sm md:text-base tracking-widest font-mono">
-            PORTFOLIO / 2026
+          <span className="text-[#F7F6F2] font-semibold text-xs sm:text-sm tracking-wider font-mono">
+            PORTFOLIO <span className="text-[#B96F52]">/</span> 2026
           </span>
         </div>
 
         <div className="flex items-center gap-6 pointer-events-auto">
           <button
             onClick={() => setOpenInfo(true)}
-            className="flip-nav-link text-xs sm:text-sm md:text-base font-bold tracking-widest text-[#F7F6F2] hover:text-[#788477] transition-colors cursor-pointer"
+            className="flip-nav-link text-xs sm:text-sm font-semibold tracking-wider text-[#F7F6F2] hover:text-[#B96F52] transition-colors cursor-pointer"
           >
             <span className="flip-nav-inner">
               <span className="flip-nav-front">INFO</span>
@@ -543,7 +543,7 @@ export default function App() {
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto font-mono text-xs uppercase tracking-widest bg-[#788477] hover:bg-[#8E9C8D] text-[#F7F6F2] px-6 py-3 font-bold transition-all shadow-md cursor-pointer"
+                      className="w-full sm:w-auto font-sans text-xs uppercase tracking-wider bg-[#B96F52] hover:bg-[#C98369] text-[#F7F6F2] px-6 py-3 font-semibold transition-all shadow-md cursor-pointer"
                     >
                       TRANSMIT MESSAGE
                     </button>
@@ -647,7 +647,7 @@ export default function App() {
                         setOpenInfo(false);
                         navigateToView('projects'); // Jump to Projects
                       }}
-                      className="w-full py-2.5 bg-[#788477] hover:bg-[#8E9C8D] text-[#F7F6F2] font-mono text-xs tracking-widest uppercase font-bold shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-2.5 bg-[#B96F52] hover:bg-[#C98369] text-[#F7F6F2] font-sans text-xs tracking-wider uppercase font-semibold shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>SEE ARCHITECTURAL PROJECTS</span>
                       <span>→</span>
@@ -657,7 +657,7 @@ export default function App() {
                         setOpenInfo(false);
                         navigateToView('contact');
                       }}
-                      className="w-full py-2 bg-[#171B19] hover:bg-[#2A302C] text-[#F7F6F2] font-mono text-xs tracking-widest uppercase transition-colors border border-[#2A302C] cursor-pointer"
+                      className="w-full py-2 bg-[#171B19] hover:bg-[#2A302C] text-[#F7F6F2] font-sans text-xs tracking-wider uppercase transition-colors border border-[#2A302C] cursor-pointer"
                     >
                       TRANSMIT INQUIRY ✉
                     </button>

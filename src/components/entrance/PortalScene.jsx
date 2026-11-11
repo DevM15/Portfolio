@@ -50,17 +50,17 @@ export default function PortalScene({
         <div
           className="absolute inset-0 pointer-events-none z-10 opacity-70"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(120, 132, 119, 0.16) 0%, rgba(5, 7, 6, 0.95) 75%)',
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(185, 111, 82, 0.12) 0%, rgba(5, 7, 6, 0.95) 75%)',
           }}
         />
 
         {/* Real Portfolio Content Miniature Preview inside the Portal */}
         <div className="absolute inset-0 flex flex-col justify-between p-6 z-20 select-none overflow-hidden text-[#F7F6F2]">
           {/* Header Preview */}
-          <div className="flex items-center justify-between text-[8px] font-mono tracking-widest text-[#788477] border-b border-[#2A302C]/60 pb-2">
+          <div className="flex items-center justify-between text-[8px] font-mono tracking-wider text-[#788477] border-b border-[#2A302C]/60 pb-2">
             <span>DEV MISTRY // 2026</span>
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#788477] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B96F52] animate-pulse" />
               <span>LIVE CORE</span>
             </div>
           </div>
@@ -83,12 +83,12 @@ export default function PortalScene({
 
             {/* Center Dev Portrait Hero Card */}
             <div
-              className="relative w-28 h-40 bg-[#161B18] border border-[#788477]/60 rounded-sm shadow-2xl z-10 overflow-hidden flex flex-col justify-between p-2"
+              className="relative w-28 h-40 bg-[#161B18] border border-[#B96F52]/60 rounded-sm shadow-2xl z-10 overflow-hidden flex flex-col justify-between p-2"
               style={{
                 transform: 'perspective(500px) translateZ(20px)',
               }}
             >
-              <div className="text-[7px] font-mono text-[#788477] tracking-wider">
+              <div className="text-[7px] font-mono text-[#B96F52] tracking-wider">
                 01 / PROFILE
               </div>
               <div className="relative w-full h-24 overflow-hidden rounded-[1px] my-1 bg-black/40">
@@ -100,7 +100,7 @@ export default function PortalScene({
               </div>
               <div className="text-[7px] font-mono text-[#F7F6F2] flex items-center justify-between">
                 <span>DEV MISTRY</span>
-                <span className="text-[#788477]">→</span>
+                <span className="text-[#B96F52]">→</span>
               </div>
             </div>
 
@@ -120,7 +120,7 @@ export default function PortalScene({
           </div>
 
           {/* Footer Preview */}
-          <div className="flex items-center justify-between text-[7px] font-mono text-[#788477] tracking-[0.2em] border-t border-[#2A302C]/60 pt-2">
+          <div className="flex items-center justify-between text-[7px] font-mono text-[#788477] tracking-[0.12em] border-t border-[#2A302C]/60 pt-2">
             <span>MUMBAI • FULL STACK</span>
             <span>CYLINDER 3D</span>
           </div>
@@ -131,7 +131,7 @@ export default function PortalScene({
           className="absolute inset-0 pointer-events-none z-30"
           style={{
             border: '1px solid rgba(255, 255, 255, 0.4)',
-            boxShadow: 'inset 0 0 24px rgba(120, 132, 119, 0.2)',
+            boxShadow: 'inset 0 0 24px rgba(185, 111, 82, 0.2)',
           }}
           animate={{
             opacity: [0.4, 0.8, 0.4],
