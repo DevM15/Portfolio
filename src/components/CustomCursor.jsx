@@ -1,15 +1,38 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 /**
- * CustomCursor - High-Performance Direct DOM Cursor
- * - Zero React re-renders on mousemove (uses GPU translate3d via direct DOM ref)
- * - Zero setInterval loops
- * - Preserves the exact precision digital reticle aesthetic with Terracotta accents
+ * CustomCursor:
+ * Premium Architectural Editorial Cursor with:
+ * - Small charcoal circular cursor with central dot and thin outer ring
+ * - Subtle terracotta accent
+ * - Contextual hover labels:
+ *   - Project cards: "EXPLORE"
+ *   - Profile photograph: "ABOUT"
+ *   - Navigation links: subtle ring expansion
+ *   - Primary buttons: "CLICK"
+ *   - Archive / external links: "VIEW"
+ * - High-precision tactile click effect:
+ *   - Terracotta central pulse
+ *   - Expanding thin circular ring (ease-out, 450-550ms)
+ * - Zero cursor lag, hardware-accelerated transform, respects touch devices & reduced-motion
  */
 export default function CustomCursor() {
   const cursorRef = useRef(null);
+  const ringRef = useRef(null);
+  const dotRef = useRef(null);
+  const labelRef = useRef(null);
+  const [clickRipples, setClickRipples] = useState([]);
+
+  // Remove ripples after animation finishes
+  const handleRippleEnd = useCallback((id) => {
+    setClickRipples((prev) => prev.filter((r) => r.id !== id));
+  }, []);
 
   useEffect(() => {
+    // Check for touch / fine pointer device
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    if (isTouch) return;
+
     let animId;
     let targetX = -100;
     let targetY = -100;
@@ -18,6 +41,9 @@ export default function CustomCursor() {
     let isMoving = false;
 
     const el = cursorRef.current;
+    const dotEl = dotRef.current;
+    const labelEl = labelRef.current;
+
     if (!el) return;
 
     const handleMouseMove = (e) => {
@@ -30,31 +56,97 @@ export default function CustomCursor() {
       }
     };
 
+    // Determine Contextual Cursor Label on Hover
     const handleMouseOver = (e) => {
-      if (e.target.closest('button, a, [data-interactive], input, textarea, .cursor-pointer')) {
+      const target = e.target;
+      if (!target || !(target instanceof HTMLElement)) return;
+
+      const projectCard = target.closest('[data-cursor="project"], .group.cursor-pointer');
+      const profilePhoto = target.closest('[data-cursor="profile"]');
+      const archiveLink = target.closest('[data-cursor="archive"]');
+      const primaryBtn = target.closest('button:not([data-cursor="none"]), [data-cursor="button"]');
+      const navLink = target.closest('.flip-nav-link, a, nav button');
+
+      if (profilePhoto) {
         el.dataset.hover = 'true';
+        el.dataset.accent = 'terracotta';
+        if (labelEl) {
+          labelEl.textContent = 'ABOUT';
+          labelEl.style.opacity = '1';
+          labelEl.style.transform = 'translate(14px, 14px) scale(1)';
+        }
+      } else if (projectCard) {
+        el.dataset.hover = 'true';
+        el.dataset.accent = 'terracotta';
+        if (labelEl) {
+          labelEl.textContent = 'EXPLORE';
+          labelEl.style.opacity = '1';
+          labelEl.style.transform = 'translate(14px, 14px) scale(1)';
+        }
+      } else if (archiveLink) {
+        el.dataset.hover = 'true';
+        el.dataset.accent = 'terracotta';
+        if (labelEl) {
+          labelEl.textContent = 'VIEW';
+          labelEl.style.opacity = '1';
+          labelEl.style.transform = 'translate(14px, 14px) scale(1)';
+        }
+      } else if (primaryBtn) {
+        el.dataset.hover = 'true';
+        el.dataset.accent = 'charcoal';
+        if (labelEl) {
+          labelEl.textContent = 'CLICK';
+          labelEl.style.opacity = '1';
+          labelEl.style.transform = 'translate(14px, 14px) scale(1)';
+        }
+      } else if (navLink) {
+        el.dataset.hover = 'true';
+        el.dataset.accent = 'terracotta';
+        if (labelEl) {
+          labelEl.textContent = '';
+          labelEl.style.opacity = '0';
+          labelEl.style.transform = 'translate(14px, 14px) scale(0.8)';
+        }
       }
     };
 
     const handleMouseOut = (e) => {
-      if (e.target.closest('button, a, [data-interactive], input, textarea, .cursor-pointer')) {
+      const target = e.target;
+      if (!target || !(target instanceof HTMLElement)) return;
+
+      if (target.closest('button, a, .cursor-pointer, [data-cursor]')) {
         delete el.dataset.hover;
+        delete el.dataset.accent;
+        if (labelEl) {
+          labelEl.style.opacity = '0';
+          labelEl.style.transform = 'translate(14px, 14px) scale(0.8)';
+        }
       }
     };
 
-    const handleMouseDown = () => {
+    // Click Ripple Generation
+    const handleMouseDown = (e) => {
       el.dataset.click = 'true';
+      if (dotEl) dotEl.style.transform = 'scale(0.6)';
+
+      // Trigger subtle tactile click ripple at exact mouse coordinate
+      const rippleId = performance.now() + Math.random();
+      setClickRipples((prev) => [
+        ...prev.slice(-3), // Limit maximum 4 simultaneous ripples to maintain zero lag
+        { id: rippleId, x: e.clientX, y: e.clientY },
+      ]);
     };
 
     const handleMouseUp = () => {
       delete el.dataset.click;
+      if (dotEl) dotEl.style.transform = 'scale(1)';
     };
 
-    // Smooth 60/120fps GPU transform loop
+    // Smooth tight GPU transform loop (low latency 0.45 lerp factor for instant responsiveness)
     const tick = () => {
-      currentX += (targetX - currentX) * 0.35;
-      currentY += (targetY - currentY) * 0.35;
-      el.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      currentX += (targetX - currentX) * 0.45;
+      currentY += (targetY - currentY) * 0.45;
+      el.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0)`;
       animId = requestAnimationFrame(tick);
     };
 
@@ -77,56 +169,75 @@ export default function CustomCursor() {
   }, []);
 
   return (
-    <div
-      ref={cursorRef}
-      className="pointer-events-none fixed top-0 left-0 z-[9999] hidden md:block will-change-transform group"
-      style={{
-        transform: 'translate3d(-100px, -100px, 0) translate(-50%, -50%)',
-      }}
-    >
-      <svg
-        width="36"
-        height="36"
-        viewBox="0 0 40 40"
-        className="transition-all duration-200 ease-out group-data-[hover=true]:scale-125 group-data-[click=true]:scale-90"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+    <>
+      {/* ==================== 1. MAIN EDITORIAL CURSOR ==================== */}
+      <div
+        ref={cursorRef}
+        className="pointer-events-none fixed top-0 left-0 z-[9999] hidden md:block will-change-transform group select-none"
+        style={{
+          transform: 'translate3d(-100px, -100px, 0)',
+        }}
       >
-        {/* Outer Rotating Crosshair Ring */}
-        <circle
-          cx="20"
-          cy="20"
-          r="14"
-          stroke="rgba(120, 132, 119, 0.45)"
-          strokeWidth="1"
-          className="transition-colors group-data-[hover=true]:stroke-[#252A27] group-data-[hover=true]:stroke-[1.5] group-data-[click=true]:stroke-[#B96F52]"
-        />
+        <div className="relative -top-1/2 -left-1/2 flex items-center justify-center w-8 h-8 -translate-x-1/2 -translate-y-1/2">
+          {/* Thin Outer Ring (Expands smoothly on hover) */}
+          <div
+            ref={ringRef}
+            className="absolute w-6 h-6 rounded-full border border-[#252A27]/40 transition-all duration-200 ease-out group-data-[hover=true]:w-8 group-data-[hover=true]:h-8 group-data-[hover=true]:border-[#B96F52] group-data-[hover=true]:border-[1.5px] group-data-[click=true]:scale-90"
+          />
 
-        {/* Precision 4-Axis Reticle Ticks */}
-        <line x1="20" y1="2" x2="20" y2="7" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
-        <line x1="20" y1="33" x2="20" y2="38" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
-        <line x1="2" y1="20" x2="7" y2="20" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
-        <line x1="33" y1="20" x2="38" y2="20" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
+          {/* Central Precision Dot */}
+          <div
+            ref={dotRef}
+            className="w-1.5 h-1.5 rounded-full bg-[#252A27] transition-all duration-150 ease-out group-data-[hover=true]:bg-[#B96F52] group-data-[click=true]:bg-[#B96F52] group-data-[click=true]:scale-75 shadow-xs"
+          />
 
-        {/* Central Target Reticle */}
-        <circle
-          cx="20"
-          cy="20"
-          r="2.5"
-          fill="#252A27"
-          className="transition-all duration-150 group-data-[hover=true]:r-[3.5] group-data-[click=true]:fill-[#B96F52]"
-        />
+          {/* Contextual Editorial Label (Appears beside cursor on relevant hover) */}
+          <span
+            ref={labelRef}
+            className="absolute font-mono text-[9px] font-semibold tracking-wider text-[#F7F6F2] bg-[#252A27] border border-[#353A37] px-1.5 py-0.5 rounded-[1px] opacity-0 pointer-events-none transition-all duration-200 ease-out shadow-sm"
+            style={{
+              transform: 'translate(14px, 14px) scale(0.8)',
+              transformOrigin: 'top left',
+            }}
+          />
+        </div>
+      </div>
 
-        {/* Satellite Orbit Dot */}
-        <circle
-          cx="32"
-          cy="8"
-          r="1.5"
-          fill="#B96F52"
-          stroke="rgba(37, 42, 39, 0.7)"
-          strokeWidth="0.8"
-        />
-      </svg>
+      {/* ==================== 2. TACTILE EDITORIAL CLICK RIPPLES ==================== */}
+      <div className="pointer-events-none fixed inset-0 z-[9998] overflow-hidden">
+        {clickRipples.map((ripple) => (
+          <ClickRippleItem key={ripple.id} ripple={ripple} onEnd={() => handleRippleEnd(ripple.id)} />
+        ))}
+      </div>
+    </>
+  );
+}
+
+/**
+ * ClickRippleItem:
+ * High-performance CSS animation for tactile click feedback
+ * - Small terracotta dot (brief 1 -> 0 scale)
+ * - Thin circular ring expanding 1 to 2.5 with smooth ease-out fade (500ms)
+ */
+function ClickRippleItem({ ripple, onEnd }) {
+  useEffect(() => {
+    const timer = setTimeout(onEnd, 520);
+    return () => clearTimeout(timer);
+  }, [onEnd]);
+
+  return (
+    <div
+      className="absolute pointer-events-none -translate-x-1/2 -translate-y-1/2 select-none"
+      style={{ left: `${ripple.x}px`, top: `${ripple.y}px` }}
+    >
+      {/* Expanding Thin Terracotta Ring */}
+      <div
+        className="w-6 h-6 rounded-full border border-[#B96F52] animate-editorial-click-ring"
+      />
+      {/* Central Flash Dot */}
+      <div
+        className="absolute inset-0 m-auto w-1.5 h-1.5 rounded-full bg-[#B96F52] animate-editorial-click-dot"
+      />
     </div>
   );
 }

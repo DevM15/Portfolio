@@ -93,3 +93,46 @@ html, body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ==================== TACTILE EDITORIAL CLICK & BUTTON INTERACTIONS ==================== */
+@keyframes editorialClickRing {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes editorialClickDot {
+  0% {
+    transform: scale(1.4);
+    opacity: 0.9;
+  }
+  40% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-editorial-click-ring {
+  animation: editorialClickRing 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-editorial-click-dot {
+  animation: editorialClickDot 0.45s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* Tactile downward press effect for buttons */
+button:active:not([disabled]) {
+  transform: translateY(1px) scale(0.985);
+  transition: transform 0.08s ease-out;
+}

@@ -218,6 +218,7 @@ export default function HomeSection({
 
               <button
                 onClick={() => onNavigateToProjects && onNavigateToProjects()}
+                data-cursor="archive"
                 className="px-4 py-2.5 bg-[#FFFFFF] hover:bg-[#F7F6F2] text-[#252A27] hover:text-[#B96F52] border border-[#DED9CE] hover:border-[#B96F52] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] cursor-pointer"
               >
                 VIEW ARCHIVE
@@ -239,6 +240,7 @@ export default function HomeSection({
               {/* The Central DM Identity Card (Transitions smoothly in 3D into the hero portrait) */}
               <motion.div
                 layoutId="dm-central-anchor"
+                data-cursor="profile"
                 animate={{
                   y: isProfileTrans ? 0 : isGreetingExit ? -8 : 0,
                   scale: isProfileTrans ? 1 : isCardFormed ? 1.02 : 1.0,
@@ -320,6 +322,7 @@ export default function HomeSection({
               }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               onClick={() => onOpenSection && onOpenSection(rightProject.sectionId)}
+              data-cursor="project"
               className="group relative bg-[#FFFFFF] border border-[#DED9CE] hover:border-[#B96F52] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(37,42,39,0.06)] hover:shadow-[0_16px_40px_rgba(185,111,82,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
             >
               <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[#ECE8DE] bg-[#F7F6F2]">
@@ -372,6 +375,7 @@ export default function HomeSection({
               }}
               transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               onClick={() => onOpenSection && onOpenSection(leftProject.sectionId)}
+              data-cursor="project"
               className="group relative bg-[#FFFFFF] border border-[#DED9CE] hover:border-[#B96F52] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(37,42,39,0.06)] hover:shadow-[0_16px_40px_rgba(185,111,82,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
             >
               <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[#ECE8DE] bg-[#F7F6F2]">
