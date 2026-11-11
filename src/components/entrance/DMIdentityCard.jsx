@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 /**
  * DMIdentityCard:
@@ -79,9 +80,16 @@ export default function DMIdentityCard({
             <span>EDITION / 2026</span>
           </div>
 
-          {/* Centered Metallic DM Monogram */}
-          <div
-            className="relative flex items-center justify-center my-auto"
+          {/* Centered Metallic DM Monogram with Brand Identity Reveal & Light Sheen Sweep */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 2.0,
+              delay: 0.6,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="relative flex items-center justify-center my-auto overflow-hidden px-4 py-2"
             style={{ transformStyle: 'preserve-3d' }}
           >
             {/* D Letter */}
@@ -127,7 +135,23 @@ export default function DMIdentityCard({
                 M
               </span>
             </div>
-          </div>
+
+            {/* Subtle Metallic Light Sheen Reflection Sweep */}
+            <motion.div
+              initial={{ x: '-120%', opacity: 0 }}
+              animate={{ x: '180%', opacity: [0, 0.65, 0.65, 0] }}
+              transition={{
+                duration: 1.8,
+                delay: 1.3,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="absolute inset-0 pointer-events-none mix-blend-overlay"
+              style={{
+                background: 'linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.85) 50%, transparent 80%)',
+                transform: 'skewX(-20deg)',
+              }}
+            />
+          </motion.div>
 
           {/* Micro Bottom Footer on Identity Card (reveals smoothly when framed) */}
           <div

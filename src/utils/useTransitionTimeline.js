@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 
 export const TRANSITION_PHASES = {
-  INTRO: 'INTRO',                                 // 0 - 2200ms: Standalone DM monogram + greeting
-  GREETING_EXIT: 'GREETING_EXIT',                 // 2200 - 2600ms: Greeting slides up and fades out
-  CARD_FORMATION: 'CARD_FORMATION',               // 2600 - 3100ms: Rectangular identity card forms
-  CARD_FLIP: 'CARD_FLIP',                         // 3100 - 4300ms: 180° Y-axis flip revealing profile photo
-  BACKGROUND_TRANSFORM: 'BACKGROUND_TRANSFORM',   // 3900 - 4700ms: Canvas grid and horizon lines draw
-  NAVIGATION_REVEAL: 'NAVIGATION_REVEAL',         // 4400 - 5200ms: Header & nav links staggered entrance
-  PROFILE_TRANSITION: 'PROFILE_TRANSITION',       // 4700 - 5400ms: Profile card moves into 3D cylinder depth
-  HERO_REVEAL: 'HERO_REVEAL',                     // 5100 - 5800ms: Center camera reticle expands & settles
-  PROJECT_REVEAL: 'PROJECT_REVEAL',               // 5400 - 6400ms: Gallery project cards fan out along cylinder
-  DECORATION_SETTLEMENT: 'DECORATION_SETTLEMENT', // 6100 - 6800ms: Footer & micro-metadata glide into place
-  COMPLETED: 'COMPLETED',                         // 6800ms+: Full interactive mode, physics unrestricted
+  INTRO: 'INTRO',                                 // 0 - 6650ms: Slower, cinematic DM reveal + greeting + 2800ms reading pause
+  GREETING_EXIT: 'GREETING_EXIT',                 // 6650 - 7100ms: Greeting slides up and fades out (450ms)
+  CARD_FORMATION: 'CARD_FORMATION',               // 7100 - 7600ms: Rectangular identity card forms (500ms)
+  CARD_FLIP: 'CARD_FLIP',                         // 7600 - 8800ms: 180° Y-axis flip revealing profile photo (1200ms)
+  BACKGROUND_TRANSFORM: 'BACKGROUND_TRANSFORM',   // 8400 - 9200ms: Canvas grid and horizon lines draw (800ms)
+  NAVIGATION_REVEAL: 'NAVIGATION_REVEAL',         // 8900 - 9500ms: Header & nav links staggered entrance (600ms)
+  PROFILE_TRANSITION: 'PROFILE_TRANSITION',       // 9200 - 9700ms: Profile card moves into 3D cylinder depth (500ms)
+  HERO_REVEAL: 'HERO_REVEAL',                     // 9600 - 10100ms: Center camera reticle expands & settles (500ms)
+  PROJECT_REVEAL: 'PROJECT_REVEAL',               // 9900 - 10900ms: Gallery project cards fan out along cylinder (1000ms)
+  DECORATION_SETTLEMENT: 'DECORATION_SETTLEMENT', // 10600 - 11300ms: Footer & micro-metadata glide into place (700ms)
+  COMPLETED: 'COMPLETED',                         // 11300ms+: Full interactive mode, physics unrestricted
 };
 
 export const PHASE_ORDER = [
@@ -29,16 +29,16 @@ export const PHASE_ORDER = [
 ];
 
 const TIMINGS = [
-  { phase: TRANSITION_PHASES.GREETING_EXIT, time: 2200 },
-  { phase: TRANSITION_PHASES.CARD_FORMATION, time: 2600 },
-  { phase: TRANSITION_PHASES.CARD_FLIP, time: 3100 },
-  { phase: TRANSITION_PHASES.BACKGROUND_TRANSFORM, time: 3900 },
-  { phase: TRANSITION_PHASES.NAVIGATION_REVEAL, time: 4400 },
-  { phase: TRANSITION_PHASES.PROFILE_TRANSITION, time: 4700 },
-  { phase: TRANSITION_PHASES.HERO_REVEAL, time: 5100 },
-  { phase: TRANSITION_PHASES.PROJECT_REVEAL, time: 5400 },
-  { phase: TRANSITION_PHASES.DECORATION_SETTLEMENT, time: 6100 },
-  { phase: TRANSITION_PHASES.COMPLETED, time: 6800 },
+  { phase: TRANSITION_PHASES.GREETING_EXIT, time: 6650 },
+  { phase: TRANSITION_PHASES.CARD_FORMATION, time: 7100 },
+  { phase: TRANSITION_PHASES.CARD_FLIP, time: 7600 },
+  { phase: TRANSITION_PHASES.BACKGROUND_TRANSFORM, time: 8400 },
+  { phase: TRANSITION_PHASES.NAVIGATION_REVEAL, time: 8900 },
+  { phase: TRANSITION_PHASES.PROFILE_TRANSITION, time: 9200 },
+  { phase: TRANSITION_PHASES.HERO_REVEAL, time: 9600 },
+  { phase: TRANSITION_PHASES.PROJECT_REVEAL, time: 9900 },
+  { phase: TRANSITION_PHASES.DECORATION_SETTLEMENT, time: 10600 },
+  { phase: TRANSITION_PHASES.COMPLETED, time: 11300 },
 ];
 
 export function useTransitionTimeline() {
@@ -80,16 +80,16 @@ export function useTransitionTimeline() {
       activeTimers.push(timer);
     });
 
-    // Continuous RAF loop for smooth gallery fan-out interpolation (5400ms to 6400ms)
+    // Continuous RAF loop for smooth gallery fan-out interpolation (9900ms to 10900ms)
     const updateProgress = () => {
       if (!startTimeRef.current) return;
       const elapsed = performance.now() - startTimeRef.current;
-      if (elapsed >= 6400) {
+      if (elapsed >= 10900) {
         setUnfoldProgress(1);
         return;
       }
-      if (elapsed > 5400) {
-        const p = Math.min((elapsed - 5400) / 1000, 1);
+      if (elapsed > 9900) {
+        const p = Math.min((elapsed - 9900) / 1000, 1);
         setUnfoldProgress(p);
       } else {
         setUnfoldProgress(0);

@@ -594,15 +594,40 @@ export default function HomeSection({
                 y: phaseIndex === 0 ? 0 : -16,
               }}
               exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="absolute top-[calc(50%+165px)] sm:top-[calc(50%+180px)] md:top-[calc(50%+195px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-30"
             >
-              <h1 className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none">
+              <motion.h1
+                initial={{ opacity: 0, y: 18 }}
+                animate={{
+                  opacity: phaseIndex === 0 ? 1 : 0,
+                  y: phaseIndex === 0 ? 0 : -18,
+                }}
+                transition={{
+                  duration: 1.2,
+                  delay: phaseIndex === 0 ? 2.6 : 0,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none"
+              >
                 HELLO, I'M DEV<span className="text-[#B96F52]">.</span>
-              </h1>
-              <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-sans font-medium text-[#788477] tracking-normal select-none">
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 14 }}
+                animate={{
+                  opacity: phaseIndex === 0 ? 1 : 0,
+                  y: phaseIndex === 0 ? 0 : -14,
+                }}
+                transition={{
+                  duration: 0.95,
+                  delay: phaseIndex === 0 ? 2.95 : 0,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-sans font-medium text-[#788477] tracking-normal select-none"
+              >
                 DESIGNING & BUILDING DIGITAL EXPERIENCES.
-              </p>
+              </motion.p>
             </motion.div>
           )}
         </AnimatePresence>
