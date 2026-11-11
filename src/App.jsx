@@ -117,7 +117,7 @@ export default function App() {
     phaseIndex,
     isAtLeast,
     isCompleted,
-    unfoldProgress,
+    timelineStart,
   } = useTransitionTimeline();
 
   const navigateToView = useCallback((viewId) => {
@@ -208,7 +208,7 @@ export default function App() {
       />
 
       {/* Extremely Faint Paper Grain Overlay */}
-      <div className="absolute inset-0 pointer-events-none z-[2] bg-subtle-grain mix-blend-multiply opacity-25" />
+      <div className="absolute inset-0 pointer-events-none z-[2] bg-subtle-grain opacity-20" />
 
       {/* Minimal Architectural Horizon Guidelines (draws across during BACKGROUND_TRANSFORM) */}
       <motion.div
@@ -339,7 +339,7 @@ export default function App() {
                 onNavigateToContact={() => navigateToView('contact')}
                 transitionPhase={transitionPhase}
                 phaseIndex={phaseIndex}
-                unfoldProgress={unfoldProgress}
+                timelineStart={timelineStart}
               />
             </motion.div>
           )}

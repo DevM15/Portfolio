@@ -132,17 +132,17 @@ export default function HomeSection({
   onOpenSection,
   transitionPhase = 'COMPLETED',
   phaseIndex = 10,
-  unfoldProgress = 1,
+  timelineStart = null,
 }) {
   const containerRef = useRef(null);
   const cardElementsRef = useRef([]);
   const cardImgRefs = useRef([]);
   const reticleRef = useRef(null);
 
-  const transitionPropsRef = useRef({ transitionPhase, phaseIndex, unfoldProgress });
+  const transitionPropsRef = useRef({ transitionPhase, phaseIndex, timelineStart });
   useEffect(() => {
-    transitionPropsRef.current = { transitionPhase, phaseIndex, unfoldProgress };
-  }, [transitionPhase, phaseIndex, unfoldProgress]);
+    transitionPropsRef.current = { transitionPhase, phaseIndex, timelineStart };
+  }, [transitionPhase, phaseIndex, timelineStart]);
 
   // Physics animation variables in refs (eliminates 60fps React re-renders)
   const physicsRef = useRef({
@@ -208,7 +208,10 @@ export default function HomeSection({
       p.cameraReticleX = lerp(p.cameraReticleX, p.targetReticleX, 0.08);
       p.cameraReticleY = lerp(p.cameraReticleY, p.targetReticleY, 0.08);
 
-      const { phaseIndex: currPhase, unfoldProgress: currUnfold } = transitionPropsRef.current;
+      const { phaseIndex: currPhase, timelineStart } = transitionPropsRef.current;
+      const tStart = timelineStart || performance.now();
+      const elapsed = performance.now() - tStart;
+      const currUnfold = Math.min(Math.max(0, (elapsed - 9900) / 1000), 1);
 
       // Update camera reticle DOM transform (animates scale & opacity at HERO_REVEAL)
       if (reticleRef.current) {
@@ -218,7 +221,7 @@ export default function HomeSection({
         p.reticleOpacity = lerp(p.reticleOpacity || 0, targetReticleOpacity, 0.08);
         p.reticleScale = lerp(p.reticleScale || 0.4, targetReticleScale, 0.08);
 
-        reticleRef.current.style.transform = `translate3d(${p.cameraReticleX}px, ${p.cameraReticleY}px, 0) scale(${p.reticleScale.toFixed(3)})`;
+        reticleRef.current.style.transform = `translate3d(${p.cameraReticleX.toFixed(1)}px, ${p.cameraReticleY.toFixed(1)}px, 0) scale(${p.reticleScale.toFixed(3)})`;
         reticleRef.current.style.opacity = p.reticleOpacity.toFixed(3);
       }
 
@@ -245,7 +248,6 @@ export default function HomeSection({
         const normDist = Math.min(absDiff / 85, 1);
         const targetScale = lerp(1.08, 0.68, normDist);
         const targetOpacity = lerp(1.0, 0.45, normDist);
-        const targetBrightness = lerp(1.0, 0.65, normDist);
 
         // Hover offset
         const isHovered = p.hoveredIndex === i;
@@ -291,15 +293,11 @@ export default function HomeSection({
           // Cards 1..11: Project Gallery Cards
           if (currPhase < 8) {
             // Completely hidden before PROJECT_REVEAL
-            cardState.x = 0;
-            cardState.y = 0;
-            cardState.z = -300;
-            cardState.rotY = 0;
-            cardState.rotX = 0;
-            cardState.scale = 0.5;
-            cardState.opacity = 0;
-            el.style.opacity = '0';
-            el.style.pointerEvents = 'none';
+            if (cardState.opacity > 0) {
+              cardState.opacity = 0;
+              el.style.opacity = '0';
+              el.style.pointerEvents = 'none';
+            }
             continue;
           } else if (currPhase < 10) {
             // PROJECT_REVEAL: Symmetrical fan-out along cylindrical arc
@@ -324,8 +322,10 @@ export default function HomeSection({
             if (absDiff > 85) {
               cardState.opacity = lerp(cardState.opacity, 0, 0.15);
               if (cardState.opacity < 0.01) {
-                el.style.opacity = '0';
-                el.style.pointerEvents = 'none';
+                if (el.style.opacity !== '0') {
+                  el.style.opacity = '0';
+                  el.style.pointerEvents = 'none';
+                }
                 continue;
               }
             }
@@ -345,33 +345,45 @@ export default function HomeSection({
           }
         }
 
-        cardState.brightness = lerp(cardState.brightness, targetBrightness, 0.08);
-        cardState.imgScale = lerp(cardState.imgScale, isHovered ? 1.03 : 1.0, 0.08);
-
         // Update card DOM transforms directly (GPU-friendly translate3d)
         el.style.transform = `
-          translate3d(calc(-50% + ${cardState.x.toFixed(2)}px), calc(-50% + ${cardState.y.toFixed(2)}px), ${cardState.z.toFixed(2)}px)
-          rotateY(${cardState.rotY.toFixed(2)}deg)
-          rotateX(${cardState.rotX.toFixed(2)}deg)
+          translate3d(calc(-50% + ${cardState.x.toFixed(1)}px), calc(-50% + ${cardState.y.toFixed(1)}px), ${cardState.z.toFixed(1)}px)
+          rotateY(${cardState.rotY.toFixed(1)}deg)
+          rotateX(${cardState.rotX.toFixed(1)}deg)
           scale(${cardState.scale.toFixed(3)})
         `;
         el.style.opacity = cardState.opacity.toFixed(3);
         el.style.zIndex = Math.round(100 - absDiff);
         el.style.pointerEvents = (currPhase >= 10 && cardState.opacity > 0.2) ? 'auto' : (i === 0 && currPhase >= 10 ? 'auto' : 'none');
 
-        // Update liquid image scale
+        // Update image hover scale only on hovered card
         const img = cardImgRefs.current[i];
         if (img) {
-          img.style.filter = `contrast(1.1) brightness(${cardState.brightness.toFixed(2)})`;
-          img.style.transform = `scale(${cardState.imgScale.toFixed(3)})`;
+          const targetImgScale = isHovered ? 'scale(1.03)' : 'scale(1)';
+          if (img.style.transform !== targetImgScale) {
+            img.style.transform = targetImgScale;
+          }
         }
       }
 
       animId = requestAnimationFrame(tick);
     };
 
+    // Pause animation when page tab is hidden
+    const handleVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animId);
+      } else {
+        animId = requestAnimationFrame(tick);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
     animId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(animId);
+    return () => {
+      cancelAnimationFrame(animId);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [totalCards, stepAngle]);
 
   // Wheel listener: feeding smooth velocity
@@ -504,10 +516,10 @@ export default function HomeSection({
         {/* ==================== 1. FIXED CAMERA RETICLE (VIEWPOINT = 0,0,0) ==================== */}
         <div
           ref={reticleRef}
-          className="absolute z-10 pointer-events-none flex items-center justify-center"
+          className="absolute z-10 flex items-center justify-center pointer-events-none"
           style={{ willChange: 'transform, opacity', opacity: 0 }}
         >
-          <div className="relative w-8 h-8 flex items-center justify-center">
+          <div className="relative flex items-center justify-center w-8 h-8">
             <div className="w-4 h-4 rounded-full border border-[#B96F52]" />
             <div className="w-1.5 h-1.5 rounded-full bg-[#B96F52]" />
             <div className="absolute top-0 w-px h-1.5 bg-[#B96F52]" />
@@ -554,11 +566,13 @@ export default function HomeSection({
                       ref={(img) => (cardImgRefs.current[index] = img)}
                       src={item.image}
                       alt={item.label}
-                      className="w-full h-full object-cover transition-transform duration-300"
+                      loading="lazy"
+                      decoding="async"
+                      className="object-cover w-full h-full transition-transform duration-300 contrast-[1.03]"
                     />
 
                     {/* Micro Section Label */}
-                    <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2]/90 px-2 py-0.5 backdrop-blur-sm border border-[#DED9CE] uppercase pointer-events-none rounded-[1px]">
+                    <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2] px-2 py-0.5 border border-[#DED9CE] uppercase pointer-events-none rounded-[1px] shadow-xs">
                       {item.label}
                     </div>
 

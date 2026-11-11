@@ -187,7 +187,7 @@ export default function DMIdentityCard({
           />
 
           {/* Subtle Editorial Top Tag */}
-          <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2]/90 px-2 py-0.5 backdrop-blur-sm rounded-[1px] border border-[#DED9CE] uppercase">
+          <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2] px-2 py-0.5 rounded-[1px] border border-[#DED9CE] uppercase shadow-xs">
             01 / PROFILE
           </div>
 

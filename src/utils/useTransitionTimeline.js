@@ -49,9 +49,7 @@ export function useTransitionTimeline() {
     return TRANSITION_PHASES.INTRO;
   });
 
-  const [unfoldProgress, setUnfoldProgress] = useState(0);
-  const animFrameRef = useRef(null);
-  const startTimeRef = useRef(null);
+  const timelineStartRef = useRef(performance.now());
 
   // Preload authentic profile photograph
   useEffect(() => {
@@ -64,15 +62,14 @@ export function useTransitionTimeline() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
       setPhase(TRANSITION_PHASES.COMPLETED);
-      setUnfoldProgress(1);
       return;
     }
 
-    startTimeRef.current = performance.now();
+    timelineStartRef.current = performance.now();
 
     const activeTimers = [];
 
-    // Schedule all discrete state transitions
+    // Schedule discrete state transitions (ONLY 10 total state changes throughout the intro)
     TIMINGS.forEach(({ phase: p, time }) => {
       const timer = setTimeout(() => {
         setPhase(p);
@@ -80,28 +77,8 @@ export function useTransitionTimeline() {
       activeTimers.push(timer);
     });
 
-    // Continuous RAF loop for smooth gallery fan-out interpolation (9900ms to 10900ms)
-    const updateProgress = () => {
-      if (!startTimeRef.current) return;
-      const elapsed = performance.now() - startTimeRef.current;
-      if (elapsed >= 10900) {
-        setUnfoldProgress(1);
-        return;
-      }
-      if (elapsed > 9900) {
-        const p = Math.min((elapsed - 9900) / 1000, 1);
-        setUnfoldProgress(p);
-      } else {
-        setUnfoldProgress(0);
-      }
-      animFrameRef.current = requestAnimationFrame(updateProgress);
-    };
-
-    animFrameRef.current = requestAnimationFrame(updateProgress);
-
     return () => {
       activeTimers.forEach((t) => clearTimeout(t));
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
   }, []);
 
@@ -118,6 +95,6 @@ export function useTransitionTimeline() {
     isAtLeast,
     isCompleted: phase === TRANSITION_PHASES.COMPLETED,
     flipDeg: isAtLeast(TRANSITION_PHASES.CARD_FLIP) ? 180 : 0,
-    unfoldProgress: isAtLeast(TRANSITION_PHASES.COMPLETED) ? 1 : unfoldProgress,
+    timelineStart: timelineStartRef.current,
   };
 }

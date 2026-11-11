@@ -1,67 +1,70 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
+/**
+ * CustomCursor - High-Performance Direct DOM Cursor
+ * - Zero React re-renders on mousemove (uses GPU translate3d via direct DOM ref)
+ * - Zero setInterval loops
+ * - Preserves the exact precision digital reticle aesthetic with Terracotta accents
+ */
 export default function CustomCursor() {
-  const [pos, setPos] = useState({ x: -100, y: -100 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
-  const [particles, setParticles] = useState([]);
-  const particleIdRef = useRef(0);
+  const cursorRef = useRef(null);
 
   useEffect(() => {
+    let animId;
+    let targetX = -100;
+    let targetY = -100;
+    let currentX = -100;
+    let currentY = -100;
+    let isMoving = false;
+
+    const el = cursorRef.current;
+    if (!el) return;
+
     const handleMouseMove = (e) => {
-      setPos({ x: e.clientX, y: e.clientY });
+      targetX = e.clientX;
+      targetY = e.clientY;
+      if (!isMoving) {
+        currentX = e.clientX;
+        currentY = e.clientY;
+        isMoving = true;
+      }
     };
 
     const handleMouseOver = (e) => {
       if (e.target.closest('button, a, [data-interactive], input, textarea, .cursor-pointer')) {
-        setIsHovering(true);
+        el.dataset.hover = 'true';
       }
     };
 
     const handleMouseOut = (e) => {
       if (e.target.closest('button, a, [data-interactive], input, textarea, .cursor-pointer')) {
-        setIsHovering(false);
+        delete el.dataset.hover;
       }
     };
 
-    const handleMouseDown = (e) => {
-      setIsClicking(true);
-      const colors = ['#B96F52', '#788477', '#8E9C8D', '#F7F6F2', '#252A27'];
-      const count = 14;
-      const newParticles = [];
-
-      for (let i = 0; i < count; i++) {
-        particleIdRef.current += 1;
-        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
-        const speed = 35 + Math.random() * 75;
-        const vx = Math.cos(angle) * speed;
-        const vy = Math.sin(angle) * speed - 15;
-        const size = 3 + Math.random() * 4;
-        const color = colors[Math.floor(Math.random() * colors.length)];
-
-        newParticles.push({
-          id: particleIdRef.current,
-          x: e.clientX,
-          y: e.clientY,
-          vx,
-          vy,
-          size,
-          color,
-          createdAt: Date.now(),
-        });
-      }
-      setParticles((prev) => [...prev, ...newParticles]);
+    const handleMouseDown = () => {
+      el.dataset.click = 'true';
     };
 
     const handleMouseUp = () => {
-      setIsClicking(false);
+      delete el.dataset.click;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseover', handleMouseOver);
-    window.addEventListener('mouseout', handleMouseOut);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
+    // Smooth 60/120fps GPU transform loop
+    const tick = () => {
+      currentX += (targetX - currentX) * 0.35;
+      currentY += (targetY - currentY) * 0.35;
+      el.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      animId = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
+    window.addEventListener('mouseout', handleMouseOut, { passive: true });
+    window.addEventListener('mousedown', handleMouseDown, { passive: true });
+    window.addEventListener('mouseup', handleMouseUp, { passive: true });
+
+    animId = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
@@ -69,113 +72,61 @@ export default function CustomCursor() {
       window.removeEventListener('mouseout', handleMouseOut);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
+      cancelAnimationFrame(animId);
     };
   }, []);
 
-  useEffect(() => {
-    if (particles.length === 0) return;
-    const interval = setInterval(() => {
-      const now = Date.now();
-      setParticles((prev) =>
-        prev
-          .filter((p) => now - p.createdAt < 750)
-          .map((p) => ({
-            ...p,
-            x: p.x + p.vx * 0.08,
-            y: p.y + p.vy * 0.08 + 3.5,
-            vy: p.vy + 2.0,
-          }))
-      );
-    }, 16);
-    return () => clearInterval(interval);
-  }, [particles]);
-
   return (
-    <>
-      {/* Precision Digital Reticle Cursor */}
-      <div
-        className="pointer-events-none fixed z-[9999] hidden md:block"
-        style={{
-          left: `${pos.x}px`,
-          top: `${pos.y}px`,
-          transform: 'translate(-50%, -50%)',
-          willChange: 'left, top',
-        }}
+    <div
+      ref={cursorRef}
+      className="pointer-events-none fixed top-0 left-0 z-[9999] hidden md:block will-change-transform group"
+      style={{
+        transform: 'translate3d(-100px, -100px, 0) translate(-50%, -50%)',
+      }}
+    >
+      <svg
+        width="36"
+        height="36"
+        viewBox="0 0 40 40"
+        className="transition-all duration-200 ease-out group-data-[hover=true]:scale-125 group-data-[click=true]:scale-90"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <svg
-          width={isHovering ? 44 : isClicking ? 28 : 34}
-          height={isHovering ? 44 : isClicking ? 28 : 34}
-          viewBox="0 0 40 40"
-          className="transition-all duration-200 ease-out"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Outer Rotating Crosshair Ring */}
-          <circle
-            cx="20"
-            cy="20"
-            r={isHovering ? 17 : 14}
-            stroke={isClicking ? '#B96F52' : isHovering ? '#252A27' : 'rgba(120, 132, 119, 0.45)'}
-            strokeWidth={isHovering ? '1.5' : '1'}
-            strokeDasharray={isHovering ? '4 2' : 'none'}
-            className={isHovering ? 'animate-spin' : ''}
-            style={{ animationDuration: '8s' }}
-          />
+        {/* Outer Rotating Crosshair Ring */}
+        <circle
+          cx="20"
+          cy="20"
+          r="14"
+          stroke="rgba(120, 132, 119, 0.45)"
+          strokeWidth="1"
+          className="transition-colors group-data-[hover=true]:stroke-[#252A27] group-data-[hover=true]:stroke-[1.5] group-data-[click=true]:stroke-[#B96F52]"
+        />
 
-          {/* Precision 4-Axis Reticle Ticks */}
-          <line x1="20" y1="2" x2="20" y2="7" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
-          <line x1="20" y1="33" x2="20" y2="38" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
-          <line x1="2" y1="20" x2="7" y2="20" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
-          <line x1="33" y1="20" x2="38" y2="20" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
+        {/* Precision 4-Axis Reticle Ticks */}
+        <line x1="20" y1="2" x2="20" y2="7" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
+        <line x1="20" y1="33" x2="20" y2="38" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
+        <line x1="2" y1="20" x2="7" y2="20" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
+        <line x1="33" y1="20" x2="38" y2="20" stroke="#B96F52" strokeWidth="1.2" strokeLinecap="round" />
 
-          {/* Central Target Reticle */}
-          <circle
-            cx="20"
-            cy="20"
-            r={isClicking ? 3.5 : isHovering ? 4 : 2.5}
-            fill={isClicking ? '#B96F52' : '#252A27'}
-            className="transition-all duration-150"
-          />
+        {/* Central Target Reticle */}
+        <circle
+          cx="20"
+          cy="20"
+          r="2.5"
+          fill="#252A27"
+          className="transition-all duration-150 group-data-[hover=true]:r-[3.5] group-data-[click=true]:fill-[#B96F52]"
+        />
 
-          {/* Satellite Orbit Dot */}
-          <circle
-            cx="32"
-            cy="8"
-            r="1.5"
-            fill="#B96F52"
-            stroke="rgba(37, 42, 39, 0.7)"
-            strokeWidth="0.8"
-          />
-        </svg>
-      </div>
-
-      {/* Physics Confetti Particles on Click */}
-      {particles.map((p) => {
-        const age = Date.now() - p.createdAt;
-        const opacity = Math.max(0, 1 - age / 750);
-        return (
-          <div
-            key={p.id}
-            className="pointer-events-none fixed z-[9998]"
-            style={{
-              left: `${p.x}px`,
-              top: `${p.y}px`,
-              opacity,
-              transform: 'translate(-50%, -50%)',
-            }}
-          >
-            <div
-              style={{
-                width: `${p.size}px`,
-                height: `${p.size * 1.5}px`,
-                backgroundColor: p.color,
-                borderRadius: '1px',
-                boxShadow: `0 0 6px ${p.color}`,
-              }}
-            />
-          </div>
-        );
-      })}
-    </>
+        {/* Satellite Orbit Dot */}
+        <circle
+          cx="32"
+          cy="8"
+          r="1.5"
+          fill="#B96F52"
+          stroke="rgba(37, 42, 39, 0.7)"
+          strokeWidth="0.8"
+        />
+      </svg>
+    </div>
   );
 }

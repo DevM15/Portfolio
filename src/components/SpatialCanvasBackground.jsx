@@ -25,7 +25,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
   // Generate fixed procedural particles with edge density gradient (clear center safe area)
   const particles = useMemo(() => {
     const list = [];
-    const count = 90;
+    const count = 28; // Optimized from 90 to 28 for zero-lag rendering
     for (let i = 0; i < count; i++) {
       let x = Math.random();
       let y = Math.random();
@@ -41,12 +41,11 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       list.push({
         baseX: x,
         baseY: y,
-        size: Math.random() < 0.1 ? Math.random() * 1.6 + 1.0 : Math.random() * 0.8 + 0.4,
-        opacity: Math.random() * 0.22 + 0.08,
-        speed: Math.random() * 0.00025 + 0.00008,
-        driftAngle: Math.random() * Math.PI * 2,
-        isAccent: Math.random() < 0.05, // Occasional subtle terracotta marker
-        layer: Math.random() < 0.4 ? 1 : (Math.random() < 0.75 ? 2 : 3),
+        size: Math.random() < 0.1 ? 1.8 : 0.9,
+        opacity: Math.random() * 0.2 + 0.08,
+        speed: Math.random() * 0.0002 + 0.00008,
+        isAccent: i === 0 || i === 7, // Restrained terracotta markers
+        layer: (i % 3) + 1,
       });
     }
     return list;
@@ -81,8 +80,22 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
     window.addEventListener('resize', handleResize);
 
     let startTime = performance.now();
+    let isTabVisible = !document.hidden;
+
+    const handleVisibilityChange = () => {
+      isTabVisible = !document.hidden;
+      if (isTabVisible && !animFrameRef.current) {
+        animFrameRef.current = requestAnimationFrame(render);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     const render = (time) => {
+      if (!isTabVisible) {
+        animFrameRef.current = null;
+        return;
+      }
+
       const elapsed = (time - startTime) * 0.001; // seconds
 
       // Smooth mouse lerp
@@ -127,84 +140,84 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
         return;
       }
 
-      // 2. Light Architectural Grid Lines
+      // 2. Light Architectural Grid Lines (Batched stroke)
       ctx.save();
       ctx.strokeStyle = `rgba(222, 217, 206, ${(0.45 * revealProgress).toFixed(3)})`;
       ctx.lineWidth = 0.75;
       const gridSpacing = 120;
+      ctx.beginPath();
       for (let x = gridSpacing; x < width; x += gridSpacing) {
-        ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
-        ctx.stroke();
       }
       for (let y = gridSpacing; y < height; y += gridSpacing) {
-        ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
-        ctx.stroke();
       }
+      ctx.stroke();
       ctx.restore();
 
-      // 3. Bottom-Left Curved Terrain Mesh in Muted Warm Grey / Sage
+      // 3. Bottom-Left Curved Terrain Mesh (Precomputed 6x8 vertices, single stroke)
       ctx.save();
       ctx.globalAlpha = revealProgress;
       const meshParallaxX = mx * 10 + secShift * 0.35;
       const meshParallaxY = my * 6;
       ctx.translate(meshParallaxX, meshParallaxY);
 
-      const rows = 10;
-      const cols = 14;
-      const cellW = width * 0.038;
-      const cellH = height * 0.042;
-      const meshOriginX = -width * 0.05;
-      const meshOriginY = height * 0.62;
+      const rows = 6;
+      const cols = 8;
+      const cellW = width * 0.055;
+      const cellH = height * 0.06;
+      const meshOriginX = -width * 0.04;
+      const meshOriginY = height * 0.65;
 
       ctx.strokeStyle = 'rgba(120, 132, 119, 0.12)';
       ctx.lineWidth = 0.85;
 
+      const pts = [];
       for (let r = 0; r <= rows; r++) {
-        ctx.beginPath();
+        pts[r] = [];
+        const sinR = Math.sin(r * 0.4 + elapsed * 0.2) * 8;
         for (let c = 0; c <= cols; c++) {
-          const px = meshOriginX + c * cellW + Math.sin(r * 0.4 + elapsed * 0.2) * 8;
+          const px = meshOriginX + c * cellW + sinR;
           const py =
             meshOriginY +
             r * cellH +
             Math.cos(c * 0.35 + elapsed * 0.25) * 10 +
             Math.sin(c * 0.2 + r * 0.3) * 6;
-          if (c === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
+          pts[r][c] = { x: px, y: py };
         }
-        ctx.stroke();
       }
 
-      for (let c = 0; c <= cols; c++) {
-        ctx.beginPath();
-        for (let r = 0; r <= rows; r++) {
-          const px = meshOriginX + c * cellW + Math.sin(r * 0.4 + elapsed * 0.2) * 8;
-          const py =
-            meshOriginY +
-            r * cellH +
-            Math.cos(c * 0.35 + elapsed * 0.25) * 10 +
-            Math.sin(c * 0.2 + r * 0.3) * 6;
-          if (r === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
+      ctx.beginPath();
+      for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c <= cols; c++) {
+          const p = pts[r][c];
+          if (c === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
         }
-        ctx.stroke();
       }
+      for (let c = 0; c <= cols; c++) {
+        for (let r = 0; r <= rows; r++) {
+          const p = pts[r][c];
+          if (r === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        }
+      }
+      ctx.stroke();
       ctx.restore();
 
-      // 4. Top-Right Secondary Curved Wireframe Mesh
+      // 4. Top-Right Secondary Curved Wireframe Mesh (4 concentric ellipses)
       ctx.save();
       ctx.globalAlpha = revealProgress;
       const trMeshX = width * 0.84 + mx * 6;
       const trMeshY = -height * 0.02 + my * 5;
       ctx.strokeStyle = 'rgba(120, 132, 119, 0.09)';
       ctx.lineWidth = 0.75;
-      for (let i = 0; i < 7; i++) {
-        const radiusX = Math.max(1, width * 0.14 - i * 9);
-        const radiusY = Math.max(1, height * 0.10 - i * 6);
-        ctx.beginPath();
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const radiusX = Math.max(1, width * 0.14 - i * 14);
+        const radiusY = Math.max(1, height * 0.10 - i * 10);
         ctx.ellipse(
           trMeshX + i * 12,
           trMeshY + i * 14,
@@ -214,8 +227,8 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
           0,
           Math.PI * 2
         );
-        ctx.stroke();
       }
+      ctx.stroke();
       ctx.restore();
 
       // 5. Subtle Architectural Crosshairs & Coordinates
@@ -247,22 +260,37 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       ctx.fill();
       ctx.restore();
 
-      // 6. Sparse Architectural Dust Particles
+      // 6. Sparse Architectural Dust Particles (Batched)
+      ctx.save();
+      ctx.fillStyle = `rgba(120, 132, 119, ${(0.15 * revealProgress).toFixed(3)})`;
+      ctx.beginPath();
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
+        if (p.isAccent) continue;
         const parallaxFactor = p.layer === 1 ? 4 : p.layer === 2 ? 8 : 12;
         const drift = Math.sin(elapsed * 0.3 + i) * 4;
-
         const px = p.baseX * width + mx * parallaxFactor + drift;
         const py = p.baseY * height + my * (parallaxFactor * 0.6) + (elapsed * p.speed * height) % height;
-
-        ctx.fillStyle = p.isAccent
-          ? `rgba(185, 111, 82, ${(0.6 * revealProgress).toFixed(3)})`
-          : `rgba(120, 132, 119, ${(p.opacity * 0.9 * revealProgress).toFixed(3)})`;
-        ctx.beginPath();
+        ctx.moveTo(px + p.size, py);
         ctx.arc(px, py, p.size, 0, Math.PI * 2);
-        ctx.fill();
       }
+      ctx.fill();
+
+      // Accent particles (Terracotta)
+      ctx.fillStyle = `rgba(185, 111, 82, ${(0.55 * revealProgress).toFixed(3)})`;
+      ctx.beginPath();
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        if (!p.isAccent) continue;
+        const parallaxFactor = 8;
+        const drift = Math.sin(elapsed * 0.3 + i) * 4;
+        const px = p.baseX * width + mx * parallaxFactor + drift;
+        const py = p.baseY * height + my * 4.8 + (elapsed * p.speed * height) % height;
+        ctx.moveTo(px + 1.8, py);
+        ctx.arc(px, py, 1.8, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      ctx.restore();
 
       animFrameRef.current = requestAnimationFrame(render);
     };
@@ -272,6 +300,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [particles, sectionIndex]);
 
