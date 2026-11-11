@@ -85,8 +85,8 @@ export default function DMIdentityCard({
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
-              duration: 2.0,
-              delay: 0.6,
+              duration: 1.2,
+              delay: 0.2,
               ease: [0.16, 1, 0.3, 1],
             }}
             className="relative flex items-center justify-center my-auto overflow-hidden px-4 py-2"
@@ -141,8 +141,8 @@ export default function DMIdentityCard({
               initial={{ x: '-120%', opacity: 0 }}
               animate={{ x: '180%', opacity: [0, 0.65, 0.65, 0] }}
               transition={{
-                duration: 1.8,
-                delay: 1.3,
+                duration: 1.2,
+                delay: 0.7,
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="absolute inset-0 pointer-events-none mix-blend-overlay"

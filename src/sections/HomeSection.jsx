@@ -211,7 +211,7 @@ export default function HomeSection({
       const { phaseIndex: currPhase, timelineStart } = transitionPropsRef.current;
       const tStart = timelineStart || performance.now();
       const elapsed = performance.now() - tStart;
-      const currUnfold = Math.min(Math.max(0, (elapsed - 9900) / 1000), 1);
+      const currUnfold = Math.min(Math.max(0, (elapsed - 5600) / 700), 1);
 
       // Update camera reticle DOM transform (animates scale & opacity at HERO_REVEAL)
       if (reticleRef.current) {
@@ -293,11 +293,10 @@ export default function HomeSection({
           // Cards 1..11: Project Gallery Cards
           if (currPhase < 8) {
             // Completely hidden before PROJECT_REVEAL
-            if (cardState.opacity > 0) {
-              cardState.opacity = 0;
-              el.style.opacity = '0';
-              el.style.pointerEvents = 'none';
-            }
+            cardState.opacity = 0;
+            el.style.opacity = '0';
+            el.style.pointerEvents = 'none';
+            el.style.transform = 'translate3d(-50%, -50%, -500px) scale(0.6)';
             continue;
           } else if (currPhase < 10) {
             // PROJECT_REVEAL: Symmetrical fan-out along cylindrical arc
@@ -542,11 +541,14 @@ export default function HomeSection({
               }}
               onMouseMove={(e) => handleCardMouseMove(e, index)}
               onMouseLeave={handleCardMouseLeave}
-              className="absolute z-20 w-[190px] sm:w-[210px] md:w-[225px] aspect-[0.71] flex flex-col justify-between cursor-pointer pointer-events-auto"
+              className="absolute z-20 w-[190px] sm:w-[210px] md:w-[225px] aspect-[0.71] flex flex-col justify-between cursor-pointer"
               style={{
                 transformStyle: 'preserve-3d',
                 left: '50%',
                 top: '50%',
+                transform: 'translate3d(-50%, -50%, 0)',
+                opacity: isProfile ? 1 : 0,
+                pointerEvents: isProfile && phaseIndex >= 10 ? 'auto' : 'none',
                 willChange: 'transform, opacity',
               }}
             >
@@ -618,8 +620,8 @@ export default function HomeSection({
                   y: phaseIndex === 0 ? 0 : -18,
                 }}
                 transition={{
-                  duration: 1.2,
-                  delay: phaseIndex === 0 ? 2.6 : 0,
+                  duration: 0.85,
+                  delay: phaseIndex === 0 ? 1.0 : 0,
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none"
@@ -634,8 +636,8 @@ export default function HomeSection({
                   y: phaseIndex === 0 ? 0 : -14,
                 }}
                 transition={{
-                  duration: 0.95,
-                  delay: phaseIndex === 0 ? 2.95 : 0,
+                  duration: 0.75,
+                  delay: phaseIndex === 0 ? 1.3 : 0,
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-sans font-medium text-[#788477] tracking-normal select-none"
