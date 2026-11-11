@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomCursor from './components/CustomCursor';
 import SpatialCanvasBackground from './components/SpatialCanvasBackground';
-import PortfolioEntrance from './components/entrance/PortfolioEntrance';
+import { useTransitionTimeline, TRANSITION_PHASES } from './utils/useTransitionTimeline';
 import HomeSection from './sections/HomeSection';
 import AboutSection from './sections/AboutSection';
 import InternshipSection from './sections/InternshipSection';
@@ -111,12 +111,14 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState('ALL WORK');
   const [openInfo, setOpenInfo] = useState(false);
 
-  // Premium Cinematic Portfolio Entrance - DM Experience
-  const [showIntro, setShowIntro] = useState(true);
-
-  const handleEntranceComplete = useCallback(() => {
-    setShowIntro(false);
-  }, []);
+  // Centralized Cinematic Transition Orchestrator
+  const {
+    phase: transitionPhase,
+    phaseIndex,
+    isAtLeast,
+    isCompleted,
+    unfoldProgress,
+  } = useTransitionTimeline();
 
   const navigateToView = useCallback((viewId) => {
     if (viewId === currentViewId) return;
@@ -147,7 +149,7 @@ export default function App() {
 
   // Keyboard navigation (← and →) between top-level sections
   useEffect(() => {
-    if (contactOpen || openInfo || showIntro) return;
+    if (contactOpen || openInfo || !isCompleted) return;
 
     const onKeyDown = (e) => {
       if (e.key === 'ArrowRight') {
@@ -164,9 +166,9 @@ export default function App() {
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [currentViewId, contactOpen, openInfo, showIntro, navigateToView]);
+  }, [currentViewId, contactOpen, openInfo, isCompleted, navigateToView]);
 
-  const viewOrder = ['home', 'about', 'internship', 'skills', 'journey', 'github', 'projects', 'contact'];
+  const viewOrder = ALL_VIEWS.map((v) => v.id);
   const currentIndex = viewOrder.indexOf(currentViewId);
   const prevIndex = viewOrder.indexOf(prevViewId);
   const direction = currentIndex >= prevIndex ? 1 : -1;
@@ -192,7 +194,10 @@ export default function App() {
   return (
     <div className="relative w-screen h-screen bg-[#F7F6F2] text-[#252A27] overflow-hidden select-none font-sans">
       {/* ==================== PROCEDURAL SPATIAL CANVAS BACKGROUND (WARM IVORY) ==================== */}
-      <SpatialCanvasBackground sectionIndex={currentIndex} />
+      <SpatialCanvasBackground
+        sectionIndex={currentIndex}
+        isRevealed={isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM)}
+      />
 
       {/* Subtle Warm Vignette Layer */}
       <div
@@ -205,58 +210,100 @@ export default function App() {
       {/* Extremely Faint Paper Grain Overlay */}
       <div className="absolute inset-0 pointer-events-none z-[2] bg-subtle-grain mix-blend-multiply opacity-25" />
 
-      {/* Minimal Architectural Horizon Guidelines */}
-      <div className="absolute top-20 left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80 pointer-events-none z-[3]" />
-      <div className="absolute bottom-[72px] left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80 pointer-events-none z-[3]" />
+      {/* Minimal Architectural Horizon Guidelines (draws across during BACKGROUND_TRANSFORM) */}
+      <motion.div
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={{
+          scaleX: isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM) ? 1 : 0,
+          opacity: isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM) ? 1 : 0,
+        }}
+        transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute top-20 left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80 pointer-events-none z-[3] origin-center"
+      />
+      <motion.div
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={{
+          scaleX: isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM) ? 1 : 0,
+          opacity: isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM) ? 1 : 0,
+        }}
+        transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute bottom-[72px] left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80 pointer-events-none z-[3] origin-center"
+      />
 
       <CustomCursor />
 
-      {/* ==================== PREMIUM CINEMATIC PORTFOLIO ENTRANCE ==================== */}
-      <AnimatePresence>
-        {showIntro && (
-          <PortfolioEntrance onComplete={handleEntranceComplete} />
-        )}
-      </AnimatePresence>
-
       {/* ==================== GLOBAL FIXED HEADER (HUD FLOATING TRANSPARENT) ==================== */}
       <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: showIntro ? 0 : 1, y: showIntro ? -20 : 0 }}
-        transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0, y: -24 }}
+        animate={{
+          opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
+          y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -24,
+        }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#252A27] pointer-events-none bg-transparent"
       >
         <div className="flex items-center gap-6 pointer-events-auto md:gap-12">
-          <div className="flex items-baseline gap-2">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{
+              opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
+              y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -10,
+            }}
+            transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-baseline gap-2"
+          >
             <span className="font-mono text-xs tracking-wider text-[#788477]">NAME /</span>
             <span className="text-lg sm:text-[20px] font-bold tracking-tight text-[#252A27] font-display">
               DEV MISTRY
             </span>
-          </div>
-          <div className="items-baseline hidden gap-2 lg:flex">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{
+              opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
+              y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -10,
+            }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="items-baseline hidden gap-2 lg:flex"
+          >
             <span className="font-mono text-xs tracking-wider text-[#788477]">OCCUPATION /</span>
             <span className="text-sm sm:text-base font-semibold tracking-tight text-[#252A27]">
               FULL STACK DEVELOPER
             </span>
-          </div>
-          <div className="items-baseline hidden gap-2 xl:flex">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{
+              opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
+              y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -10,
+            }}
+            transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="items-baseline hidden gap-2 xl:flex"
+          >
             <span className="font-mono text-xs tracking-wider text-[#788477]">LOCATION /</span>
             <span className="text-sm sm:text-base font-semibold tracking-tight text-[#788477]">
               MUMBAI
             </span>
-          </div>
+          </motion.div>
         </div>
 
         {/* Top-Right Navigation: ONLY HOME, PROJECTS, CONTACT WITH TEXT FLIP */}
         <nav className="flex items-center gap-6 pointer-events-auto sm:gap-10">
-          {NAV_SECTIONS.map((sec) => {
+          {NAV_SECTIONS.map((sec, idx) => {
             const isActive =
               (sec.id === 'home' && !['projects', 'contact'].includes(currentViewId)) ||
               sec.id === currentViewId;
 
             return (
-              <button
+              <motion.button
                 key={sec.id}
                 onClick={() => navigateToView(sec.id)}
+                initial={{ opacity: 0, y: -12 }}
+                animate={{
+                  opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
+                  y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -12,
+                }}
+                transition={{ duration: 0.5, delay: 0.3 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
                 className={`flip-nav-link text-sm sm:text-base font-medium tracking-normal transition-all duration-200 cursor-pointer ${isActive && !contactOpen
                     ? 'active text-[#B96F52] font-bold'
                     : 'text-[#788477] hover:text-[#252A27]'
@@ -266,7 +313,7 @@ export default function App() {
                   <span className="flip-nav-front">{sec.label}</span>
                   <span className="flip-nav-back">{sec.label}</span>
                 </span>
-              </button>
+              </motion.button>
             );
           })}
         </nav>
@@ -290,6 +337,9 @@ export default function App() {
                 onOpenSection={(secId) => navigateToView(secId)}
                 onNavigateToProjects={() => navigateToView('projects')}
                 onNavigateToContact={() => navigateToView('contact')}
+                transitionPhase={transitionPhase}
+                phaseIndex={phaseIndex}
+                unfoldProgress={unfoldProgress}
               />
             </motion.div>
           )}
@@ -409,15 +459,24 @@ export default function App() {
 
       {/* ==================== GLOBAL FIXED FOOTER (FLOATING MINIMAL HUD) ==================== */}
       <motion.footer
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: showIntro ? 0 : 1, y: showIntro ? 20 : 0 }}
-        transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0, y: 24 }}
+        animate={{
+          opacity: isAtLeast(TRANSITION_PHASES.DECORATION_SETTLEMENT) ? 1 : 0,
+          y: isAtLeast(TRANSITION_PHASES.DECORATION_SETTLEMENT) ? 0 : 24,
+        }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-wider uppercase text-[#788477] pointer-events-none bg-transparent"
       >
         <div className="flex items-center gap-3 pointer-events-auto">
           <span className="text-[#252A27] font-semibold text-xs sm:text-sm tracking-wider font-mono">
             PORTFOLIO <span className="text-[#B96F52]">/</span> 2026
           </span>
+        </div>
+
+        {/* Minimal Orbit/Drag Interaction Indicator */}
+        <div className="hidden md:flex items-center gap-2 text-[10px] text-[#788477] font-mono tracking-widest">
+          <span>SCROLL OR DRAG TO ROTATE EXHIBITION</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B96F52] animate-pulse" />
         </div>
 
         <div className="flex items-center gap-6 pointer-events-auto">

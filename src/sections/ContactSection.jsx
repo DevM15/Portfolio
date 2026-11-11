@@ -14,7 +14,7 @@ export default function ContactSection({ onOpenMessage }) {
       </div>
 
       {/* Main Editorial Contact Composition */}
-      <div className="my-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+      <div className="grid items-center grid-cols-1 gap-10 my-auto lg:grid-cols-12 lg:gap-16">
         {/* Left Column: Monumental Headline */}
         <div className="lg:col-span-7">
           <motion.div
@@ -46,7 +46,7 @@ export default function ContactSection({ onOpenMessage }) {
         </div>
 
         {/* Right Column: Direct Channels */}
-        <div className="lg:col-span-5 space-y-4 font-mono text-xs">
+        <div className="space-y-4 font-mono text-xs lg:col-span-5">
           <div className="p-6 bg-[#FFFFFF] border border-[#DED9CE] rounded-[2px] space-y-4 shadow-sm">
             <span className="text-[10px] text-[#788477] uppercase block tracking-wider font-semibold">
               DIRECT CHANNELS

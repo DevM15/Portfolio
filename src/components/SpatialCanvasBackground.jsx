@@ -10,11 +10,17 @@ import { useEffect, useRef, useMemo } from 'react';
  * - Gentle mouse parallax (max 12px)
  * - No glowing neon or heavy black gradients
  */
-export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
+export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed = true }) {
   const canvasRef = useRef(null);
   const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
   const animFrameRef = useRef(null);
   const sectionShiftRef = useRef(0);
+  const revealProgressRef = useRef(isRevealed ? 1 : 0);
+  const isRevealedRef = useRef(isRevealed);
+
+  useEffect(() => {
+    isRevealedRef.current = isRevealed;
+  }, [isRevealed]);
 
   // Generate fixed procedural particles with edge density gradient (clear center safe area)
   const particles = useMemo(() => {
@@ -90,6 +96,11 @@ export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
       sectionShiftRef.current += (targetShift - sectionShiftRef.current) * 0.05;
       const secShift = sectionShiftRef.current;
 
+      // Smooth background reveal transition
+      const targetReveal = isRevealedRef.current ? 1 : 0;
+      revealProgressRef.current += (targetReveal - revealProgressRef.current) * 0.04;
+      const revealProgress = revealProgressRef.current;
+
       ctx.clearRect(0, 0, width, height);
 
       // 1. Warm Ivory Base Background
@@ -111,9 +122,14 @@ export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, width, height);
 
+      if (revealProgress < 0.005) {
+        animFrameRef.current = requestAnimationFrame(render);
+        return;
+      }
+
       // 2. Light Architectural Grid Lines
       ctx.save();
-      ctx.strokeStyle = 'rgba(222, 217, 206, 0.45)';
+      ctx.strokeStyle = `rgba(222, 217, 206, ${(0.45 * revealProgress).toFixed(3)})`;
       ctx.lineWidth = 0.75;
       const gridSpacing = 120;
       for (let x = gridSpacing; x < width; x += gridSpacing) {
@@ -132,6 +148,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
 
       // 3. Bottom-Left Curved Terrain Mesh in Muted Warm Grey / Sage
       ctx.save();
+      ctx.globalAlpha = revealProgress;
       const meshParallaxX = mx * 10 + secShift * 0.35;
       const meshParallaxY = my * 6;
       ctx.translate(meshParallaxX, meshParallaxY);
@@ -179,6 +196,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
 
       // 4. Top-Right Secondary Curved Wireframe Mesh
       ctx.save();
+      ctx.globalAlpha = revealProgress;
       const trMeshX = width * 0.84 + mx * 6;
       const trMeshY = -height * 0.02 + my * 5;
       ctx.strokeStyle = 'rgba(120, 132, 119, 0.09)';
@@ -202,6 +220,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
 
       // 5. Subtle Architectural Crosshairs & Coordinates
       ctx.save();
+      ctx.globalAlpha = revealProgress;
       ctx.font = '9px "IBM Plex Mono", monospace';
       ctx.fillStyle = 'rgba(120, 132, 119, 0.45)';
 
@@ -238,8 +257,8 @@ export default function SpatialCanvasBackground({ sectionIndex = 0 }) {
         const py = p.baseY * height + my * (parallaxFactor * 0.6) + (elapsed * p.speed * height) % height;
 
         ctx.fillStyle = p.isAccent
-          ? 'rgba(185, 111, 82, 0.6)'
-          : `rgba(120, 132, 119, ${p.opacity * 0.9})`;
+          ? `rgba(185, 111, 82, ${(0.6 * revealProgress).toFixed(3)})`
+          : `rgba(120, 132, 119, ${(p.opacity * 0.9 * revealProgress).toFixed(3)})`;
         ctx.beginPath();
         ctx.arc(px, py, p.size, 0, Math.PI * 2);
         ctx.fill();

@@ -1,4 +1,6 @@
 import { useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import DMIdentityCard from '../components/entrance/DMIdentityCard';
 
 /**
  * 12 Curated Exhibition Objects arranged in a continuous, infinite 3D cylinder:
@@ -126,11 +128,21 @@ const EXHIBITION_ITEMS = [
   },
 ];
 
-export default function HomeSection({ onOpenSection }) {
+export default function HomeSection({
+  onOpenSection,
+  transitionPhase = 'COMPLETED',
+  phaseIndex = 10,
+  unfoldProgress = 1,
+}) {
   const containerRef = useRef(null);
   const cardElementsRef = useRef([]);
   const cardImgRefs = useRef([]);
   const reticleRef = useRef(null);
+
+  const transitionPropsRef = useRef({ transitionPhase, phaseIndex, unfoldProgress });
+  useEffect(() => {
+    transitionPropsRef.current = { transitionPhase, phaseIndex, unfoldProgress };
+  }, [transitionPhase, phaseIndex, unfoldProgress]);
 
   // Physics animation variables in refs (eliminates 60fps React re-renders)
   const physicsRef = useRef({
@@ -154,6 +166,8 @@ export default function HomeSection({ onOpenSection }) {
     cameraReticleY: 0,
     targetReticleX: 0,
     targetReticleY: 0,
+    reticleOpacity: phaseIndex >= 7 ? 0.3 : 0,
+    reticleScale: phaseIndex >= 7 ? 1 : 0.4,
     cardStates: EXHIBITION_ITEMS.map(() => ({
       x: 0,
       y: 0,
@@ -194,9 +208,18 @@ export default function HomeSection({ onOpenSection }) {
       p.cameraReticleX = lerp(p.cameraReticleX, p.targetReticleX, 0.08);
       p.cameraReticleY = lerp(p.cameraReticleY, p.targetReticleY, 0.08);
 
-      // Update camera reticle DOM transform
+      const { phaseIndex: currPhase, unfoldProgress: currUnfold } = transitionPropsRef.current;
+
+      // Update camera reticle DOM transform (animates scale & opacity at HERO_REVEAL)
       if (reticleRef.current) {
-        reticleRef.current.style.transform = `translate3d(${p.cameraReticleX}px, ${p.cameraReticleY}px, 0)`;
+        const isReticleRevealed = currPhase >= 7;
+        const targetReticleOpacity = isReticleRevealed ? 0.3 : 0;
+        const targetReticleScale = isReticleRevealed ? 1 : 0.4;
+        p.reticleOpacity = lerp(p.reticleOpacity || 0, targetReticleOpacity, 0.08);
+        p.reticleScale = lerp(p.reticleScale || 0.4, targetReticleScale, 0.08);
+
+        reticleRef.current.style.transform = `translate3d(${p.cameraReticleX}px, ${p.cameraReticleY}px, 0) scale(${p.reticleScale.toFixed(3)})`;
+        reticleRef.current.style.opacity = p.reticleOpacity.toFixed(3);
       }
 
       // 2. Calculate Every Card's 3D Cylindrical Geometry
@@ -212,19 +235,7 @@ export default function HomeSection({ onOpenSection }) {
         const absDiff = Math.abs(diffAngle);
         const cardState = p.cardStates[i];
 
-        // Graceful culling: only display 5–7 cards on visible forward half (±85°)
-        if (absDiff > 85) {
-          cardState.opacity = lerp(cardState.opacity, 0, 0.15);
-          if (cardState.opacity < 0.01) {
-            el.style.opacity = '0';
-            el.style.pointerEvents = 'none';
-            continue;
-          }
-        }
-
         // ==================== CONVEX CYLINDER DEPTH PROFILE ====================
-        // The curve bends TOWARD the camera:
-        // Center card (0°) has +150px Z, inner cards have -80px, edges recede down to -500px
         const rad = (diffAngle * Math.PI) / 180;
         const targetX = Math.sin(rad) * 660; // radiusX
         const targetZ = Math.cos(rad) * 450 - 300; // Convex Z depth (+150px at center, -500px at edges)
@@ -245,14 +256,95 @@ export default function HomeSection({ onOpenSection }) {
         const hoverRotY = isHovered ? p.currentPointerX * 2.5 : 0;
         const hoverScaleFactor = isHovered ? 1.04 : 1.0;
 
-        // Smooth Spring-like interpolation per card
-        cardState.x = lerp(cardState.x, targetX + hoverTx, 0.08);
-        cardState.y = lerp(cardState.y, hoverTy, 0.08);
-        cardState.z = lerp(cardState.z, targetZ + hoverTz, 0.08);
-        cardState.rotY = lerp(cardState.rotY, targetRotY + hoverRotY, 0.08);
-        cardState.rotX = lerp(cardState.rotX, hoverRotX, 0.08);
-        cardState.scale = lerp(cardState.scale, targetScale * hoverScaleFactor, 0.08);
-        cardState.opacity = lerp(cardState.opacity, targetOpacity, 0.08);
+        // Specific Transition Choreography per Card Type
+        if (i === 0) {
+          // Card 0: Profile Card (Central DM Flip Card shared transition)
+          if (currPhase < 6) {
+            // Stay centered in 2D plane during INTRO, GREETING_EXIT, CARD_FORMATION, CARD_FLIP
+            const isLifted = currPhase >= 3 && currPhase < 6;
+            cardState.x = 0;
+            cardState.y = 0;
+            cardState.z = isLifted ? 30 : 0;
+            cardState.rotY = 0;
+            cardState.rotX = 0;
+            cardState.scale = isLifted ? 1.03 : 1.0;
+            cardState.opacity = 1.0;
+          } else if (currPhase === 6) {
+            // PROFILE_TRANSITION: Card smoothly moves into 3D cylinder depth (+150px Z, 1.08 scale)
+            cardState.x = lerp(cardState.x, targetX, 0.08);
+            cardState.y = lerp(cardState.y, hoverTy, 0.08);
+            cardState.z = lerp(cardState.z, targetZ, 0.08);
+            cardState.rotY = lerp(cardState.rotY, targetRotY, 0.08);
+            cardState.scale = lerp(cardState.scale, targetScale, 0.08);
+            cardState.opacity = 1.0;
+          } else {
+            // currPhase >= 7: fully in interactive cylinder physics
+            cardState.x = lerp(cardState.x, targetX + hoverTx, 0.08);
+            cardState.y = lerp(cardState.y, hoverTy, 0.08);
+            cardState.z = lerp(cardState.z, targetZ + hoverTz, 0.08);
+            cardState.rotY = lerp(cardState.rotY, targetRotY + hoverRotY, 0.08);
+            cardState.rotX = lerp(cardState.rotX, hoverRotX, 0.08);
+            cardState.scale = lerp(cardState.scale, targetScale * hoverScaleFactor, 0.08);
+            cardState.opacity = lerp(cardState.opacity, targetOpacity, 0.08);
+          }
+        } else {
+          // Cards 1..11: Project Gallery Cards
+          if (currPhase < 8) {
+            // Completely hidden before PROJECT_REVEAL
+            cardState.x = 0;
+            cardState.y = 0;
+            cardState.z = -300;
+            cardState.rotY = 0;
+            cardState.rotX = 0;
+            cardState.scale = 0.5;
+            cardState.opacity = 0;
+            el.style.opacity = '0';
+            el.style.pointerEvents = 'none';
+            continue;
+          } else if (currPhase < 10) {
+            // PROJECT_REVEAL: Symmetrical fan-out along cylindrical arc
+            const k = Math.min(i, 12 - i); // Distance from center (1..6)
+            const t_card = Math.max(0, Math.min(1, (currUnfold - (k - 1) * 0.10) / 0.40));
+            const easeOut = 1 - Math.pow(1 - t_card, 3);
+
+            cardState.x = lerp(0, targetX, easeOut);
+            cardState.y = lerp(0, hoverTy, easeOut);
+            cardState.z = lerp(-250, targetZ, easeOut);
+            cardState.rotY = lerp(0, targetRotY, easeOut);
+            cardState.rotX = lerp(0, hoverRotX, easeOut);
+            cardState.scale = lerp(0.55, targetScale, easeOut);
+            cardState.opacity = lerp(0, targetOpacity, easeOut);
+
+            const img = cardImgRefs.current[i];
+            if (img) {
+              img.style.clipPath = easeOut < 0.98 ? `inset(0% ${((1 - easeOut) * 50).toFixed(1)}% 0% ${((1 - easeOut) * 50).toFixed(1)}%)` : 'none';
+            }
+          } else {
+            // COMPLETED: normal interactive physics
+            if (absDiff > 85) {
+              cardState.opacity = lerp(cardState.opacity, 0, 0.15);
+              if (cardState.opacity < 0.01) {
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
+                continue;
+              }
+            }
+
+            cardState.x = lerp(cardState.x, targetX + hoverTx, 0.08);
+            cardState.y = lerp(cardState.y, hoverTy, 0.08);
+            cardState.z = lerp(cardState.z, targetZ + hoverTz, 0.08);
+            cardState.rotY = lerp(cardState.rotY, targetRotY + hoverRotY, 0.08);
+            cardState.rotX = lerp(cardState.rotX, hoverRotX, 0.08);
+            cardState.scale = lerp(cardState.scale, targetScale * hoverScaleFactor, 0.08);
+            cardState.opacity = lerp(cardState.opacity, targetOpacity, 0.08);
+
+            const img = cardImgRefs.current[i];
+            if (img && img.style.clipPath !== 'none') {
+              img.style.clipPath = 'none';
+            }
+          }
+        }
+
         cardState.brightness = lerp(cardState.brightness, targetBrightness, 0.08);
         cardState.imgScale = lerp(cardState.imgScale, isHovered ? 1.03 : 1.0, 0.08);
 
@@ -265,7 +357,7 @@ export default function HomeSection({ onOpenSection }) {
         `;
         el.style.opacity = cardState.opacity.toFixed(3);
         el.style.zIndex = Math.round(100 - absDiff);
-        el.style.pointerEvents = cardState.opacity > 0.2 ? 'auto' : 'none';
+        el.style.pointerEvents = (currPhase >= 10 && cardState.opacity > 0.2) ? 'auto' : (i === 0 && currPhase >= 10 ? 'auto' : 'none');
 
         // Update liquid image scale
         const img = cardImgRefs.current[i];
@@ -285,6 +377,7 @@ export default function HomeSection({ onOpenSection }) {
   // Wheel listener: feeding smooth velocity
   useEffect(() => {
     const handleWheel = (e) => {
+      if (transitionPropsRef.current.phaseIndex < 10) return;
       e.preventDefault();
       const p = physicsRef.current;
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
@@ -304,13 +397,14 @@ export default function HomeSection({ onOpenSection }) {
     p.targetReticleX = ((e.clientX - halfW) / halfW) * 14;
     p.targetReticleY = ((e.clientY - halfH) / halfH) * 12;
 
-    if (p.isDragging) {
+    if (p.isDragging && transitionPropsRef.current.phaseIndex >= 10) {
       const diff = e.clientX - p.dragStartX;
       p.targetRotation = p.dragStartRotation + diff * 0.16;
     }
   };
 
   const handleMouseDown = (e) => {
+    if (transitionPropsRef.current.phaseIndex < 10) return;
     if (e.target.closest('button, a')) return;
     const p = physicsRef.current;
     p.isDragging = true;
@@ -325,6 +419,7 @@ export default function HomeSection({ onOpenSection }) {
 
   // Touch Swipe Integration
   const handleTouchStart = (e) => {
+    if (transitionPropsRef.current.phaseIndex < 10) return;
     if (e.touches.length !== 1) return;
     const p = physicsRef.current;
     p.isDragging = true;
@@ -393,7 +488,9 @@ export default function HomeSection({ onOpenSection }) {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className="relative w-full h-full flex flex-col justify-center items-center select-none overflow-hidden cursor-grab active:cursor-grabbing outline-none"
+      className={`relative w-full h-full flex flex-col justify-center items-center select-none overflow-hidden outline-none ${
+        phaseIndex >= 10 ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'
+      }`}
     >
       {/* 3D Exhibition Stage: Perspective 1800px with Fixed Stationary Camera Center */}
       <div
@@ -407,8 +504,8 @@ export default function HomeSection({ onOpenSection }) {
         {/* ==================== 1. FIXED CAMERA RETICLE (VIEWPOINT = 0,0,0) ==================== */}
         <div
           ref={reticleRef}
-          className="absolute z-10 pointer-events-none flex items-center justify-center opacity-30"
-          style={{ willChange: 'transform' }}
+          className="absolute z-10 pointer-events-none flex items-center justify-center"
+          style={{ willChange: 'transform, opacity', opacity: 0 }}
         >
           <div className="relative w-8 h-8 flex items-center justify-center">
             <div className="w-4 h-4 rounded-full border border-[#B96F52]" />
@@ -421,56 +518,94 @@ export default function HomeSection({ onOpenSection }) {
         </div>
 
         {/* ==================== 2. CONVEX CYLINDRICAL CARDS (BENDING TOWARD CAMERA) ==================== */}
-        {EXHIBITION_ITEMS.map((item, index) => (
-          <div
-            key={item.id}
-            ref={(el) => (cardElementsRef.current[index] = el)}
-            onClick={() => onOpenSection(item.sectionId)}
-            onMouseMove={(e) => handleCardMouseMove(e, index)}
-            onMouseLeave={handleCardMouseLeave}
-            className="absolute z-20 w-[190px] sm:w-[210px] md:w-[225px] aspect-[0.71] flex flex-col justify-between cursor-pointer pointer-events-auto"
-            style={{
-              transformStyle: 'preserve-3d',
-              left: '50%',
-              top: '50%',
-              willChange: 'transform, opacity',
-            }}
-          >
-            {/* Image-First Editorial Card (Light Editorial Theme) */}
-            <div className="relative w-full h-full bg-[#FFFFFF] rounded-[2px] overflow-hidden border border-[#DED9CE] hover:border-[#B96F52] shadow-[0_12px_32px_rgba(37,42,39,0.08)] hover:shadow-[0_20px_45px_rgba(185,111,82,0.16)] transition-all duration-300">
-              {/* Visual Area */}
-              <div className="relative w-full h-full overflow-hidden">
-                <img
-                  ref={(img) => (cardImgRefs.current[index] = img)}
-                  src={item.image}
-                  alt={item.label}
-                  className="w-full h-full object-cover transition-transform duration-300"
+        {EXHIBITION_ITEMS.map((item, index) => {
+          const isProfile = item.isProfile;
+
+          return (
+            <div
+              key={item.id}
+              ref={(el) => (cardElementsRef.current[index] = el)}
+              onClick={() => {
+                if (phaseIndex >= 10) onOpenSection(item.sectionId);
+              }}
+              onMouseMove={(e) => handleCardMouseMove(e, index)}
+              onMouseLeave={handleCardMouseLeave}
+              className="absolute z-20 w-[190px] sm:w-[210px] md:w-[225px] aspect-[0.71] flex flex-col justify-between cursor-pointer pointer-events-auto"
+              style={{
+                transformStyle: 'preserve-3d',
+                left: '50%',
+                top: '50%',
+                willChange: 'transform, opacity',
+              }}
+            >
+              {isProfile ? (
+                /* Card 0: Profile Card (Central DM Flip Card shared transition) */
+                <DMIdentityCard
+                  flipDeg={phaseIndex >= 3 ? 180 : 0}
+                  isFramed={phaseIndex >= 2}
+                  isLifted={phaseIndex >= 3 && phaseIndex < 6}
+                  onOpenSection={phaseIndex >= 10 ? onOpenSection : null}
                 />
+              ) : (
+                /* Cards 1..11: Image-First Editorial Card (Light Editorial Theme) */
+                <div className="relative w-full h-full bg-[#FFFFFF] rounded-[2px] overflow-hidden border border-[#DED9CE] hover:border-[#B96F52] shadow-[0_12px_32px_rgba(37,42,39,0.08)] hover:shadow-[0_20px_45px_rgba(185,111,82,0.16)] transition-all duration-300">
+                  <div className="relative w-full h-full overflow-hidden">
+                    <img
+                      ref={(img) => (cardImgRefs.current[index] = img)}
+                      src={item.image}
+                      alt={item.label}
+                      className="w-full h-full object-cover transition-transform duration-300"
+                    />
 
-                {/* Micro Section Label */}
-                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2]/90 px-2 py-0.5 backdrop-blur-sm border border-[#DED9CE] uppercase pointer-events-none rounded-[1px]">
-                  {item.label}
+                    {/* Micro Section Label */}
+                    <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2]/90 px-2 py-0.5 backdrop-blur-sm border border-[#DED9CE] uppercase pointer-events-none rounded-[1px]">
+                      {item.label}
+                    </div>
+
+                    {/* Deterministic Button Placement Inside Card */}
+                    <div className={`absolute z-30 pointer-events-auto ${getButtonPositionClass(item.btnPosition)}`}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (phaseIndex >= 10) onOpenSection(item.sectionId);
+                        }}
+                        className="font-mono text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-[1px] border border-[#DED9CE] bg-[#F7F6F2]/90 text-[#252A27] hover:border-[#B96F52] hover:bg-[#B96F52] hover:text-[#F7F6F2] hover:font-semibold transition-all shadow-sm cursor-pointer flex items-center gap-1"
+                      >
+                        <span>{item.btnText}</span>
+                      </button>
+                    </div>
+
+                    {/* Subtle surface reflection overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.05] to-transparent pointer-events-none" />
+                  </div>
                 </div>
-
-                {/* Deterministic Button Placement Inside Card */}
-                <div className={`absolute z-30 pointer-events-auto ${getButtonPositionClass(item.btnPosition)}`}>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpenSection(item.sectionId);
-                    }}
-                    className="font-mono text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-[1px] border border-[#DED9CE] bg-[#F7F6F2]/90 text-[#252A27] hover:border-[#B96F52] hover:bg-[#B96F52] hover:text-[#F7F6F2] hover:font-semibold transition-all shadow-sm cursor-pointer flex items-center gap-1"
-                  >
-                    <span>{item.btnText}</span>
-                  </button>
-                </div>
-
-                {/* Subtle surface reflection overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.05] to-transparent pointer-events-none" />
-              </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
+
+        {/* Initial Entrance Greeting: Hello, I'm Dev */}
+        <AnimatePresence>
+          {phaseIndex < 2 && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{
+                opacity: phaseIndex === 0 ? 1 : 0,
+                y: phaseIndex === 0 ? 0 : -16,
+              }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute top-[calc(50%+165px)] sm:top-[calc(50%+180px)] md:top-[calc(50%+195px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-30"
+            >
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none">
+                HELLO, I'M DEV<span className="text-[#B96F52]">.</span>
+              </h1>
+              <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-sans font-medium text-[#788477] tracking-normal select-none">
+                DESIGNING & BUILDING DIGITAL EXPERIENCES.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -10,18 +10,22 @@ import React from 'react';
  */
 export default function DMIdentityCard({
   flipDeg = 0,
-  cardWidth = 240,
-  cardHeight = 340,
-  borderRadius = 6,
+  cardWidth = null,
+  cardHeight = null,
+  borderRadius = 4,
   isFramed = false,
   isLifted = false,
+  onOpenSection = null,
 }) {
+  const widthStyle = cardWidth ? (typeof cardWidth === 'number' ? `${cardWidth}px` : cardWidth) : '100%';
+  const heightStyle = cardHeight ? (typeof cardHeight === 'number' ? `${cardHeight}px` : cardHeight) : '100%';
+
   return (
     <div
-      className="relative select-none flex items-center justify-center"
+      className="relative select-none flex items-center justify-center w-full h-full"
       style={{
-        width: `${cardWidth}px`,
-        height: `${cardHeight}px`,
+        width: widthStyle,
+        height: heightStyle,
         perspective: 1400,
         transformStyle: 'preserve-3d',
       }}
@@ -32,7 +36,7 @@ export default function DMIdentityCard({
         style={{
           transformStyle: 'preserve-3d',
           transform: `rotateY(${flipDeg}deg) translateZ(${isLifted ? 30 : 0}px)`,
-          transition: 'transform 1.2s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 0.6s ease',
+          transition: 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease',
           borderRadius: isFramed ? `${borderRadius}px` : '0px',
           boxShadow: isFramed
             ? isLifted
@@ -159,13 +163,21 @@ export default function DMIdentityCard({
           />
 
           {/* Subtle Editorial Top Tag */}
-          <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#F7F6F2] bg-[#252A27]/80 px-2 py-0.5 backdrop-blur-sm rounded-[1px] border border-white/10 uppercase">
+          <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2]/90 px-2 py-0.5 backdrop-blur-sm rounded-[1px] border border-[#DED9CE] uppercase">
             01 / PROFILE
           </div>
 
           {/* Subtle Editorial Bottom Callout */}
-          <div className="absolute bottom-2.5 right-2.5 font-mono text-[8px] tracking-wider text-[#F7F6F2] bg-[#B96F52] px-2 py-0.5 rounded-[1px] shadow-sm uppercase font-semibold">
-            ABOUT DEV →
+          <div className="absolute bottom-3 right-3 pointer-events-auto">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onOpenSection) onOpenSection('about');
+              }}
+              className="font-mono text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-[1px] border border-[#DED9CE] bg-[#F7F6F2]/90 text-[#252A27] hover:border-[#B96F52] hover:bg-[#B96F52] hover:text-[#F7F6F2] hover:font-semibold transition-all shadow-sm cursor-pointer flex items-center gap-1"
+            >
+              <span>ABOUT DEV →</span>
+            </button>
           </div>
         </div>
       </div>
