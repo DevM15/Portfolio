@@ -6,35 +6,38 @@ import DMIdentityCard from './DMIdentityCard';
  * PortfolioEntrance - Synchronized State Machine Animation Controller
  *
  * Sequence of Explicit Stages:
- * - STAGE 0: INITIAL (0 to 2800ms)
- *   Persistent rectangular DM identity card on warm ivory (#F7F6F2).
- *   Greeting: "HELLO, I'M DEV." + Subtitle.
- *   NO CIRCULAR BORDER anywhere. Card is completely stationary.
+ * - STAGE 0: INITIAL_INTRO (0–2400ms)
+ *   1. Warm ivory background (#F7F6F2) fades in.
+ *   2. Standalone metallic DM monogram appears with no border (NO CIRCLE, NO RECTANGLE).
+ *   3. "HELLO, I'M DEV." fades in with subtle upward glide.
+ *   4. Subtitle "DESIGNING & BUILDING DIGITAL EXPERIENCES." appears.
+ *   5. Comfortable reading pause (1800ms).
  *
- * - STAGE 1: GREETING_EXIT (2800ms to 3250ms, duration: 450ms)
- *   Greeting & subtitle fade out with subtle upward glide.
- *   The rectangular card remains perfectly stationary and focused.
+ * - STAGE 1: GREETING_EXIT (2400–2800ms, duration: 400ms)
+ *   Greeting & subtitle fade out with gentle upward movement.
+ *   DM monogram remains perfectly visible and centered.
  *
- * - STAGE 2: CARD_LIFT (3250ms to 3750ms, duration: 500ms)
- *   Card subtly lifts from background (translateZ: 30px) with soft realistic shadow.
- *   Card dimensions remain unchanged. NO rotation yet.
+ * - STAGE 2: CARD_FORMATION (2800–3300ms, duration: 500ms)
+ *   Rectangular card boundary (#DED9CE) emerges smoothly around the DM monogram.
  *
- * - STAGE 3: CARD_FLIP (3750ms to 4850ms, duration: 1100ms)
- *   Smooth 180-degree vertical flip around Y-axis with gentle ease-in-out curve.
- *   Reverses to show Dev's actual profile portrait (/img/dev_portrait.jpg).
+ * - STAGE 3: CARD_LIFT (3300–3650ms, duration: 350ms)
+ *   Card subtly lifts from the background (translateZ: 30px) with soft realistic shadow.
  *
- * - STAGE 4: PHOTO_PAUSE (4850ms to 5350ms, duration: 500ms)
- *   Settles facing the visitor so the portrait is recognized.
+ * - STAGE 4: CARD_FLIP (3650–4850ms, duration: 1200ms)
+ *   Smooth 180° vertical flip around Y-axis.
+ *   Reveals Dev's actual profile photograph covering the ENTIRE back face (edge-to-edge).
  *
- * - STAGE 5: CARD_TO_HERO (5350ms to 6250ms, duration: 900ms)
- *   Card moves smoothly into the exact hero profile card position while the ivory
- *   background dissolves into the spatial deep dark canvas.
+ * - STAGE 5: PROFILE_PAUSE (4850–5250ms, duration: 400ms)
+ *   Pause facing the visitor to recognize the photograph.
  *
- * - STAGE 6: COMPLETED (6250ms+)
- *   Triggers onComplete() to unmount entrance and activate the fully functional portfolio.
+ * - STAGE 6: CARD_TO_HERO & WEBSITE_REVEAL (5250–6150ms, duration: 900ms)
+ *   The flipped card scales and moves into the hero profile card position.
+ *   The entrance dissolves into the light-themed website.
+ *
+ * - STAGE 7: COMPLETED (6150ms+)
+ *   Full handoff to the live, fully interactive portfolio.
  */
 export default function PortfolioEntrance({ onComplete = () => {} }) {
-  // State Machine: 0 to 6
   const [stage, setStage] = useState(0);
   const [flipDeg, setFlipDeg] = useState(0);
   const isTriggeredRef = useRef(false);
@@ -58,53 +61,59 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
   useEffect(() => {
     if (isTriggeredRef.current) return;
 
-    // Stage 1: GREETING_EXIT at 2800ms (duration 450ms)
+    // Stage 1: GREETING_EXIT at 2400ms (duration 400ms)
     const t1 = setTimeout(() => {
       setStage(1);
-    }, 2800);
+    }, 2400);
 
-    // Stage 2: CARD_LIFT at 3250ms (duration 500ms)
+    // Stage 2: CARD_FORMATION at 2800ms (duration 500ms)
     const t2 = setTimeout(() => {
       setStage(2);
-    }, 3250);
+    }, 2800);
 
-    // Stage 3: CARD_FLIP at 3750ms (duration 1100ms)
+    // Stage 3: CARD_LIFT at 3300ms (duration 350ms)
     const t3 = setTimeout(() => {
       setStage(3);
-      setFlipDeg(180);
-    }, 3750);
+    }, 3300);
 
-    // Stage 4: PHOTO_PAUSE at 4850ms (duration 500ms)
+    // Stage 4: CARD_FLIP at 3650ms (duration 1200ms)
     const t4 = setTimeout(() => {
       setStage(4);
-    }, 4850);
+      setFlipDeg(180);
+    }, 3650);
 
-    // Stage 5: CARD_TO_HERO at 5350ms (duration 900ms)
+    // Stage 5: PROFILE_PAUSE at 4850ms (duration 400ms)
     const t5 = setTimeout(() => {
       setStage(5);
-    }, 5350);
+    }, 4850);
 
-    // Stage 6: COMPLETED at 6250ms
+    // Stage 6: CARD_TO_HERO at 5250ms (duration 900ms)
     const t6 = setTimeout(() => {
-      isTriggeredRef.current = true;
       setStage(6);
-      onComplete();
-    }, 6250);
+    }, 5250);
 
-    timersRef.current = [t1, t2, t3, t4, t5, t6];
+    // Stage 7: COMPLETED at 6150ms
+    const t7 = setTimeout(() => {
+      isTriggeredRef.current = true;
+      setStage(7);
+      onComplete();
+    }, 6150);
+
+    timersRef.current = [t1, t2, t3, t4, t5, t6, t7];
 
     return () => {
       timersRef.current.forEach((t) => clearTimeout(t));
     };
   }, [onComplete]);
 
-  if (stage >= 6) {
+  if (stage >= 7) {
     return null;
   }
 
   const isGreetingVisible = stage === 0;
-  const isLifted = stage >= 2;
-  const isTraveling = stage === 5;
+  const isFramed = stage >= 2;
+  const isLifted = stage >= 3;
+  const isTraveling = stage === 6;
 
   return (
     <motion.div
@@ -117,7 +126,7 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
         opacity: isTraveling ? 0 : 1,
       }}
       transition={{
-        duration: 0.9,
+        duration: 0.85,
         ease: [0.16, 1, 0.3, 1],
       }}
     >
@@ -131,7 +140,7 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
 
       {/* Center 3D Stage */}
       <div className="relative z-20 flex flex-col items-center justify-center w-full max-w-4xl px-6 text-center">
-        {/* ==================== 1. PERSISTENT RECTANGULAR IDENTITY CARD ==================== */}
+        {/* ==================== 1. DM IDENTITY FLIP CARD ==================== */}
         <motion.div
           className="relative flex items-center justify-center"
           animate={{
@@ -139,16 +148,17 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
             y: isTraveling ? -15 : 0,
           }}
           transition={{
-            duration: 0.9,
+            duration: 0.85,
             ease: [0.16, 1, 0.3, 1],
           }}
         >
-          {/* Strictly rectangular from frame 0 - NO circles or morphing */}
+          {/* DM Identity Card: initially standalone DM, then rectangle forms at Stage 2 */}
           <DMIdentityCard
             flipDeg={flipDeg}
             cardWidth={240}
             cardHeight={340}
             borderRadius={6}
+            isFramed={isFramed}
             isLifted={isLifted}
           />
         </motion.div>
@@ -158,9 +168,10 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
           {isGreetingVisible && (
             <motion.div
               className="flex flex-col items-center justify-center mt-6 sm:mt-8"
-              initial={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none">
                 HELLO, I'M DEV<span className="text-[#B96F52]">.</span>

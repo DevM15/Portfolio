@@ -8,13 +8,13 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
   return (
     <div className="w-full h-full flex flex-col justify-between py-16 px-6 md:px-16 max-w-[1600px] mx-auto select-none overflow-y-auto no-scrollbar">
       {/* Top Section Metadata */}
-      <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.25em] text-[#626A65] uppercase border-b border-[#2A302C] pb-4 flex-shrink-0">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[#788477] uppercase border-b border-[#DED9CE] pb-4 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <span className="text-[#F1EFE8] font-bold">04 / PROJECTS</span>
-          <span className="text-white/10">•</span>
-          <span className="text-[#9EA49F]">SYSTEM SPECIFICATIONS & ARCHITECTURE</span>
+          <span className="text-[#B96F52] font-semibold">04 / PROJECTS</span>
+          <span className="text-black/10">•</span>
+          <span className="text-[#788477]">SYSTEM SPECIFICATIONS & ARCHITECTURE</span>
         </div>
-        <div className="hidden sm:block text-[#9EA49F]">0{filtered.length} / 0{projects.length} SYSTEMS</div>
+        <div className="hidden sm:block text-[#788477]">0{filtered.length} / 0{projects.length} SYSTEMS</div>
       </div>
 
       {/* Main Layout: Filters & Technical Cards Grid */}
@@ -28,8 +28,8 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
               onClick={() => onFilterChange(f)}
               className={`px-3 py-1 transition-all rounded-[2px] cursor-pointer ${
                 activeFilter === f
-                  ? 'bg-[#B96F52] text-[#F7F6F2] font-semibold'
-                  : 'text-[#788477] hover:text-[#F7F6F2] bg-[#171B19] border border-[#2A302C]'
+                  ? 'bg-[#B96F52] text-[#F7F6F2] font-semibold shadow-sm'
+                  : 'text-[#788477] hover:text-[#252A27] bg-[#FFFFFF] border border-[#DED9CE]'
               }`}
             >
               {f}
@@ -46,8 +46,46 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
               onClick={() => onOpenProject(p)}
-              className="group cursor-pointer flex flex-col bg-[#111513] border border-[#2A302C] rounded-[2px] p-5 hover:border-[#B96F52] transition-all shadow-lg"
+              className="group cursor-pointer flex flex-col bg-[#FFFFFF] border border-[#DED9CE] rounded-[2px] p-5 hover:border-[#B96F52] transition-all shadow-sm hover:shadow-md"
             >
+              {/* Project Image Container */}
+              <div className="relative w-full aspect-[16/10] overflow-hidden rounded-[1px] mb-4 bg-[#F7F6F2]">
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-2 right-2 bg-[#F7F6F2]/90 border border-[#DED9CE] text-[8px] font-mono tracking-wider text-[#252A27] px-2 py-0.5 rounded-[1px]">
+                  {p.category}
+                </div>
+              </div>
+
+              {/* Title & Description */}
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-display font-bold text-lg text-[#252A27] group-hover:text-[#B96F52] transition-colors">
+                  {p.title}
+                </h4>
+                <span className="text-[#B96F52] text-sm group-hover:translate-x-0.5 transition-transform">↗</span>
+              </div>
+              <p className="font-sans text-xs text-[#788477] line-clamp-2 leading-relaxed mb-4">
+                {p.description}
+              </p>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-1.5 mt-auto pt-3 border-t border-[#DED9CE]/60">
+                {p.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="font-mono text-[8px] tracking-wider text-[#788477] bg-[#F7F6F2] px-2 py-0.5 rounded-[1px]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
               <div className="relative aspect-[16/10] bg-[#0B0D0C] border border-[#2A302C] overflow-hidden rounded-[2px]">
                 <img
                   src={p.image}

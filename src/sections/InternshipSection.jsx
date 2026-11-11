@@ -27,16 +27,16 @@ export default function InternshipSection({ onBack }) {
   return (
     <div className="w-full h-full flex flex-col justify-between py-12 px-6 md:px-16 max-w-[1500px] mx-auto select-none">
       {/* Top Section Metadata */}
-      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[#788477] uppercase border-b border-[#2A302C] pb-4">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[#788477] uppercase border-b border-[#DED9CE] pb-4">
         <div className="flex items-center gap-3">
           <span className="text-[#B96F52] font-semibold">02 / INTERNSHIP</span>
-          <span className="text-white/10">•</span>
+          <span className="text-black/10">•</span>
           <span className="text-[#788477]">COMMISSIONED EXPERIENCE ARCHIVE</span>
         </div>
         {onBack && (
           <button
             onClick={onBack}
-            className="text-[#B96F52] hover:text-[#F7F6F2] transition-colors cursor-pointer"
+            className="text-[#B96F52] hover:text-[#252A27] transition-colors cursor-pointer"
           >
             ← BACK TO HOME
           </button>
@@ -48,6 +48,40 @@ export default function InternshipSection({ onBack }) {
         {INTERNSHIPS.map((intern, idx) => (
           <motion.div
             key={intern.id}
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: idx * 0.12 }}
+            className="p-8 bg-[#FFFFFF] border border-[#DED9CE] rounded-[2px] shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between font-mono text-[9px] tracking-wider text-[#B96F52] uppercase mb-3 font-semibold">
+                <span>{intern.badge}</span>
+                <span className="text-[#788477]">{intern.period}</span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-display font-bold text-[#252A27] tracking-tight mb-2">
+                {intern.company}
+              </h3>
+              <div className="text-xs font-mono text-[#B96F52] mb-4 font-medium uppercase">
+                {intern.role}
+              </div>
+              <p className="font-sans text-xs sm:text-sm text-[#788477] leading-relaxed mb-6 font-normal">
+                {intern.description}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2 pt-4 border-t border-[#DED9CE]/60">
+              {intern.technologies.map((tech) => (
+                <span
+                  key={tech}
+                  className="font-mono text-[8px] tracking-wider text-[#788477] bg-[#F7F6F2] px-2 py-0.5 rounded-[1px]"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        ))}
+      </div>
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: idx * 0.12 }}

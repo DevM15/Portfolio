@@ -436,19 +436,19 @@ export default function HomeSection({ onOpenSection }) {
               willChange: 'transform, opacity',
             }}
           >
-            {/* Image-First Editorial Card (1-2 elements strictly) */}
-            <div className="relative w-full h-full bg-[#0D1211] rounded-[2px] overflow-hidden border border-[rgba(247,246,242,0.12)] hover:border-[#B96F52] shadow-[0_20px_50px_rgba(0,0,0,0.92)] transition-colors duration-300">
+            {/* Image-First Editorial Card (Light Editorial Theme) */}
+            <div className="relative w-full h-full bg-[#FFFFFF] rounded-[2px] overflow-hidden border border-[#DED9CE] hover:border-[#B96F52] shadow-[0_12px_32px_rgba(37,42,39,0.08)] hover:shadow-[0_20px_45px_rgba(185,111,82,0.16)] transition-all duration-300">
               {/* Visual Area */}
-              <div className={`relative w-full h-full overflow-hidden ${item.isProfile ? 'p-3 flex flex-col justify-between' : ''}`}>
+              <div className="relative w-full h-full overflow-hidden">
                 <img
                   ref={(img) => (cardImgRefs.current[index] = img)}
                   src={item.image}
                   alt={item.label}
-                  className="w-full h-full object-cover rounded-[1px] transition-transform duration-300"
+                  className="w-full h-full object-cover transition-transform duration-300"
                 />
 
                 {/* Micro Section Label */}
-                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#F7F6F2] bg-[#050706]/85 px-2 py-0.5 backdrop-blur-sm border border-white/10 uppercase pointer-events-none">
+                <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2]/90 px-2 py-0.5 backdrop-blur-sm border border-[#DED9CE] uppercase pointer-events-none rounded-[1px]">
                   {item.label}
                 </div>
 
@@ -459,14 +459,14 @@ export default function HomeSection({ onOpenSection }) {
                       e.stopPropagation();
                       onOpenSection(item.sectionId);
                     }}
-                    className="font-mono text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-[1px] border border-white/20 bg-[#050706]/85 text-[#F7F6F2] hover:border-[#B96F52] hover:bg-[#B96F52] hover:text-[#F7F6F2] hover:font-semibold transition-all shadow-md cursor-pointer flex items-center gap-1"
+                    className="font-mono text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-[1px] border border-[#DED9CE] bg-[#F7F6F2]/90 text-[#252A27] hover:border-[#B96F52] hover:bg-[#B96F52] hover:text-[#F7F6F2] hover:font-semibold transition-all shadow-sm cursor-pointer flex items-center gap-1"
                   >
                     <span>{item.btnText}</span>
                   </button>
                 </div>
 
                 {/* Subtle surface reflection overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.05] to-transparent pointer-events-none" />
               </div>
             </div>
           </div>

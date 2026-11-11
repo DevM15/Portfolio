@@ -115,7 +115,7 @@ export default function CustomCursor() {
             cx="20"
             cy="20"
             r={isHovering ? 17 : 14}
-            stroke={isClicking ? '#788477' : isHovering ? '#F7F6F2' : 'rgba(247, 246, 242, 0.45)'}
+            stroke={isClicking ? '#B96F52' : isHovering ? '#252A27' : 'rgba(120, 132, 119, 0.45)'}
             strokeWidth={isHovering ? '1.5' : '1'}
             strokeDasharray={isHovering ? '4 2' : 'none'}
             className={isHovering ? 'animate-spin' : ''}
@@ -133,7 +133,7 @@ export default function CustomCursor() {
             cx="20"
             cy="20"
             r={isClicking ? 3.5 : isHovering ? 4 : 2.5}
-            fill={isClicking ? '#B96F52' : '#F7F6F2'}
+            fill={isClicking ? '#B96F52' : '#252A27'}
             className="transition-all duration-150"
           />
 
@@ -143,7 +143,7 @@ export default function CustomCursor() {
             cy="8"
             r="1.5"
             fill="#B96F52"
-            stroke="rgba(247, 246, 242, 0.7)"
+            stroke="rgba(37, 42, 39, 0.7)"
             strokeWidth="0.8"
           />
         </svg>

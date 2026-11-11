@@ -2,17 +2,18 @@ import React from 'react';
 
 /**
  * DMIdentityCard:
- * A persistent, physical 3D Identity Card with:
- * - A clean, rectangular border and warm ivory surface from frame zero (NO CIRCLES).
- * - Exact 180-degree flip around the vertical axis.
- * - Front: Sculptural metallic DM monogram.
- * - Back: Dev Mistry's actual profile portrait (/img/dev_portrait.jpg) with editorial card styling.
+ * Represents the 3D identity card with:
+ * - Initially: NO BORDER, just standalone metallic DM letters floating on warm ivory.
+ * - Stage 2+: A subtle, elegant rectangular card forms around the monogram.
+ * - Stage 3+: 180-degree vertical 3D flip.
+ * - Back Face: Dev Mistry's actual profile photograph covering the ENTIRE surface (edge-to-edge, full background cover).
  */
 export default function DMIdentityCard({
   flipDeg = 0,
   cardWidth = 240,
   cardHeight = 340,
   borderRadius = 6,
+  isFramed = false,
   isLifted = false,
 }) {
   return (
@@ -25,40 +26,48 @@ export default function DMIdentityCard({
         transformStyle: 'preserve-3d',
       }}
     >
-      {/* 3D Rotating Card Container with single persistent rectangular geometry */}
+      {/* 3D Rotating Card Container */}
       <div
         className="relative w-full h-full"
         style={{
           transformStyle: 'preserve-3d',
           transform: `rotateY(${flipDeg}deg) translateZ(${isLifted ? 30 : 0}px)`,
-          transition: 'transform 1.1s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 0.5s ease',
-          borderRadius: `${borderRadius}px`,
-          boxShadow: isLifted
-            ? '0 32px 75px -12px rgba(37, 42, 39, 0.32), 0 0 0 1px #DED9CE'
-            : '0 16px 40px -10px rgba(37, 42, 39, 0.16), 0 0 0 1px #DED9CE',
+          transition: 'transform 1.2s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 0.6s ease',
+          borderRadius: isFramed ? `${borderRadius}px` : '0px',
+          boxShadow: isFramed
+            ? isLifted
+              ? '0 32px 75px -12px rgba(37, 42, 39, 0.28), 0 0 0 1px #DED9CE'
+              : '0 16px 40px -10px rgba(37, 42, 39, 0.14), 0 0 0 1px #DED9CE'
+            : 'none',
         }}
       >
-        {/* ==================== FRONT FACE: METALLIC DM ON WARM IVORY ==================== */}
+        {/* ==================== FRONT FACE: METALLIC DM MONOGRAM ==================== */}
         <div
-          className="absolute inset-0 flex flex-col items-center justify-between p-4 overflow-hidden"
+          className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden transition-all duration-500"
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
-            backgroundColor: '#F7F6F2',
-            borderRadius: `${borderRadius}px`,
-            border: '1px solid #DED9CE',
+            backgroundColor: isFramed ? '#F7F6F2' : 'transparent',
+            borderRadius: isFramed ? `${borderRadius}px` : '0px',
+            border: isFramed ? '1px solid #DED9CE' : '1px solid transparent',
           }}
         >
-          {/* Subtle Warm Paper Texture Grain Overlay */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-25 mix-blend-multiply"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
-            }}
-          />
+          {/* Subtle Warm Paper Texture Grain Overlay (visible when framed) */}
+          {isFramed && (
+            <div
+              className="absolute inset-0 pointer-events-none opacity-25 mix-blend-multiply transition-opacity duration-500"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
+              }}
+            />
+          )}
 
-          {/* Micro Top Header on Identity Card */}
-          <div className="relative z-10 w-full flex items-center justify-between text-[8px] font-mono tracking-wider text-[#788477] uppercase border-b border-[#DED9CE]/60 pb-2">
+          {/* Micro Top Header on Identity Card (reveals smoothly when framed) */}
+          <div
+            className={`absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] font-mono tracking-wider text-[#788477] uppercase border-b border-[#DED9CE]/60 pb-2 transition-opacity duration-500 ${
+              isFramed ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
             <span className="flex items-center gap-1.5 font-semibold text-[#252A27]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B96F52]" />
               DEV MISTRY
@@ -116,53 +125,47 @@ export default function DMIdentityCard({
             </div>
           </div>
 
-          {/* Micro Bottom Footer on Identity Card */}
-          <div className="relative z-10 w-full flex items-center justify-between text-[7px] font-mono tracking-wider text-[#788477] uppercase border-t border-[#DED9CE]/60 pt-2">
+          {/* Micro Bottom Footer on Identity Card (reveals smoothly when framed) */}
+          <div
+            className={`absolute bottom-3 left-4 right-4 flex items-center justify-between text-[7px] font-mono tracking-wider text-[#788477] uppercase border-t border-[#DED9CE]/60 pt-2 transition-opacity duration-500 ${
+              isFramed ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
             <span>IDENTITY FOLIO</span>
             <span className="text-[#B96F52] font-semibold">01 / PROFILE</span>
           </div>
         </div>
 
-        {/* ==================== BACK FACE: REAL PROFILE PHOTOGRAPH ==================== */}
+        {/* ==================== BACK FACE: REAL PROFILE PHOTO (FULL EDGE-TO-EDGE COVER) ==================== */}
         <div
-          className="absolute inset-0 flex flex-col justify-between p-3.5 bg-[#0D1211] overflow-hidden"
+          className="absolute inset-0 overflow-hidden"
           style={{
             transform: 'rotateY(180deg)',
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             borderRadius: `${borderRadius}px`,
-            border: '1px solid rgba(247, 246, 242, 0.15)',
-            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.95)',
+            border: '1px solid #DED9CE',
+            boxShadow: '0 25px 60px rgba(37, 42, 39, 0.35)',
           }}
         >
-          {/* Header Metadata matching Hero card */}
-          <div className="relative z-10 flex items-center justify-between font-mono text-[8px] tracking-wider text-[#F7F6F2] uppercase px-1">
-            <span className="bg-[#050706]/80 px-2 py-0.5 rounded-[1px] border border-white/10 backdrop-blur-sm">
-              01 / PROFILE
-            </span>
-            <span className="text-[#B96F52] text-[7px] font-semibold tracking-wider">
-              LIVE
-            </span>
+          {/* Full background coverage with Dev Mistry's actual profile portrait */}
+          <img
+            src="/img/dev_portrait.jpg"
+            alt="Dev Mistry"
+            className="w-full h-full object-cover"
+            style={{
+              objectPosition: 'center 20%', // Centers face perfectly
+            }}
+          />
+
+          {/* Subtle Editorial Top Tag */}
+          <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#F7F6F2] bg-[#252A27]/80 px-2 py-0.5 backdrop-blur-sm rounded-[1px] border border-white/10 uppercase">
+            01 / PROFILE
           </div>
 
-          {/* Actual Dev Mistry Profile Photograph from Assets */}
-          <div className="relative w-full flex-1 my-2 overflow-hidden rounded-[2px] bg-black/40">
-            <img
-              src="/img/dev_portrait.jpg"
-              alt="Dev Mistry"
-              className="w-full h-full object-cover filter contrast-105"
-            />
-            {/* Subtle Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-          </div>
-
-          {/* Bottom Callout matching Hero card */}
-          <div className="relative z-10 flex items-center justify-between font-mono text-[8px] tracking-wider uppercase px-1">
-            <span className="text-[#788477]">DEV MISTRY</span>
-            <span className="px-2 py-0.5 rounded-[1px] bg-[#B96F52] text-[#F7F6F2] font-semibold text-[7px] flex items-center gap-1 shadow-sm">
-              <span>ABOUT DEV</span>
-              <span>→</span>
-            </span>
+          {/* Subtle Editorial Bottom Callout */}
+          <div className="absolute bottom-2.5 right-2.5 font-mono text-[8px] tracking-wider text-[#F7F6F2] bg-[#B96F52] px-2 py-0.5 rounded-[1px] shadow-sm uppercase font-semibold">
+            ABOUT DEV →
           </div>
         </div>
       </div>

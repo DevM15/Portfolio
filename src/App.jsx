@@ -190,24 +190,24 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-screen h-screen bg-[#050706] text-[#F1EFE8] overflow-hidden select-none font-sans">
-      {/* ==================== PROCEDURAL SPATIAL CANVAS BACKGROUND ==================== */}
+    <div className="relative w-screen h-screen bg-[#F7F6F2] text-[#252A27] overflow-hidden select-none font-sans">
+      {/* ==================== PROCEDURAL SPATIAL CANVAS BACKGROUND (WARM IVORY) ==================== */}
       <SpatialCanvasBackground sectionIndex={currentIndex} />
 
-      {/* Subtle Depth Vignette Layer (Darkening Viewport Borders) */}
+      {/* Subtle Warm Vignette Layer */}
       <div
         className="absolute inset-0 pointer-events-none z-[1]"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, transparent 60%, rgba(5, 7, 6, 0.75) 100%)',
+          background: 'radial-gradient(circle at 50% 50%, transparent 65%, rgba(222, 217, 206, 0.4) 100%)',
         }}
       />
 
-      {/* Extremely Faint Film Grain Overlay (~1.8%) */}
-      <div className="absolute inset-0 pointer-events-none z-[2] bg-subtle-grain mix-blend-overlay opacity-75" />
+      {/* Extremely Faint Paper Grain Overlay */}
+      <div className="absolute inset-0 pointer-events-none z-[2] bg-subtle-grain mix-blend-multiply opacity-25" />
 
-      {/* Minimal Architectural Horizon Guidelines (0.05 opacity) */}
-      <div className="absolute top-20 left-6 right-6 md:left-12 md:right-12 h-px bg-[rgba(241,239,232,0.05)] pointer-events-none z-[3]" />
-      <div className="absolute bottom-[72px] left-6 right-6 md:left-12 md:right-12 h-px bg-[rgba(241,239,232,0.05)] pointer-events-none z-[3]" />
+      {/* Minimal Architectural Horizon Guidelines */}
+      <div className="absolute top-20 left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80 pointer-events-none z-[3]" />
+      <div className="absolute bottom-[72px] left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80 pointer-events-none z-[3]" />
 
       <CustomCursor />
 
@@ -223,18 +223,18 @@ export default function App() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: showIntro ? 0 : 1, y: showIntro ? -20 : 0 }}
         transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#F7F6F2] pointer-events-none bg-transparent"
+        className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#252A27] pointer-events-none bg-transparent"
       >
         <div className="flex items-center gap-6 pointer-events-auto md:gap-12">
           <div className="flex items-baseline gap-2">
             <span className="font-mono text-xs tracking-wider text-[#788477]">NAME /</span>
-            <span className="text-lg sm:text-[20px] font-bold tracking-tight text-[#F7F6F2] font-display">
+            <span className="text-lg sm:text-[20px] font-bold tracking-tight text-[#252A27] font-display">
               DEV MISTRY
             </span>
           </div>
           <div className="items-baseline hidden gap-2 lg:flex">
             <span className="font-mono text-xs tracking-wider text-[#788477]">OCCUPATION /</span>
-            <span className="text-sm sm:text-base font-semibold tracking-tight text-[#F7F6F2]">
+            <span className="text-sm sm:text-base font-semibold tracking-tight text-[#252A27]">
               FULL STACK DEVELOPER
             </span>
           </div>
@@ -257,10 +257,11 @@ export default function App() {
               <button
                 key={sec.id}
                 onClick={() => navigateToView(sec.id)}
-                className={`flip-nav-link text-sm sm:text-base font-medium tracking-normal transition-all duration-200 cursor-pointer ${isActive && !contactOpen
+                className={`flip-nav-link text-sm sm:text-base font-medium tracking-normal transition-all duration-200 cursor-pointer ${
+                  isActive && !contactOpen
                     ? 'active text-[#B96F52] font-bold'
-                    : 'text-[#788477] hover:text-[#F7F6F2]'
-                  }`}
+                    : 'text-[#788477] hover:text-[#252A27]'
+                }`}
               >
                 <span className="flip-nav-inner">
                   <span className="flip-nav-front">{sec.label}</span>
@@ -415,7 +416,7 @@ export default function App() {
         className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-wider uppercase text-[#788477] pointer-events-none bg-transparent"
       >
         <div className="flex items-center gap-3 pointer-events-auto">
-          <span className="text-[#F7F6F2] font-semibold text-xs sm:text-sm tracking-wider font-mono">
+          <span className="text-[#252A27] font-semibold text-xs sm:text-sm tracking-wider font-mono">
             PORTFOLIO <span className="text-[#B96F52]">/</span> 2026
           </span>
         </div>
@@ -423,7 +424,7 @@ export default function App() {
         <div className="flex items-center gap-6 pointer-events-auto">
           <button
             onClick={() => setOpenInfo(true)}
-            className="flip-nav-link text-xs sm:text-sm font-semibold tracking-wider text-[#F7F6F2] hover:text-[#B96F52] transition-colors cursor-pointer"
+            className="flip-nav-link text-xs sm:text-sm font-semibold tracking-wider text-[#252A27] hover:text-[#B96F52] transition-colors cursor-pointer"
           >
             <span className="flip-nav-inner">
               <span className="flip-nav-front">INFO</span>
