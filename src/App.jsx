@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomCursor from './components/CustomCursor';
 import SpatialCanvasBackground from './components/SpatialCanvasBackground';
-import BookIntro from './components/BookIntro';
+import PortfolioEntrance from './components/entrance/PortfolioEntrance';
 import HomeSection from './sections/HomeSection';
 import AboutSection from './sections/AboutSection';
 import InternshipSection from './sections/InternshipSection';
@@ -147,10 +147,10 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState('ALL WORK');
   const [openInfo, setOpenInfo] = useState(false);
 
-  // Cinematic 3D Book Landing Intro Animation
+  // Premium Cinematic Portfolio Entrance - DM Experience
   const [showIntro, setShowIntro] = useState(true);
 
-  const handleBookComplete = useCallback(() => {
+  const handleEntranceComplete = useCallback(() => {
     setShowIntro(false);
   }, []);
 
@@ -249,10 +249,10 @@ export default function App() {
 
       <CustomCursor />
 
-      {/* ==================== CINEMATIC 3D BOOK LANDING INTRO ==================== */}
+      {/* ==================== PREMIUM CINEMATIC PORTFOLIO ENTRANCE ==================== */}
       <AnimatePresence>
         {showIntro && (
-          <BookIntro onComplete={handleBookComplete} />
+          <PortfolioEntrance onComplete={handleEntranceComplete} />
         )}
       </AnimatePresence>
 
