@@ -698,7 +698,7 @@ export default function App() {
                   <div className="relative bg-[#171B19] border border-[#2A302C] p-3 rounded-[2px] shadow-2xl w-full max-w-[280px]">
                     <div className="relative mb-3 overflow-hidden border border-[#2A302C] aspect-[3/4] bg-[#0B0D0C]">
                       <img
-                        src="/img/dev_portrait.jpg"
+                        src="/img/dev_pic.png"
                         alt="Dev Mistry Portrait"
                         className="w-full h-full object-cover contrast-[1.05]"
                       />

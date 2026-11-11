@@ -93,7 +93,7 @@ export default function PortalScene({
               </div>
               <div className="relative w-full h-24 overflow-hidden rounded-[1px] my-1 bg-black/40">
                 <img
-                  src="/img/dev_portrait.jpg"
+                  src="/img/dev_pic.png"
                   alt="Dev Mistry"
                   className="w-full h-full object-cover filter contrast-110"
                 />

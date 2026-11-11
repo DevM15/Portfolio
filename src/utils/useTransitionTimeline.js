@@ -54,7 +54,7 @@ export function useTransitionTimeline() {
   // Preload authentic profile photograph
   useEffect(() => {
     const img = new Image();
-    img.src = '/img/dev_portrait.jpg';
+    img.src = '/img/dev_pic.png';
   }, []);
 
   useEffect(() => {

@@ -50,6 +50,8 @@ export default function DMIdentityCard({
         <div
           className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden transition-all duration-500"
           style={{
+            transform: 'rotateY(0deg) translateZ(1px)',
+            transformStyle: 'preserve-3d',
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             backgroundColor: isFramed ? '#F7F6F2' : 'transparent',
@@ -96,7 +98,7 @@ export default function DMIdentityCard({
             <div className="relative inline-block">
               <span
                 className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[#C8C4B7]/60 select-none blur-[2px]"
-                style={{ transform: 'translate3d(3px, 6px, -15px)' }}
+                style={{ transform: 'translate3d(3px, 6px, 0px)' }}
                 aria-hidden="true"
               >
                 D
@@ -118,7 +120,7 @@ export default function DMIdentityCard({
             <div className="relative inline-block -ml-2 sm:-ml-3">
               <span
                 className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[#C8C4B7]/60 select-none blur-[2px]"
-                style={{ transform: 'translate3d(3px, 6px, -15px)' }}
+                style={{ transform: 'translate3d(3px, 6px, 0px)' }}
                 aria-hidden="true"
               >
                 M
@@ -166,9 +168,10 @@ export default function DMIdentityCard({
 
         {/* ==================== BACK FACE: REAL PROFILE PHOTO (FULL EDGE-TO-EDGE COVER) ==================== */}
         <div
-          className="absolute inset-0 overflow-hidden"
+          className="absolute inset-0 overflow-hidden bg-[#F7F6F2]"
           style={{
-            transform: 'rotateY(180deg)',
+            transform: 'rotateY(180deg) translateZ(1px)',
+            transformStyle: 'preserve-3d',
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             borderRadius: `${borderRadius}px`,
@@ -178,7 +181,7 @@ export default function DMIdentityCard({
         >
           {/* Full background coverage with Dev Mistry's actual profile portrait */}
           <img
-            src="/img/dev_portrait.jpg"
+            src="/img/dev_pic.png"
             alt="Dev Mistry"
             className="w-full h-full object-cover"
             style={{

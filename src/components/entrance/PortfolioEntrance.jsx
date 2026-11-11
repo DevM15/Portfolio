@@ -46,7 +46,7 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
   // Preload actual profile photo so reverse face is rendered instantly
   useEffect(() => {
     const img = new Image();
-    img.src = '/img/dev_portrait.jpg';
+    img.src = '/img/dev_pic.png';
   }, []);
 
   // Respect prefers-reduced-motion
