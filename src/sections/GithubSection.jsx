@@ -50,8 +50,6 @@ export default function GithubSection({ onBack }) {
           </button>
         )}
       </div>
-        )}
-      </div>
 
       {/* Main Content Area: Overview Metrics + Repository Grid */}
       <div className="my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
 /**
  * Cinematic 3D Book Landing Intro Component
@@ -53,7 +53,7 @@ export default function BookIntro({ onComplete }) {
     }
   };
 
-  const triggerOpen = () => {
+  const triggerOpen = useCallback(() => {
     if (phase !== 'ready') return;
     setPhase('opening');
 
@@ -68,7 +68,7 @@ export default function BookIntro({ onComplete }) {
       setPhase('done');
       onComplete?.();
     }, 2450);
-  };
+  }, [phase, onComplete]);
 
   // Keyboard accessibility
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function BookIntro({ onComplete }) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [phase, onComplete]);
+  }, [phase, onComplete, triggerOpen]);
 
   if (phase === 'done') return null;
 

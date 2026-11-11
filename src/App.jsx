@@ -104,42 +104,6 @@ const FILTERS = [
   'AGENTIC AI',
 ];
 
-// Dynamic background atmosphere variations per section
-const SECTION_ATMOSPHERES = {
-  0: { // 01 HOME: Subtle cool teal tone
-    primaryGlow: 'radial-gradient(circle at 28% 44%, rgba(101, 230, 210, 0.038) 0%, rgba(11, 16, 15, 0.4) 45%, transparent 72%)',
-    secondaryGlow: 'radial-gradient(circle at 74% 52%, rgba(13, 18, 17, 0.6) 0%, transparent 65%)',
-  },
-  1: { // 02 ABOUT: Slightly warmer graphite tone
-    primaryGlow: 'radial-gradient(circle at 35% 48%, rgba(140, 150, 145, 0.025) 0%, rgba(13, 18, 17, 0.5) 45%, transparent 70%)',
-    secondaryGlow: 'radial-gradient(circle at 70% 40%, rgba(101, 230, 210, 0.02) 0%, transparent 60%)',
-  },
-  2: { // 03 INTERNSHIP: Technical muted deep tone
-    primaryGlow: 'radial-gradient(circle at 30% 50%, rgba(101, 230, 210, 0.025) 0%, rgba(11, 16, 15, 0.5) 45%, transparent 70%)',
-    secondaryGlow: 'radial-gradient(circle at 75% 45%, rgba(119, 136, 255, 0.018) 0%, transparent 65%)',
-  },
-  3: { // 04 PROJECTS: Deep obsidian graphite
-    primaryGlow: 'radial-gradient(circle at 50% 40%, rgba(11, 16, 15, 0.7) 0%, transparent 75%)',
-    secondaryGlow: 'radial-gradient(circle at 20% 60%, rgba(101, 230, 210, 0.02) 0%, transparent 60%)',
-  },
-  4: { // 05 SKILLS: Controlled technical graphite
-    primaryGlow: 'radial-gradient(circle at 45% 45%, rgba(101, 230, 210, 0.03) 0%, rgba(13, 18, 17, 0.5) 50%, transparent 70%)',
-    secondaryGlow: 'radial-gradient(circle at 80% 50%, rgba(13, 18, 17, 0.6) 0%, transparent 60%)',
-  },
-  5: { // 06 JOURNEY: Subtle horizontal drift tone
-    primaryGlow: 'radial-gradient(circle at 50% 50%, rgba(101, 230, 210, 0.028) 0%, rgba(11, 16, 15, 0.6) 50%, transparent 75%)',
-    secondaryGlow: 'radial-gradient(circle at 85% 40%, rgba(119, 136, 255, 0.02) 0%, transparent 65%)',
-  },
-  6: { // 07 GITHUB: Pure deep graphite with subtle source tone
-    primaryGlow: 'radial-gradient(circle at 35% 45%, rgba(101, 230, 210, 0.032) 0%, rgba(11, 16, 15, 0.5) 45%, transparent 70%)',
-    secondaryGlow: 'radial-gradient(circle at 70% 55%, rgba(13, 18, 17, 0.7) 0%, transparent 65%)',
-  },
-  7: { // 08 CONTACT: Atmospheric cyan horizon tone
-    primaryGlow: 'radial-gradient(circle at 30% 45%, rgba(101, 230, 210, 0.045) 0%, rgba(11, 16, 15, 0.5) 50%, transparent 75%)',
-    secondaryGlow: 'radial-gradient(circle at 75% 55%, rgba(119, 136, 255, 0.025) 0%, transparent 65%)',
-  },
-};
-
 export default function App() {
   const [currentViewId, setCurrentViewId] = useState('home');
   const [prevViewId, setPrevViewId] = useState('home');
@@ -149,18 +113,17 @@ export default function App() {
 
   // Premium Cinematic Portfolio Entrance - DM Experience
   const [showIntro, setShowIntro] = useState(true);
-  const [introStep, setIntroStep] = useState(0); // 0: plain, 1: DM appears, 2: diagonal separate, 3: reveal portfolio
 
   const handleEntranceComplete = useCallback(() => {
     setShowIntro(false);
   }, []);
 
-  const navigateToView = (viewId) => {
+  const navigateToView = useCallback((viewId) => {
     if (viewId === currentViewId) return;
     setPrevViewId(currentViewId);
     setCurrentViewId(viewId);
     setContactOpen(false);
-  };
+  }, [currentViewId]);
 
   // 3D Tilt for Contact Modal Card
   const [contactTilt, setContactTilt] = useState({ rx: 0, ry: 0 });
@@ -201,7 +164,7 @@ export default function App() {
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [currentViewId, contactOpen, openInfo, showIntro]);
+  }, [currentViewId, contactOpen, openInfo, showIntro, navigateToView]);
 
   const viewOrder = ['home', 'about', 'internship', 'skills', 'journey', 'github', 'projects', 'contact'];
   const currentIndex = viewOrder.indexOf(currentViewId);
@@ -225,8 +188,6 @@ export default function App() {
       transition: { duration: 0.38, ease: [0.16, 1, 0.3, 1] },
     }),
   };
-
-  const currentSection = ALL_VIEWS.find((v) => v.id === currentViewId) || ALL_VIEWS[0];
 
   return (
     <div className="relative w-screen h-screen bg-[#050706] text-[#F1EFE8] overflow-hidden select-none font-sans">

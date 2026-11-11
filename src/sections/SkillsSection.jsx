@@ -55,8 +55,8 @@ export default function SkillsSection({ onBack }) {
           >
             <div>
               {/* Category Header */}
-              <div className="font-mono text-[9px] tracking-[0.25em] text-[#65E6D2] uppercase mb-2">
-                0{idx + 1} // DOMAIN
+              <div className="font-mono text-[9px] tracking-[0.25em] text-[#788477] uppercase mb-2">
+                {`0${idx + 1} // DOMAIN`}
               </div>
               <h3 className="text-2xl sm:text-3xl font-display font-black text-[#F1EFE8] uppercase tracking-tight leading-none mb-3">
                 {group.category}
