@@ -183,22 +183,6 @@ export default function HorizontalScrollExhibition({
     goToCard(nearest);
   };
 
-  // If initial entrance greeting timeline is still progressing, show HomeSection entrance
-  if (!isCompleted) {
-    return (
-      <div className="w-full h-full flex items-center justify-center overflow-hidden">
-        <HomeSection
-          onOpenSection={onOpenSection}
-          onNavigateToProjects={onNavigateToProjects}
-          onNavigateToContact={onNavigateToContact}
-          transitionPhase={transitionPhase}
-          phaseIndex={phaseIndex}
-          timelineStart={timelineStart}
-        />
-      </div>
-    );
-  }
-
   const activeRoom = WORKSPACE_ROOMS[activeCardIndex] || WORKSPACE_ROOMS[0];
 
   return (

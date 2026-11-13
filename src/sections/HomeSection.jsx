@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import DMIdentityCard from '../components/entrance/DMIdentityCard';
-import TechText from '../components/TechText/TechText';
 import StrokeText from '../components/StrokeText/StrokeText';
 
 /**
@@ -74,17 +73,10 @@ export default function HomeSection({
   const [selectedExhibitionIndex, setSelectedExhibitionIndex] = useState(0);
   const containerRef = useRef(null);
 
-  // Discrete Phase Indicators matching useTransitionTimeline
-  const isGreetingPhase = phaseIndex < 1;       // INTRO
-  const isGreetingExit = phaseIndex >= 1;       // GREETING_EXIT
-  const isCardFormed = phaseIndex >= 2;         // CARD_FORMATION
-  const isCardFlipped = phaseIndex >= 3;        // CARD_FLIP (180deg flip)
-  // eslint-disable-next-line no-unused-vars
-  const isBgTransformed = phaseIndex >= 4;      // BACKGROUND_TRANSFORM
-  const isProfileTrans = phaseIndex >= 6;       // PROFILE_TRANSITION
-  const isHeroRevealed = phaseIndex >= 7;       // HERO_REVEAL (Intro text glides in)
-  const isProjectsRevealed = phaseIndex >= 8;   // PROJECT_REVEAL (Editorial projects reveal)
-  const isFullySettled = phaseIndex >= 9;       // DECORATION_SETTLEMENT & COMPLETED
+  // Indicators - Hero is immediately ready and interactive inside the workspace card
+  const isCardFlipped = true;
+  const isProjectsRevealed = true;
+  const isFullySettled = true;
 
   // Featured pair based on selected index
   const leftProject = CURATED_PROJECTS[selectedExhibitionIndex % CURATED_PROJECTS.length];
@@ -97,24 +89,25 @@ export default function HomeSection({
       ref={containerRef}
       className="relative w-full h-full flex flex-col items-center justify-center select-none overflow-hidden outline-none px-4 sm:px-8 md:px-12 text-[var(--text-primary)]"
     >
-      {/* ==================== 1. INITIAL ENTRANCE GREETING ==================== */}
-      <AnimatePresence>
-        {!isGreetingExit && (
+      {/* ==================== EDITORIAL HERO EXHIBITION STAGE ==================== */}
+      <div className="relative w-full max-w-[1420px] h-full flex flex-col justify-center items-center py-4">
+
+        {/* --- MAIN HERO ROW: 3-ZONE BALANCED EDITORIAL COMPOSITION --- */}
+        <div className="relative z-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
+
+          {/* ==================== ZONE 1: TYPOGRAPHIC IDENTITY & INTRO (COL 1-4) ==================== */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{
-              opacity: isGreetingPhase ? 1 : 0,
-              y: isGreetingPhase ? 0 : -16,
-            }}
-            exit={{ opacity: 0, y: -20, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            className="absolute top-[calc(50%+85px)] sm:top-[calc(50%+95px)] md:top-[calc(50%+110px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
+            initial={{ opacity: 0, x: -24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col justify-center space-y-4 lg:col-span-4 order-2 lg:order-1"
           >
-            {/* Luxury Editorial Main Heading Animated via StrokeText */}
-            <div className="w-full max-w-xl mx-auto flex items-center justify-center px-2">
+            {/* Main Editorial StrokeText Display: HELLO, I'M DEV. */}
+            <div className="w-full relative -ml-1 py-1" data-cursor="pointer">
               <StrokeText
                 text="HELLO, I'M DEV."
                 fontFamily='"Cormorant Garamond", "Bodoni Moda", Georgia, serif'
-                fontSize={58}
+                fontSize={56}
                 fontWeight={600}
                 strokeColor="var(--accent)"
                 fillColor="var(--text-primary)"
@@ -126,123 +119,37 @@ export default function HomeSection({
                 trigger="mount"
                 fillMode="wipe"
                 wipeFrom="left"
-                letterSpacing={2}
+                letterSpacing={1.5}
                 hoverRedraw={true}
                 shadow={false}
               />
             </div>
 
-            {/* Refined Architectural Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 0.9, y: 0 }}
-              transition={{
-                duration: 0.8,
-                delay: 1.1,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="mt-2.5 sm:mt-3.5 text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.36em] uppercase select-none"
-            >
-              DESIGNING & BUILDING DIGITAL EXPERIENCES.
-            </motion.p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ==================== 2. EDITORIAL HERO EXHIBITION STAGE ==================== */}
-      <div className="relative w-full max-w-[1420px] h-full flex flex-col justify-center items-center py-4">
-
-        {/* --- MAIN HERO ROW: 3-ZONE BALANCED EDITORIAL COMPOSITION --- */}
-        <div className="relative z-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
-
-          {/* ==================== ZONE 1: TYPOGRAPHIC IDENTITY & INTRO (COL 1-4) ==================== */}
-          <motion.div
-            initial={{ opacity: 0, x: -36, filter: 'blur(4px)' }}
-            animate={{
-              opacity: isHeroRevealed ? 1 : 0,
-              x: isHeroRevealed ? 0 : -36,
-              filter: isHeroRevealed ? 'blur(0px)' : 'blur(4px)',
-            }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className={`flex flex-col justify-center space-y-6 lg:col-span-4 order-2 lg:order-1 ${isHeroRevealed ? 'pointer-events-auto' : 'pointer-events-none'
-              }`}
-          >
-            {/* Fine Header Meta */}
-            <div className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
-              <span className="font-mono text-[10px] tracking-wider text-[var(--text-secondary)] uppercase font-medium">
-                PROFILE & EXHIBITION / 2026
-              </span>
-            </div>
-
-            {/* Main Typographic Hierarchy */}
-            <div className="space-y-1">
-              <span className="font-mono text-xs tracking-wider text-[var(--accent)] uppercase block font-semibold">
-                FULL STACK DEVELOPER
-              </span>
-              <div
-                className="w-full h-[60px] sm:h-[72px] xl:h-[84px] relative -ml-1"
-                data-cursor="explore"
-              >
-                <TechText
-                  text="DEV MISTRY"
-                  fontWeight={800}
-                  fontSize={72}
-                  letterSpacing={-0.03}
-                  align="left"
-                  color="var(--text-primary)"
-                  accentColor="var(--accent)"
-                  reveal="letter"
-                  dashLength={4}
-                  dashGap={2}
-                  specks={14}
-                  selection={true}
-                  labels={true}
-                  draggable={true}
-                  clickKick={true}
-                  bounce={0.4}
-                  sweep={true}
-                  speed={0.8}
-                  guides={true}
-                  intro="metrics"
-                  introDuration={1.8}
-                />
-              </div>
-            </div>
-
-            {/* Contemporary Editorial Statement */}
-            <p className="font-sans text-sm sm:text-base text-[var(--text-secondary)] font-normal leading-relaxed max-w-md">
-              Designing and building digital experiences. Specialized in deterministic cloud architecture, high-availability web platforms, and autonomous agentic swarms.
+            {/* Editorial Subtitle */}
+            <p className="text-[11px] sm:text-xs font-sans font-medium text-[var(--accent)] tracking-[0.24em] uppercase">
+              DESIGNING & BUILDING DIGITAL EXPERIENCES
             </p>
 
-            {/* Restrained Metadata Strip */}
-            <div className="flex items-center gap-6 pt-1 font-mono text-[11px] text-[var(--text-secondary)] border-t border-[var(--border-primary)] pt-4">
-              <div className="flex flex-col">
-                <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider">BASE LOCATION</span>
-                <span className="font-semibold text-[var(--text-primary)] mt-0.5">MUMBAI, INDIA</span>
-              </div>
-              <div className="w-px h-8 bg-[var(--border-primary)]" />
-              <div className="flex flex-col">
-                <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider">STATUS</span>
-                <span className="font-semibold text-[var(--accent)] mt-0.5">OPEN FOR SELECT CONTRACTS</span>
-              </div>
-            </div>
+            {/* Crisp Statement - Unwanted Bloat Removed */}
+            <p className="font-sans text-sm text-[var(--text-secondary)] font-normal leading-relaxed max-w-sm">
+              Specialized in deterministic cloud architecture, high-availability web platforms, and autonomous agentic swarms.
+            </p>
 
-            {/* Primary Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            {/* Clean Action Buttons */}
+            <div className="flex items-center gap-3 pt-2">
               <button
                 onClick={() => onOpenSection && onOpenSection('about')}
                 data-cursor="button"
-                className="group px-5 py-2.5 bg-[var(--text-primary)] text-[var(--bg-primary)] hover:bg-[var(--accent)] hover:text-[#F7F6F2] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] shadow-sm hover:shadow-md flex items-center gap-2 cursor-pointer"
+                className="group px-4 py-2 bg-[var(--text-primary)] text-[var(--bg-primary)] hover:bg-[var(--accent)] hover:text-[#F7F6F2] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] shadow-sm hover:shadow-md flex items-center gap-2 cursor-pointer"
               >
-                <span>ABOUT SPECIFICATION</span>
+                <span>SPECIFICATION</span>
                 <span className="transition-transform group-hover:translate-x-1 duration-200">→</span>
               </button>
 
               <button
                 onClick={() => onNavigateToProjects && onNavigateToProjects()}
                 data-cursor="archive"
-                className="px-4 py-2.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] hover:text-[var(--accent)] border border-[var(--border-primary)] hover:border-[var(--accent)] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] cursor-pointer"
+                className="px-4 py-2 bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] hover:text-[var(--accent)] border border-[var(--border-primary)] hover:border-[var(--accent)] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] cursor-pointer"
               >
                 VIEW ARCHIVE
               </button>
@@ -263,8 +170,8 @@ export default function HomeSection({
               <motion.div
                 data-cursor="profile"
                 animate={{
-                  y: isProfileTrans ? 0 : isGreetingExit ? -8 : 0,
-                  scale: isProfileTrans ? 1 : isCardFormed ? 1.02 : 1.0,
+                  y: 0,
+                  scale: 1,
                 }}
                 transition={{
                   duration: 0.9,
@@ -272,29 +179,15 @@ export default function HomeSection({
                 }}
                 className="relative w-full h-full cursor-pointer z-30"
                 onClick={() => {
-                  if (isFullySettled && onOpenSection) onOpenSection('about');
+                  if (onOpenSection) onOpenSection('about');
                 }}
               >
                 <DMIdentityCard
-                  flipDeg={isCardFlipped ? 180 : 0}
-                  isFramed={isCardFormed}
-                  isLifted={isCardFlipped && !isFullySettled}
-                  onOpenSection={isFullySettled ? onOpenSection : null}
+                  flipDeg={180}
+                  isFramed={true}
+                  isLifted={false}
+                  onOpenSection={onOpenSection}
                 />
-              </motion.div>
-
-              {/* Editorial Caption Tag underneath Portrait */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{
-                  opacity: isHeroRevealed ? 1 : 0,
-                  y: isHeroRevealed ? 0 : 10,
-                }}
-                transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute -bottom-7 flex items-center justify-between w-full px-1 font-mono text-[8px] tracking-wider text-[var(--text-secondary)] uppercase pointer-events-none"
-              >
-                <span>DEV MISTRY // IDENTITY SPEC</span>
-                <span className="text-[var(--accent)] font-semibold">REF: 01</span>
               </motion.div>
             </div>
           </div>
