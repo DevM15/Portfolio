@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 
 export const TRANSITION_PHASES = {
-  INTRO: 'INTRO',                                 // 0 - 3200ms: DM reveal + greeting + comfortable reading pause
-  GREETING_EXIT: 'GREETING_EXIT',                 // 3200 - 3600ms: Greeting slides up and fades out (400ms)
-  CARD_FORMATION: 'CARD_FORMATION',               // 3600 - 4000ms: Rectangular identity card forms (400ms)
-  CARD_FLIP: 'CARD_FLIP',                         // 4000 - 4800ms: 180° Y-axis flip revealing profile photo (800ms)
-  BACKGROUND_TRANSFORM: 'BACKGROUND_TRANSFORM',   // 4600 - 5200ms: Canvas grid and horizon lines draw (600ms)
-  NAVIGATION_REVEAL: 'NAVIGATION_REVEAL',         // 4900 - 5400ms: Header & nav links staggered entrance (500ms)
-  PROFILE_TRANSITION: 'PROFILE_TRANSITION',       // 5100 - 5500ms: Profile card moves into 3D cylinder depth (400ms)
-  HERO_REVEAL: 'HERO_REVEAL',                     // 5400 - 5700ms: Center camera reticle expands & settles (300ms)
-  PROJECT_REVEAL: 'PROJECT_REVEAL',               // 5600 - 6300ms: Gallery project cards fan out along cylinder (700ms)
-  DECORATION_SETTLEMENT: 'DECORATION_SETTLEMENT', // 6100 - 6600ms: Footer & micro-metadata glide into place (500ms)
-  COMPLETED: 'COMPLETED',                         // 6600ms+: Full interactive mode, physics unrestricted
+  INTRO: 'INTRO',                                 // 0 - 4200ms: DM reveal + delayed greeting + comfortable reading pause
+  GREETING_EXIT: 'GREETING_EXIT',                 // 4200 - 4600ms: Greeting slides up and fades out (400ms)
+  CARD_FORMATION: 'CARD_FORMATION',               // 4600 - 5000ms: Rectangular identity card forms (400ms)
+  CARD_FLIP: 'CARD_FLIP',                         // 5000 - 5800ms: 180° Y-axis flip revealing profile photo (800ms)
+  BACKGROUND_TRANSFORM: 'BACKGROUND_TRANSFORM',   // 5600 - 6200ms: Canvas grid and horizon lines draw (600ms)
+  NAVIGATION_REVEAL: 'NAVIGATION_REVEAL',         // 5900 - 6400ms: Header & nav links staggered entrance (500ms)
+  PROFILE_TRANSITION: 'PROFILE_TRANSITION',       // 6100 - 6500ms: Profile card moves into 3D cylinder depth (400ms)
+  HERO_REVEAL: 'HERO_REVEAL',                     // 6400 - 6700ms: Center camera reticle expands & settles (300ms)
+  PROJECT_REVEAL: 'PROJECT_REVEAL',               // 6600 - 7300ms: Gallery project cards fan out along cylinder (700ms)
+  DECORATION_SETTLEMENT: 'DECORATION_SETTLEMENT', // 7100 - 7600ms: Footer & micro-metadata glide into place (500ms)
+  COMPLETED: 'COMPLETED',                         // 7600ms+: Full interactive mode, physics unrestricted
 };
 
 export const PHASE_ORDER = [
@@ -29,16 +29,16 @@ export const PHASE_ORDER = [
 ];
 
 export const TIMINGS = [
-  { phase: TRANSITION_PHASES.GREETING_EXIT, time: 3200 },
-  { phase: TRANSITION_PHASES.CARD_FORMATION, time: 3600 },
-  { phase: TRANSITION_PHASES.CARD_FLIP, time: 4000 },
-  { phase: TRANSITION_PHASES.BACKGROUND_TRANSFORM, time: 4600 },
-  { phase: TRANSITION_PHASES.NAVIGATION_REVEAL, time: 4900 },
-  { phase: TRANSITION_PHASES.PROFILE_TRANSITION, time: 5100 },
-  { phase: TRANSITION_PHASES.HERO_REVEAL, time: 5400 },
-  { phase: TRANSITION_PHASES.PROJECT_REVEAL, time: 5600 },
-  { phase: TRANSITION_PHASES.DECORATION_SETTLEMENT, time: 6100 },
-  { phase: TRANSITION_PHASES.COMPLETED, time: 6600 },
+  { phase: TRANSITION_PHASES.GREETING_EXIT, time: 4200 },
+  { phase: TRANSITION_PHASES.CARD_FORMATION, time: 4600 },
+  { phase: TRANSITION_PHASES.CARD_FLIP, time: 5000 },
+  { phase: TRANSITION_PHASES.BACKGROUND_TRANSFORM, time: 5600 },
+  { phase: TRANSITION_PHASES.NAVIGATION_REVEAL, time: 5900 },
+  { phase: TRANSITION_PHASES.PROFILE_TRANSITION, time: 6100 },
+  { phase: TRANSITION_PHASES.HERO_REVEAL, time: 6400 },
+  { phase: TRANSITION_PHASES.PROJECT_REVEAL, time: 6600 },
+  { phase: TRANSITION_PHASES.DECORATION_SETTLEMENT, time: 7100 },
+  { phase: TRANSITION_PHASES.COMPLETED, time: 7600 },
 ];
 
 export function useTransitionTimeline() {

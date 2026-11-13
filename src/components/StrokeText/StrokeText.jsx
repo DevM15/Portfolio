@@ -41,6 +41,7 @@ const StrokeText = ({
   strokeWidth = 1.4,
   drawDuration = 1.6,
   fillDelay = 0.2,
+  startDelay = 0,
   stagger = 0.05,
   ease = 'power2.out',
   trigger = 'mount',
@@ -194,15 +195,15 @@ const StrokeText = ({
         defaults: { overwrite: 'auto' }
       });
 
-      tl.to(strokes, { strokeDashoffset: 0, duration: drawDuration, ease, stagger: staggerConfig }, 0);
+      tl.to(strokes, { strokeDashoffset: 0, duration: drawDuration, ease, stagger: staggerConfig }, startDelay);
 
       if (useWipe && wipe) {
-        tl.to(wipe, { attr: frames.end, duration: fillDuration, ease: 'power2.inOut' }, drawDuration + fillDelay);
+        tl.to(wipe, { attr: frames.end, duration: fillDuration, ease: 'power2.inOut' }, startDelay + drawDuration + fillDelay);
       } else if (fillEnabled) {
         tl.to(
           fills,
           { opacity: 1, duration: fillDuration, ease: 'power2.out', stagger: staggerConfig },
-          drawDuration + fillDelay
+          startDelay + drawDuration + fillDelay
         );
       }
 
@@ -210,7 +211,7 @@ const StrokeText = ({
         tl.to(
           drop,
           { attr: lifted, duration: fillDuration * 1.4, ease: 'power3.out' },
-          drawDuration + fillDelay + fillDuration * 0.3
+          startDelay + drawDuration + fillDelay + fillDuration * 0.3
         );
       }
 
@@ -282,6 +283,7 @@ const StrokeText = ({
     dash,
     drawDuration,
     fillDelay,
+    startDelay,
     stagger,
     ease,
     trigger,

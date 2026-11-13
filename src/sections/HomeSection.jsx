@@ -107,100 +107,45 @@ export default function HomeSection({
               y: isGreetingPhase ? 0 : -16,
             }}
             exit={{ opacity: 0, y: -20, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            className="absolute top-[calc(50%+70px)] sm:top-[calc(50%+80px)] md:top-[calc(50%+90px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40 max-w-4xl mx-auto"
+            className="absolute top-[calc(50%+85px)] sm:top-[calc(50%+95px)] md:top-[calc(50%+110px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
           >
-            {/* Ambient editorial soft backdrop glow */}
-            <div className="absolute -inset-10 -z-10 bg-radial from-[var(--border-subtle)]/35 via-transparent to-transparent blur-2xl pointer-events-none" />
-
-            {/* Micro-Index Top Bar */}
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center gap-2.5 sm:gap-3.5 font-mono text-[9px] sm:text-[10px] uppercase text-[var(--text-secondary)] mb-2.5 select-none"
-            >
-              <span className="w-6 sm:w-12 h-px bg-[var(--border-primary)]" />
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-                <span className="font-semibold text-[var(--accent)]">INDEX // 01</span>
-                <span className="text-[var(--text-muted)]">•</span>
-                <span className="tracking-widest text-[var(--text-primary)] font-medium">IDENTITY SPECIFICATION</span>
-              </div>
-              <span className="w-6 sm:w-12 h-px bg-[var(--border-primary)]" />
-            </motion.div>
-
-            {/* Luxury Editorial Main Heading Animated via StrokeText with Architectural Corner Reticles */}
-            <div className="relative w-full max-w-2xl mx-auto flex items-center justify-center px-4 py-1">
-              {/* Subtle Corner Reticles (+) */}
-              <span className="absolute -top-1 -left-1 font-mono text-[10px] text-[var(--border-primary)] opacity-70 select-none">+</span>
-              <span className="absolute -top-1 -right-1 font-mono text-[10px] text-[var(--border-primary)] opacity-70 select-none">+</span>
-              <span className="absolute -bottom-1 -left-1 font-mono text-[10px] text-[var(--border-primary)] opacity-70 select-none">+</span>
-              <span className="absolute -bottom-1 -right-1 font-mono text-[10px] text-[var(--border-primary)] opacity-70 select-none">+</span>
-
+            {/* Luxury Editorial Main Heading Animated via StrokeText with delay after DM logo */}
+            <div className="w-full max-w-xl mx-auto flex items-center justify-center px-2">
               <StrokeText
                 text="HELLO, I'M DEV."
                 fontFamily='"Cormorant Garamond", "Bodoni Moda", Georgia, serif'
-                fontSize={66}
+                fontSize={58}
                 fontWeight={600}
                 strokeColor="var(--accent)"
                 fillColor="var(--text-primary)"
-                strokeWidth={1.3}
-                drawDuration={1.35}
-                fillDelay={0.18}
+                strokeWidth={1.2}
+                startDelay={0.9}
+                drawDuration={1.3}
+                fillDelay={0.15}
                 stagger={0.045}
                 ease="power2.out"
                 trigger="mount"
                 fillMode="wipe"
                 wipeFrom="left"
-                letterSpacing={2.5}
+                letterSpacing={2}
                 hoverRedraw={true}
-                shadow={true}
-                shadowColor="rgba(185, 111, 82, 0.2)"
+                shadow={false}
               />
             </div>
 
             {/* Refined Architectural Subtitle */}
-            <motion.div
+            <motion.p
               initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 0.95, y: 0 }}
+              animate={{ opacity: 0.9, y: 0 }}
               transition={{
                 duration: 0.8,
-                delay: 1.0,
+                delay: 2.2,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="mt-2.5 sm:mt-3 flex flex-col items-center gap-1 select-none"
+              className="mt-2.5 sm:mt-3.5 text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.36em] uppercase select-none"
             >
-              <p className="text-[10px] sm:text-xs md:text-sm font-sans font-medium text-[#788477] tracking-[0.30em] sm:tracking-[0.40em] uppercase">
-                DESIGNING & BUILDING DIGITAL EXPERIENCES.
-              </p>
-            </motion.div>
-
-            {/* Micro-Metadata Exhibition Spec Strip */}
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{
-                duration: 0.75,
-                delay: 1.25,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="mt-3.5 sm:mt-4 flex items-center justify-center flex-wrap gap-x-4 sm:gap-x-6 gap-y-1.5 font-mono text-[8px] sm:text-[9.5px] tracking-wider uppercase text-[var(--text-secondary)] py-1.5 px-4 sm:px-5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)]/80 backdrop-blur-xs shadow-xs select-none"
-            >
-              <div className="flex items-center gap-1.5">
-                <span className="text-[var(--text-muted)]">ROLE:</span>
-                <span className="font-semibold text-[var(--text-primary)]">FULL STACK DEVELOPER</span>
-              </div>
-              <span className="text-[var(--border-primary)] hidden sm:inline">|</span>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[var(--text-muted)]">BASE:</span>
-                <span className="font-semibold text-[var(--text-primary)]">MUMBAI 19°N</span>
-              </div>
-              <span className="text-[var(--border-primary)] hidden sm:inline">|</span>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[var(--accent)] font-semibold">AVAILABLE FOR CONTRACTS</span>
-              </div>
-            </motion.div>
+              DESIGNING & BUILDING DIGITAL EXPERIENCES.
+            </motion.p>
           </motion.div>
         )}
       </AnimatePresence>
