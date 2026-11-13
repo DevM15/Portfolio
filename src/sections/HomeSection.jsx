@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DMIdentityCard from '../components/entrance/DMIdentityCard';
+import TechText from '../components/TechText/TechText';
 
 /**
  * Curated Exhibition Projects:
@@ -164,13 +165,38 @@ export default function HomeSection({
             </div>
 
             {/* Main Typographic Hierarchy */}
-            <div className="space-y-2">
+            <div className="space-y-1">
               <span className="font-mono text-xs tracking-wider text-[var(--accent)] uppercase block font-semibold">
                 FULL STACK DEVELOPER
               </span>
-              <h1 className="text-4xl sm:text-5xl xl:text-6xl font-display font-extrabold text-[var(--text-primary)] tracking-tight leading-[1.0] uppercase">
-                DEV MISTRY
-              </h1>
+              <div
+                className="w-full h-[60px] sm:h-[72px] xl:h-[84px] relative -ml-1"
+                data-cursor="explore"
+              >
+                <TechText
+                  text="DEV MISTRY"
+                  fontWeight={800}
+                  fontSize={72}
+                  letterSpacing={-0.03}
+                  align="left"
+                  color="var(--text-primary)"
+                  accentColor="var(--accent)"
+                  reveal="letter"
+                  dashLength={4}
+                  dashGap={2}
+                  specks={14}
+                  selection={true}
+                  labels={true}
+                  draggable={true}
+                  clickKick={true}
+                  bounce={0.4}
+                  sweep={true}
+                  speed={0.8}
+                  guides={true}
+                  intro="metrics"
+                  introDuration={1.8}
+                />
+              </div>
             </div>
 
             {/* Contemporary Editorial Statement */}
