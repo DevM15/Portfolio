@@ -93,36 +93,52 @@ export default function HomeSection({
       <div className="relative w-full max-w-[1420px] h-full flex flex-col justify-center items-center py-4">
 
         {/* --- MAIN HERO ROW: 3-ZONE BALANCED EDITORIAL COMPOSITION --- */}
-        <div className="relative z-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
+        <div className="relative z-20 grid items-center w-full grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-14">
 
           {/* ==================== ZONE 1: TYPOGRAPHIC IDENTITY & INTRO (COL 1-4) ==================== */}
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col justify-center space-y-4 lg:col-span-4 order-2 lg:order-1"
+            className="flex flex-col justify-center order-2 space-y-3.5 lg:col-span-4 lg:order-1"
           >
+            {/* Editorial Eyebrow / Catalog Index */}
+            <div className="flex items-center gap-2 font-mono text-[9px] tracking-[0.26em] text-[var(--accent)] uppercase font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+              <span>FOLIO 01 {'//'} IDENTITY RUNTIME</span>
+              <span className="text-[var(--text-muted)]">•</span>
+              <span className="text-[var(--text-secondary)]">2026</span>
+            </div>
+
             {/* Main Editorial StrokeText Display: HELLO, I'M DEV. */}
-            <div className="w-full relative -ml-1 py-1" data-cursor="pointer">
+            <div className="relative w-full py-0.5 -ml-1" data-cursor="pointer">
               <StrokeText
                 text="HELLO, I'M DEV."
                 fontFamily='"Cormorant Garamond", "Bodoni Moda", Georgia, serif'
-                fontSize={56}
+                fontSize={62}
                 fontWeight={600}
                 strokeColor="var(--accent)"
                 fillColor="var(--text-primary)"
-                strokeWidth={1.2}
-                drawDuration={1.3}
+                strokeWidth={1.25}
+                drawDuration={1.35}
                 fillDelay={0.15}
                 stagger={0.045}
                 ease="power2.out"
                 trigger="mount"
                 fillMode="wipe"
                 wipeFrom="left"
-                letterSpacing={1.5}
+                letterSpacing={2}
                 hoverRedraw={true}
                 shadow={false}
               />
+            </div>
+
+            {/* Hairline Divider & Discipline Spec */}
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-px bg-[var(--accent)]" />
+              <span className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-[var(--text-muted)]">
+                FULL STACK ARCHITECT • 19.0760° N, 72.8777° E
+              </span>
             </div>
 
             {/* Editorial Subtitle */}
@@ -130,20 +146,33 @@ export default function HomeSection({
               DESIGNING & BUILDING DIGITAL EXPERIENCES
             </p>
 
-            {/* Crisp Statement - Unwanted Bloat Removed */}
+            {/* Crisp Statement */}
             <p className="font-sans text-sm text-[var(--text-secondary)] font-normal leading-relaxed max-w-sm">
               Specialized in deterministic cloud architecture, high-availability web platforms, and autonomous agentic swarms.
             </p>
 
+            {/* Monospace Metadata Strip */}
+            <div className="flex items-center gap-5 pt-1 font-mono text-[10px] text-[var(--text-secondary)] border-t border-[var(--border-subtle)]">
+              <div className="flex flex-col">
+                <span className="text-[8px] text-[var(--text-muted)] uppercase tracking-wider">BASE</span>
+                <span className="font-semibold text-[var(--text-primary)] mt-0.5">MUMBAI, 19°N</span>
+              </div>
+              <div className="w-px h-6 bg-[var(--border-subtle)]" />
+              <div className="flex flex-col">
+                <span className="text-[8px] text-[var(--text-muted)] uppercase tracking-wider">STATUS</span>
+                <span className="font-semibold text-[var(--accent)] mt-0.5">OPEN FOR SELECT CONTRACTS</span>
+              </div>
+            </div>
+
             {/* Clean Action Buttons */}
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-3 pt-1">
               <button
                 onClick={() => onOpenSection && onOpenSection('about')}
                 data-cursor="button"
                 className="group px-4 py-2 bg-[var(--text-primary)] text-[var(--bg-primary)] hover:bg-[var(--accent)] hover:text-[#F7F6F2] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] shadow-sm hover:shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <span>SPECIFICATION</span>
-                <span className="transition-transform group-hover:translate-x-1 duration-200">→</span>
+                <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
               </button>
 
               <button
@@ -157,7 +186,7 @@ export default function HomeSection({
           </motion.div>
 
           {/* ==================== ZONE 2: CENTRAL PROFILE IDENTITY (COL 5-8) ==================== */}
-          <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2">
+          <div className="flex flex-col items-center justify-center order-1 lg:col-span-4 lg:order-2">
             <div className="relative w-[260px] sm:w-[285px] md:w-[310px] lg:w-[330px] h-[385px] sm:h-[420px] md:h-[455px] lg:h-[485px] flex items-center justify-center">
 
               {/* Background ambient framing glow */}
@@ -177,7 +206,7 @@ export default function HomeSection({
                   duration: 0.9,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="relative w-full h-full cursor-pointer z-30"
+                className="relative z-30 w-full h-full cursor-pointer"
                 onClick={() => {
                   if (onOpenSection) onOpenSection('about');
                 }}
@@ -193,7 +222,7 @@ export default function HomeSection({
           </div>
 
           {/* ==================== ZONE 3: SURROUNDING CURATED PROJECT EXHIBITION (COL 9-12) ==================== */}
-          <div className="lg:col-span-4 flex flex-col justify-center space-y-4 order-3">
+          <div className="flex flex-col justify-center order-3 space-y-4 lg:col-span-4">
 
             {/* Section Header for the Exhibition */}
             <motion.div

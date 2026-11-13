@@ -64,9 +64,6 @@ export default function HorizontalScrollExhibition({
           onOpenSection={onOpenSection}
           onNavigateToProjects={onNavigateToProjects}
           onNavigateToContact={onNavigateToContact}
-          transitionPhase={transitionPhase}
-          phaseIndex={phaseIndex}
-          timelineStart={timelineStart}
         />
       ),
     },
@@ -91,7 +88,7 @@ export default function HorizontalScrollExhibition({
       category: 'CAREER MILESTONES 2022–2026',
       component: <JourneySection onBack={() => goToCard(0)} />,
     },
-  ], [onOpenSection, onNavigateToProjects, onNavigateToContact, transitionPhase, phaseIndex, timelineStart, goToCard]);
+  ], [onOpenSection, onNavigateToProjects, onNavigateToContact, goToCard]);
 
   // Synchronize active card index with spring output
   useEffect(() => {

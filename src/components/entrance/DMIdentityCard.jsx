@@ -242,7 +242,7 @@ export default function DMIdentityCard({
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
                     <span>FOLIO // 01</span>
                   </div>
-                  <span className="text-[var(--text-muted)] tracking-widest">CURATED SPEC</span>
+                  <span>DEV MISTRY</span>
                   <span className="text-[var(--accent)] font-semibold">MUMBAI · 2026</span>
                 </div>
 
