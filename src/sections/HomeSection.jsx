@@ -224,7 +224,7 @@ export default function HomeSection({
 
           {/* ==================== ZONE 2: CENTRAL PROFILE IDENTITY (COL 5-8) ==================== */}
           <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2">
-            <div className="relative w-[230px] sm:w-[260px] md:w-[280px] aspect-[0.70] flex items-center justify-center">
+            <div className="relative w-[250px] sm:w-[280px] md:w-[305px] lg:w-[325px] aspect-[0.68] flex items-center justify-center">
 
               {/* Background ambient framing glow */}
               <div
@@ -266,10 +266,10 @@ export default function HomeSection({
                   y: isHeroRevealed ? 0 : 10,
                 }}
                 transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute -bottom-8 flex items-center justify-between w-full px-1 font-mono text-[9px] tracking-wider text-[var(--text-secondary)] uppercase pointer-events-none"
+                className="absolute -bottom-7 flex items-center justify-between w-full px-1 font-mono text-[8px] tracking-wider text-[var(--text-secondary)] uppercase pointer-events-none"
               >
-                <span>DEV MISTRY // PORTRAIT</span>
-                <span className="text-[var(--accent)] font-semibold">FIG. 01</span>
+                <span>DEV MISTRY // IDENTITY SPEC</span>
+                <span className="text-[var(--accent)] font-semibold">REF: 01</span>
               </motion.div>
             </div>
           </div>
