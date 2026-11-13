@@ -37,6 +37,9 @@ module.exports = {
         sans: ['"Inter"', 'system-ui', 'sans-serif'],
         display: ['"Manrope"', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'monospace'],
+        serif: ['"Cormorant Garamond"', '"Bodoni Moda"', 'Georgia', 'serif'],
+        bodoni: ['"Bodoni Moda"', 'Didot', 'serif'],
+        cormorant: ['"Cormorant Garamond"', 'Garamond', 'serif'],
       },
       fontSize: {
         'giant': ['clamp(3.5rem, 11vw, 9.5rem)', { lineHeight: '0.86', letterSpacing: '-0.04em' }],

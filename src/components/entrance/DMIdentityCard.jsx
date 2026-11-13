@@ -133,14 +133,14 @@ export default function DMIdentityCard({
           >
             <div className="relative inline-block">
               <span
-                className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[var(--border-subtle)] select-none blur-[2px]"
+                className="absolute inset-0 font-serif font-bold text-7xl sm:text-8xl leading-none text-[var(--border-subtle)] select-none blur-[2px]"
                 style={{ transform: 'translate3d(3px, 6px, -10px)' }}
                 aria-hidden="true"
               >
                 D
               </span>
               <span
-                className="relative block font-black leading-none tracking-tight select-none font-display text-7xl sm:text-8xl"
+                className="relative block font-bold leading-none tracking-tight select-none font-serif text-7xl sm:text-8xl"
                 style={{
                   background:
                     'linear-gradient(135deg, var(--text-primary) 0%, #353D38 35%, #788477 50%, var(--text-primary) 70%, #151916 100%)',
@@ -155,16 +155,16 @@ export default function DMIdentityCard({
               </span>
             </div>
 
-            <div className="relative inline-block -ml-3 sm:-ml-4">
+            <div className="relative inline-block -ml-2.5 sm:-ml-3.5">
               <span
-                className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[var(--border-subtle)] select-none blur-[2px]"
+                className="absolute inset-0 font-serif font-bold text-7xl sm:text-8xl leading-none text-[var(--border-subtle)] select-none blur-[2px]"
                 style={{ transform: 'translate3d(3px, 6px, -10px)' }}
                 aria-hidden="true"
               >
                 M
               </span>
               <span
-                className="relative block font-black leading-none tracking-tight select-none font-display text-7xl sm:text-8xl"
+                className="relative block font-bold leading-none tracking-tight select-none font-serif text-7xl sm:text-8xl"
                 style={{
                   background:
                     'linear-gradient(135deg, var(--text-primary) 0%, #4D5750 35%, #8FA48E 50%, var(--text-primary) 70%, #151916 100%)',

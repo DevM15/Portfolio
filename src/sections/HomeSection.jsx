@@ -106,30 +106,40 @@ export default function HomeSection({
               y: isGreetingPhase ? 0 : -16,
             }}
             exit={{ opacity: 0, y: -20, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            className="absolute top-[calc(50%+90px)] sm:top-[calc(50%+100px)] md:top-[calc(50%+115px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
+            className="absolute top-[calc(50%+85px)] sm:top-[calc(50%+95px)] md:top-[calc(50%+110px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
           >
+            {/* Luxury Editorial Main Heading */}
             <motion.h1
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.85,
-                delay: 1.0,
+                duration: 1.0,
+                delay: 0.95,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-black text-[var(--text-primary)] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-[var(--text-primary)] leading-[1.1] select-none tracking-tight flex items-center justify-center flex-wrap"
             >
-              HELLO, I'M DEV<span className="text-[var(--accent)]">.</span>
+              <span className="font-light tracking-[0.16em] sm:tracking-[0.20em] uppercase text-[0.82em] sm:text-[0.86em] text-[var(--text-primary)] opacity-95">
+                HELLO, I'M
+              </span>
+              <span className="font-serif italic font-normal tracking-normal text-[1.12em] ml-2.5 sm:ml-4 text-[var(--text-primary)]">
+                DEV
+              </span>
+              <span className="text-[var(--accent)] font-sans not-italic font-bold text-[0.9em] ml-0.5">
+                .
+              </span>
             </motion.h1>
 
+            {/* Refined Architectural Subtitle */}
             <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 0.9, y: 0 }}
               transition={{
-                duration: 0.75,
-                delay: 1.3,
+                duration: 0.9,
+                delay: 1.25,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="mt-3 sm:mt-4 text-xs sm:text-base md:text-lg lg:text-xl font-mono font-medium text-[var(--text-secondary)] tracking-[0.16em] sm:tracking-[0.24em] uppercase select-none"
+              className="mt-3 sm:mt-5 text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.36em] uppercase select-none"
             >
               DESIGNING & BUILDING DIGITAL EXPERIENCES.
             </motion.p>
