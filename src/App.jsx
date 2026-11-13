@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomCursor from './components/CustomCursor';
 import SpatialCanvasBackground from './components/SpatialCanvasBackground';
+import ThemeToggle from './components/ThemeToggle';
 import { useTransitionTimeline, TRANSITION_PHASES } from './utils/useTransitionTimeline';
 import HomeSection from './sections/HomeSection';
 import AboutSection from './sections/AboutSection';
@@ -192,8 +193,8 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-screen h-screen bg-[#F7F6F2] text-[#252A27] overflow-hidden select-none font-sans">
-      {/* ==================== PROCEDURAL SPATIAL CANVAS BACKGROUND (WARM IVORY) ==================== */}
+    <div className="relative w-screen h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-hidden select-none font-sans transition-colors duration-400">
+      {/* ==================== PROCEDURAL SPATIAL CANVAS BACKGROUND ==================== */}
       <SpatialCanvasBackground
         sectionIndex={currentIndex}
         isRevealed={isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM)}
@@ -203,12 +204,13 @@ export default function App() {
       <div
         className="absolute inset-0 pointer-events-none z-[1]"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, transparent 65%, rgba(222, 217, 206, 0.4) 100%)',
+          background: 'radial-gradient(circle at 50% 50%, transparent 65%, var(--border-subtle) 100%)',
+          opacity: 0.5,
         }}
       />
 
       {/* Extremely Faint Paper Grain Overlay */}
-      <div className="absolute inset-0 pointer-events-none z-[2] bg-subtle-grain opacity-20" />
+      <div className="absolute inset-0 pointer-events-none z-[2] bg-subtle-grain opacity-[var(--grain-opacity)]" />
 
       {/* Minimal Architectural Horizon Guidelines (draws across during BACKGROUND_TRANSFORM) */}
       <motion.div
@@ -218,7 +220,7 @@ export default function App() {
           opacity: isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM) ? 1 : 0,
         }}
         transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute top-20 left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80 pointer-events-none z-[3] origin-center"
+        className="absolute top-20 left-6 right-6 md:left-12 md:right-12 h-px bg-[var(--border-primary)]/80 pointer-events-none z-[3] origin-center"
       />
       <motion.div
         initial={{ scaleX: 0, opacity: 0 }}
@@ -227,7 +229,7 @@ export default function App() {
           opacity: isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM) ? 1 : 0,
         }}
         transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute bottom-[72px] left-6 right-6 md:left-12 md:right-12 h-px bg-[#DED9CE]/80 pointer-events-none z-[3] origin-center"
+        className="absolute bottom-[72px] left-6 right-6 md:left-12 md:right-12 h-px bg-[var(--border-primary)]/80 pointer-events-none z-[3] origin-center"
       />
 
       <CustomCursor />
@@ -240,7 +242,7 @@ export default function App() {
           y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -24,
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[#252A27] pointer-events-none bg-transparent"
+        className="fixed top-0 left-0 right-0 z-40 px-6 md:px-12 py-6 flex items-center justify-between uppercase font-sans text-[var(--text-primary)] pointer-events-none bg-transparent"
       >
         <div className="flex items-center gap-6 pointer-events-auto md:gap-12">
           <motion.div
@@ -252,8 +254,8 @@ export default function App() {
             transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
             className="flex items-baseline gap-2"
           >
-            <span className="font-mono text-xs tracking-wider text-[#788477]">NAME /</span>
-            <span className="text-lg sm:text-[20px] font-bold tracking-tight text-[#252A27] font-display">
+            <span className="font-mono text-xs tracking-wider text-[var(--text-secondary)]">NAME /</span>
+            <span className="text-lg sm:text-[20px] font-bold tracking-tight text-[var(--text-primary)] font-display">
               DEV MISTRY
             </span>
           </motion.div>
@@ -266,8 +268,8 @@ export default function App() {
             transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="items-baseline hidden gap-2 lg:flex"
           >
-            <span className="font-mono text-xs tracking-wider text-[#788477]">OCCUPATION /</span>
-            <span className="text-sm sm:text-base font-semibold tracking-tight text-[#252A27]">
+            <span className="font-mono text-xs tracking-wider text-[var(--text-secondary)]">OCCUPATION /</span>
+            <span className="text-sm sm:text-base font-semibold tracking-tight text-[var(--text-primary)]">
               FULL STACK DEVELOPER
             </span>
           </motion.div>
@@ -280,43 +282,57 @@ export default function App() {
             transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="items-baseline hidden gap-2 xl:flex"
           >
-            <span className="font-mono text-xs tracking-wider text-[#788477]">LOCATION /</span>
-            <span className="text-sm sm:text-base font-semibold tracking-tight text-[#788477]">
+            <span className="font-mono text-xs tracking-wider text-[var(--text-secondary)]">LOCATION /</span>
+            <span className="text-sm sm:text-base font-semibold tracking-tight text-[var(--text-secondary)]">
               MUMBAI
             </span>
           </motion.div>
         </div>
 
-        {/* Top-Right Navigation: ONLY HOME, PROJECTS, CONTACT WITH TEXT FLIP */}
-        <nav className="flex items-center gap-6 pointer-events-auto sm:gap-10">
-          {NAV_SECTIONS.map((sec, idx) => {
-            const isActive =
-              (sec.id === 'home' && !['projects', 'contact'].includes(currentViewId)) ||
-              sec.id === currentViewId;
+        {/* Top-Right Navigation: HOME, PROJECTS, CONTACT + THEME TOGGLE */}
+        <div className="flex items-center gap-6 pointer-events-auto sm:gap-10">
+          <nav className="flex items-center gap-6 sm:gap-10">
+            {NAV_SECTIONS.map((sec, idx) => {
+              const isActive =
+                (sec.id === 'home' && !['projects', 'contact'].includes(currentViewId)) ||
+                sec.id === currentViewId;
 
-            return (
-              <motion.button
-                key={sec.id}
-                onClick={() => navigateToView(sec.id)}
-                initial={{ opacity: 0, y: -12 }}
-                animate={{
-                  opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
-                  y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -12,
-                }}
-                transition={{ duration: 0.5, delay: 0.3 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className={`flip-nav-link text-sm sm:text-base font-medium tracking-normal transition-all duration-200 cursor-pointer ${isActive && !contactOpen
-                    ? 'active text-[#B96F52] font-bold'
-                    : 'text-[#788477] hover:text-[#252A27]'
-                  }`}
-              >
-                <span className="flip-nav-inner">
-                  <span className="flip-nav-front">{sec.label}</span>
-                  <span className="flip-nav-back">{sec.label}</span>
-                </span>
-              </motion.button>
-            );
-          })}
-        </nav>
+              return (
+                <motion.button
+                  key={sec.id}
+                  onClick={() => navigateToView(sec.id)}
+                  initial={{ opacity: 0, y: -12 }}
+                  animate={{
+                    opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
+                    y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -12,
+                  }}
+                  transition={{ duration: 0.5, delay: 0.3 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  className={`flip-nav-link text-sm sm:text-base font-medium tracking-normal transition-all duration-200 cursor-pointer ${isActive && !contactOpen
+                      ? 'active text-[var(--accent)] font-bold'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                    }`}
+                >
+                  <span className="flip-nav-inner">
+                    <span className="flip-nav-front">{sec.label}</span>
+                    <span className="flip-nav-back">{sec.label}</span>
+                  </span>
+                </motion.button>
+              );
+            })}
+          </nav>
+
+          {/* Minimal Editorial Dark/Light Mode Toggle Switch */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{
+              opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
+              scale: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0.8,
+            }}
+            transition={{ duration: 0.5, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <ThemeToggle />
+          </motion.div>
+        </div>
       </motion.header>
 
       {/* ==================== HORIZONTAL EXHIBITION STAGE ==================== */}
@@ -465,24 +481,25 @@ export default function App() {
           y: isAtLeast(TRANSITION_PHASES.DECORATION_SETTLEMENT) ? 0 : 24,
         }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-wider uppercase text-[#788477] pointer-events-none bg-transparent"
+        className="fixed bottom-0 left-0 right-0 z-40 h-[70px] px-6 md:px-12 flex items-center justify-between font-mono text-xs sm:text-sm tracking-wider uppercase text-[var(--text-secondary)] pointer-events-none bg-transparent"
       >
         <div className="flex items-center gap-3 pointer-events-auto">
-          <span className="text-[#252A27] font-semibold text-xs sm:text-sm tracking-wider font-mono">
-            PORTFOLIO <span className="text-[#B96F52]">/</span> 2026
+          <span className="text-[var(--text-primary)] font-semibold text-xs sm:text-sm tracking-wider font-mono">
+            PORTFOLIO <span className="text-[var(--accent)]">/</span> 2026
           </span>
         </div>
 
         {/* Minimal Orbit/Drag Interaction Indicator */}
-        <div className="hidden md:flex items-center gap-2 text-[10px] text-[#788477] font-mono tracking-widest">
-          <span>SCROLL OR DRAG TO ROTATE EXHIBITION</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#B96F52] animate-pulse" />
+        <div className="hidden md:flex items-center gap-2 text-[10px] text-[var(--text-secondary)] font-mono tracking-widest">
+          <span>ARCHITECTURAL PORTFOLIO & EXHIBITION</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
         </div>
 
         <div className="flex items-center gap-6 pointer-events-auto">
           <button
             onClick={() => setOpenInfo(true)}
-            className="flip-nav-link text-xs sm:text-sm font-semibold tracking-wider text-[#252A27] hover:text-[#B96F52] transition-colors cursor-pointer"
+            data-cursor="button"
+            className="flip-nav-link text-xs sm:text-sm font-semibold tracking-wider text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors cursor-pointer"
           >
             <span className="flip-nav-inner">
               <span className="flip-nav-front">INFO</span>

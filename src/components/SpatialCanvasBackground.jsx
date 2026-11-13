@@ -1,24 +1,17 @@
 import { useEffect, useRef } from 'react';
+import { useTheme } from '../utils/ThemeContext';
 
 /**
  * SpatialCanvasBackground - Premium Architectural Editorial Background
- *
- * Art-directed Palette:
- * - Base Ivory: #F7F6F2
- * - Warm White Ambient: #FCFBF8
- * - Soft Stone: #E9E5DC
- * - Architectural Guideline: rgba(222, 217, 206, 0.45)
- * - Muted Sage Details: rgba(120, 132, 119, 0.18)
- * - Sparse Terracotta Accents: #B96F52
- * - Charcoal: #252A27
- *
- * Characteristics:
- * - NO heavy technical grid
- * - Soft paper-like gradient with gentle profile illumination
- * - Architectural construction lines (horizon guides, fine golden ratio dividers)
- * - Extremely calm and spacious; zero high-frequency computation
+ * Adapts dynamically between Light mode (#F7F6F2) and Dark mode (#151916).
  */
 export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed = true }) {
+  const { isDark } = useTheme();
+  const isDarkRef = useRef(isDark);
+  useEffect(() => {
+    isDarkRef.current = isDark;
+  }, [isDark]);
+
   const canvasRef = useRef(null);
   const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
   const animFrameRef = useRef(null);
@@ -75,6 +68,18 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       }
 
       const elapsed = (time - startTime) * 0.001; // in seconds
+      const dark = isDarkRef.current;
+
+      // Theme-specific colors
+      const bgBase = dark ? '#151916' : '#F7F6F2';
+      const illumCenter = dark ? 'rgba(29, 35, 31, 0.95)' : 'rgba(252, 251, 248, 0.95)';
+      const illumMid = dark ? 'rgba(21, 25, 22, 0.7)' : 'rgba(247, 246, 242, 0.7)';
+      const illumOuter = dark ? 'rgba(15, 18, 16, 0.35)' : 'rgba(233, 229, 220, 0.35)';
+      const guideColor = dark ? 'rgba(57, 66, 57, 0.65)' : 'rgba(222, 217, 206, 0.55)';
+      const sageColor = dark ? 'rgba(162, 173, 160, 0.35)' : 'rgba(120, 132, 119, 0.32)';
+      const waveColor = dark ? 'rgba(162, 173, 160, 0.08)' : 'rgba(120, 132, 119, 0.08)';
+      const metaColor = dark ? 'rgba(162, 173, 160, 0.55)' : 'rgba(120, 132, 119, 0.55)';
+      const accentColor = dark ? '#C98265' : '#B96F52';
 
       // Very gentle mouse lerp for smooth parallax (max 8px)
       mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.03;
@@ -89,12 +94,11 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
 
       ctx.clearRect(0, 0, width, height);
 
-      // ==================== 1. BASE WARM IVORY FIELD ====================
-      ctx.fillStyle = '#F7F6F2';
+      // ==================== 1. BASE BACKGROUND ====================
+      ctx.fillStyle = bgBase;
       ctx.fillRect(0, 0, width, height);
 
-      // ==================== 2. AMBIENT WARM WHITE ILLUMINATION (CENTRAL PROFILE GLOW) ====================
-      // Gently illuminates the center hero profile area without harsh radial banding
+      // ==================== 2. AMBIENT ILLUMINATION (CENTRAL PROFILE GLOW) ====================
       const centerIllum = ctx.createRadialGradient(
         width * 0.5 + mx * 8,
         height * 0.48 + my * 6,
@@ -103,9 +107,9 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
         height * 0.48,
         width * 0.55
       );
-      centerIllum.addColorStop(0, 'rgba(252, 251, 248, 0.95)'); // Warm white #FCFBF8
-      centerIllum.addColorStop(0.5, 'rgba(247, 246, 242, 0.7)');
-      centerIllum.addColorStop(1, 'rgba(233, 229, 220, 0.35)'); // Soft stone #E9E5DC
+      centerIllum.addColorStop(0, illumCenter);
+      centerIllum.addColorStop(0.5, illumMid);
+      centerIllum.addColorStop(1, illumOuter);
       ctx.fillStyle = centerIllum;
       ctx.fillRect(0, 0, width, height);
 
@@ -118,8 +122,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       ctx.globalAlpha = revealProgress;
 
       // ==================== 3. FINE ARCHITECTURAL CONSTRUCTION GUIDELINES ====================
-      // Subtle framing lines that define proportion rather than a screen-wide grid
-      ctx.strokeStyle = 'rgba(222, 217, 206, 0.55)'; // Soft stone border
+      ctx.strokeStyle = guideColor;
       ctx.lineWidth = 0.75;
       ctx.beginPath();
 
@@ -131,7 +134,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       ctx.moveTo(32, bottomMargin);
       ctx.lineTo(width - 32, bottomMargin);
 
-      // Golden ratio architectural vertical accents (Left column & Right column alignment)
+      // Golden ratio architectural vertical accents
       const leftColX = Math.round(width * 0.08 + mx * 4);
       const rightColX = Math.round(width * 0.92 + mx * 4);
       ctx.moveTo(leftColX, topMargin);
@@ -142,8 +145,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       ctx.stroke();
 
       // ==================== 4. DELICATE GEOMETRIC EDITORIAL OUTLINES ====================
-      // Fine geometric corner marks & framing brackets
-      ctx.strokeStyle = 'rgba(120, 132, 119, 0.32)'; // Muted sage
+      ctx.strokeStyle = sageColor;
       ctx.lineWidth = 0.85;
       ctx.beginPath();
 
@@ -159,10 +161,9 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       ctx.lineTo(rightColX - bktSize, bottomMargin + 8);
       ctx.stroke();
 
-      // ==================== 5. SUBTLE SLOW-DRIFTING WIREFRAME ACCENT (BOTTOM LEFT) ====================
-      // Extremely low opacity (0.07) abstract wireframe horizon curve
+      // ==================== 5. SUBTLE SLOW-DRIFTING WIREFRAME ACCENT ====================
       const waveShift = Math.sin(elapsed * 0.15) * 8;
-      ctx.strokeStyle = 'rgba(120, 132, 119, 0.08)';
+      ctx.strokeStyle = waveColor;
       ctx.lineWidth = 0.75;
       ctx.beginPath();
       const waveY = height * 0.75 + my * 4;
@@ -176,7 +177,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
 
       // ==================== 6. EDITORIAL TYPOGRAPHIC COORDINATES & METADATA ====================
       ctx.font = '8px "IBM Plex Mono", monospace';
-      ctx.fillStyle = 'rgba(120, 132, 119, 0.55)'; // Sage metadata
+      ctx.fillStyle = metaColor;
 
       // Left architectural stamp
       const metaLeftY = topMargin + 24;
@@ -187,8 +188,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       ctx.fillText('19.0760° N, 72.8777° E', rightColX - 120, crY);
 
       // ==================== 7. SPARSE RESTING TERRACOTTA ACCENTS ====================
-      // Only 3 tiny, elegant terracotta marker dots across the entire canvas
-      ctx.fillStyle = '#B96F52';
+      ctx.fillStyle = accentColor;
 
       // Dot 1: Beside Left architectural stamp
       ctx.beginPath();
@@ -202,7 +202,9 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
 
       // Dot 3: Subtle center bottom datum marker with slow breathing opacity
       const dot3Opacity = (0.35 + Math.sin(elapsed * 0.8) * 0.15) * revealProgress;
-      ctx.fillStyle = `rgba(185, 111, 82, ${dot3Opacity.toFixed(3)})`;
+      ctx.fillStyle = dark
+        ? `rgba(201, 130, 101, ${dot3Opacity.toFixed(3)})`
+        : `rgba(185, 111, 82, ${dot3Opacity.toFixed(3)})`;
       ctx.beginPath();
       ctx.arc(width * 0.5, bottomMargin - 8, 1.8, 0, Math.PI * 2);
       ctx.fill();
@@ -224,7 +226,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-none z-0 w-full h-full"
+      className="absolute inset-0 z-0 w-full h-full pointer-events-none"
       style={{ willChange: 'transform' }}
     />
   );

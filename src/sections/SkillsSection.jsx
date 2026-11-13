@@ -25,18 +25,19 @@ const STACK_MAP = [
 
 export default function SkillsSection({ onBack }) {
   return (
-    <div className="w-full h-full flex flex-col justify-between py-16 px-6 md:px-16 max-w-[1500px] mx-auto select-none">
+    <div className="w-full h-full flex flex-col justify-between py-16 px-6 md:px-16 max-w-[1500px] mx-auto select-none text-[var(--text-primary)]">
       {/* Top Section Metadata */}
-      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[#788477] uppercase border-b border-[#DED9CE] pb-4">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-primary)] pb-4">
         <div className="flex items-center gap-3">
-          <span className="text-[#B96F52] font-semibold">03 / SKILLS</span>
-          <span className="text-black/10">•</span>
-          <span className="text-[#788477]">DIGITAL TECHNICAL MAP & CAPABILITIES</span>
+          <span className="text-[var(--accent)] font-semibold">03 / SKILLS</span>
+          <span className="opacity-40">•</span>
+          <span className="text-[var(--text-secondary)]">DIGITAL TECHNICAL MAP & CAPABILITIES</span>
         </div>
         {onBack && (
           <button
             onClick={onBack}
-            className="text-[#B96F52] hover:text-[#252A27] transition-colors cursor-pointer"
+            data-cursor="button"
+            className="text-[var(--accent)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
           >
             ← BACK TO HOME
           </button>
@@ -48,33 +49,31 @@ export default function SkillsSection({ onBack }) {
         {STACK_MAP.map((group, idx) => (
           <motion.div
             key={group.category}
-            initial={{ opacity: 0, y: 25 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: idx * 0.1 }}
-            className="flex flex-col justify-between p-6 bg-[#FFFFFF] border border-[#DED9CE] rounded-[2px] shadow-sm hover:shadow-md transition-shadow"
+            className="p-6 bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-[2px] flex flex-col justify-between shadow-xs hover:border-[var(--accent)] transition-colors"
           >
             <div>
-              {/* Category Header */}
-              <div className="font-mono text-[9px] tracking-wider text-[#B96F52] uppercase mb-2 font-semibold">
-                {`0${idx + 1} // DOMAIN`}
+              <div className="font-mono text-[9px] tracking-wider text-[var(--accent)] uppercase mb-2 font-semibold">
+                DOMAIN / 0{idx + 1}
               </div>
-              <h3 className="text-2xl sm:text-3xl font-display font-bold text-[#252A27] uppercase tracking-tight leading-none mb-3">
+              <h3 className="text-2xl sm:text-3xl font-display font-bold text-[var(--text-primary)] uppercase tracking-tight leading-none mb-3">
                 {group.category}
               </h3>
-              <p className="font-sans text-xs text-[#788477] font-normal leading-relaxed mb-6">
+              <p className="font-sans text-xs text-[var(--text-secondary)] font-normal leading-relaxed mb-6">
                 {group.description}
               </p>
             </div>
 
-            {/* Clean Typographic Skills List */}
-            <ul className="space-y-2.5 pt-4 border-t border-[#DED9CE]/80 font-mono text-xs">
+            <ul className="space-y-2.5 font-mono text-xs border-t border-[var(--border-subtle)] pt-4">
               {group.skills.map((skill) => (
                 <li
                   key={skill}
-                  className="flex items-center justify-between text-[#788477] hover:text-[#252A27] transition-colors"
+                  className="flex items-center justify-between text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
                 >
                   <span>{skill}</span>
-                  <span className="text-[#B96F52] text-[10px]">↗</span>
+                  <span className="text-[var(--accent)] text-[10px]">↗</span>
                 </li>
               ))}
             </ul>
@@ -82,12 +81,11 @@ export default function SkillsSection({ onBack }) {
         ))}
       </div>
 
-      {/* Bottom Technical Note */}
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[#788477] uppercase border-t border-[#DED9CE] pt-4">
-        <span>05 / 08 TECHNICAL SPECIFICATIONS</span>
-        <span>NEXT: JOURNEY TIMELINE →</span>
+      {/* Bottom Section Metadata */}
+      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-primary)] pt-4">
+        <span>ARCHITECTURAL STACK MAP</span>
+        <span>DEPLOYABLE 2026</span>
       </div>
     </div>
   );
 }
-

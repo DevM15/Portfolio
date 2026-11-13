@@ -25,18 +25,19 @@ const INTERNSHIPS = [
 
 export default function InternshipSection({ onBack }) {
   return (
-    <div className="w-full h-full flex flex-col justify-between py-12 px-6 md:px-16 max-w-[1500px] mx-auto select-none">
+    <div className="w-full h-full flex flex-col justify-between py-12 px-6 md:px-16 max-w-[1500px] mx-auto select-none text-[var(--text-primary)]">
       {/* Top Section Metadata */}
-      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[#788477] uppercase border-b border-[#DED9CE] pb-4">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-primary)] pb-4">
         <div className="flex items-center gap-3">
-          <span className="text-[#B96F52] font-semibold">02 / INTERNSHIP</span>
-          <span className="text-black/10">•</span>
-          <span className="text-[#788477]">COMMISSIONED EXPERIENCE ARCHIVE</span>
+          <span className="text-[var(--accent)] font-semibold">02 / INTERNSHIP</span>
+          <span className="opacity-40">•</span>
+          <span className="text-[var(--text-secondary)]">COMMISSIONED EXPERIENCE ARCHIVE</span>
         </div>
         {onBack && (
           <button
             onClick={onBack}
-            className="text-[#B96F52] hover:text-[#252A27] transition-colors cursor-pointer"
+            data-cursor="button"
+            className="text-[var(--accent)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
           >
             ← BACK TO HOME
           </button>
@@ -48,32 +49,35 @@ export default function InternshipSection({ onBack }) {
         {INTERNSHIPS.map((intern, idx) => (
           <motion.div
             key={intern.id}
-            initial={{ opacity: 0, y: 25 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: idx * 0.12 }}
-            className="p-8 bg-[#FFFFFF] border border-[#DED9CE] rounded-[2px] shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+            className="p-8 bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-[2px] flex flex-col justify-between shadow-xs hover:border-[var(--accent)] transition-colors"
           >
             <div>
-              <div className="flex items-center justify-between font-mono text-[9px] tracking-wider text-[#B96F52] uppercase mb-3 font-semibold">
-                <span>{intern.badge}</span>
-                <span className="text-[#788477]">{intern.period}</span>
+              <div className="flex items-center justify-between font-mono text-[9px] tracking-wider text-[var(--text-secondary)] uppercase mb-3">
+                <span className="text-[var(--accent)] font-semibold">{intern.badge}</span>
+                <span>{intern.period}</span>
               </div>
-              <h3 className="text-2xl sm:text-3xl font-display font-bold text-[#252A27] tracking-tight mb-2">
+
+              <h3 className="text-2xl sm:text-3xl font-display font-bold text-[var(--text-primary)] uppercase tracking-tight leading-none mb-1">
                 {intern.company}
               </h3>
-              <div className="text-xs font-mono text-[#B96F52] mb-4 font-medium uppercase">
+
+              <div className="font-mono text-xs text-[var(--accent)] tracking-wider uppercase mb-4 font-semibold">
                 {intern.role}
               </div>
-              <p className="font-sans text-xs sm:text-sm text-[#788477] leading-relaxed mb-6 font-normal">
+
+              <p className="font-sans text-sm text-[var(--text-secondary)] leading-relaxed mb-6">
                 {intern.description}
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2 pt-4 border-t border-[#DED9CE]/60">
+            <div className="pt-4 border-t border-[var(--border-subtle)] flex flex-wrap gap-2">
               {intern.technologies.map((tech) => (
                 <span
                   key={tech}
-                  className="font-mono text-[8px] tracking-wider text-[#788477] bg-[#F7F6F2] px-2 py-0.5 rounded-[1px]"
+                  className="font-mono text-[9px] tracking-wider uppercase px-2 py-1 bg-[var(--bg-primary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] rounded-[1px]"
                 >
                   {tech}
                 </span>
@@ -83,10 +87,10 @@ export default function InternshipSection({ onBack }) {
         ))}
       </div>
 
-      {/* Bottom Technical Note */}
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[#788477] uppercase border-t border-[#DED9CE] pt-4">
-        <span>03 / 08 INDUSTRY ARCHIVE</span>
-        <span>NEXT: FEATURED PROJECTS →</span>
+      {/* Bottom Section Metadata */}
+      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-primary)] pt-4">
+        <span>DEV MISTRY // ROLES</span>
+        <span>VERIFIED RECORD</span>
       </div>
     </div>
   );

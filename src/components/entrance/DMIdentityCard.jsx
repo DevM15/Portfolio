@@ -4,10 +4,11 @@ import { motion } from 'framer-motion';
 /**
  * DMIdentityCard:
  * Represents the 3D identity card with:
- * - Initially: NO BORDER, just standalone metallic DM letters floating on warm ivory.
+ * - Initially: NO BORDER, just standalone metallic DM letters floating on warm canvas.
  * - Stage 2+: A subtle, elegant rectangular card forms around the monogram.
  * - Stage 3+: 180-degree vertical 3D flip.
- * - Back Face: Dev Mistry's actual profile photograph covering the ENTIRE surface (edge-to-edge, full background cover).
+ * - Back Face: Dev Mistry's actual profile photograph covering the ENTIRE surface.
+ * - Supports Light (#F7F6F2) and Dark (#151916) themes seamlessly via CSS variables.
  */
 export default function DMIdentityCard({
   flipDeg = 0,
@@ -41,8 +42,8 @@ export default function DMIdentityCard({
           borderRadius: isFramed ? `${borderRadius}px` : '0px',
           boxShadow: isFramed
             ? isLifted
-              ? '0 32px 75px -12px rgba(37, 42, 39, 0.28), 0 0 0 1px #DED9CE'
-              : '0 16px 40px -10px rgba(37, 42, 39, 0.14), 0 0 0 1px #DED9CE'
+              ? '0 32px 75px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--border-primary)'
+              : '0 16px 40px -10px rgba(0, 0, 0, 0.2), 0 0 0 1px var(--border-primary)'
             : 'none',
         }}
       >
@@ -50,33 +51,31 @@ export default function DMIdentityCard({
         <div
           className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden transition-all duration-500"
           style={{
-            transform: 'rotateY(0deg) translateZ(1px)',
-            transformStyle: 'preserve-3d',
+            transform: 'rotateY(0deg)',
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
-            backgroundColor: isFramed ? '#F7F6F2' : 'transparent',
+            backgroundColor: isFramed ? 'var(--bg-primary)' : 'transparent',
             borderRadius: isFramed ? `${borderRadius}px` : '0px',
-            border: isFramed ? '1px solid #DED9CE' : '1px solid transparent',
+            border: isFramed ? '1px solid var(--border-primary)' : '1px solid transparent',
+            visibility: flipDeg >= 90 ? 'hidden' : 'visible',
+            pointerEvents: flipDeg >= 90 ? 'none' : 'auto',
           }}
         >
           {/* Subtle Warm Paper Texture Grain Overlay (visible when framed) */}
           {isFramed && (
             <div
-              className="absolute inset-0 pointer-events-none opacity-25 mix-blend-multiply transition-opacity duration-500"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
-              }}
+              className="absolute inset-0 pointer-events-none opacity-20 mix-blend-multiply transition-opacity duration-500 bg-subtle-grain"
             />
           )}
 
-          {/* Micro Top Header on Identity Card (reveals smoothly when framed) */}
+          {/* Micro Top Header on Identity Card */}
           <div
-            className={`absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] font-mono tracking-wider text-[#788477] uppercase border-b border-[#DED9CE]/60 pb-2 transition-opacity duration-500 ${
+            className={`absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-subtle)] pb-2 transition-opacity duration-500 ${
               isFramed ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <span className="flex items-center gap-1.5 font-semibold text-[#252A27]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#B96F52]" />
+            <span className="flex items-center gap-1.5 font-semibold text-[var(--text-primary)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
               DEV MISTRY
             </span>
             <span>EDITION / 2026</span>
@@ -97,7 +96,7 @@ export default function DMIdentityCard({
             {/* D Letter */}
             <div className="relative inline-block">
               <span
-                className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[#C8C4B7]/60 select-none blur-[2px]"
+                className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[#C8C4B7]/40 select-none blur-[2px]"
                 style={{ transform: 'translate3d(3px, 6px, 0px)' }}
                 aria-hidden="true"
               >
@@ -109,7 +108,7 @@ export default function DMIdentityCard({
                   background: 'linear-gradient(135deg, #1C1E1D 0%, #353A37 38%, #8E9691 52%, #262927 68%, #0F1110 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  filter: 'drop-shadow(0 14px 20px rgba(32,36,34,0.12))',
+                  filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.18))',
                 }}
               >
                 D
@@ -119,7 +118,7 @@ export default function DMIdentityCard({
             {/* M Letter */}
             <div className="relative inline-block -ml-2 sm:-ml-3">
               <span
-                className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[#C8C4B7]/60 select-none blur-[2px]"
+                className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[#C8C4B7]/40 select-none blur-[2px]"
                 style={{ transform: 'translate3d(3px, 6px, 0px)' }}
                 aria-hidden="true"
               >
@@ -131,7 +130,7 @@ export default function DMIdentityCard({
                   background: 'linear-gradient(135deg, #1C1E1D 0%, #353A37 34%, #9BA39E 48%, #4A514D 60%, #151817 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  filter: 'drop-shadow(0 14px 20px rgba(32,36,34,0.12))',
+                  filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.18))',
                 }}
               >
                 M
@@ -155,28 +154,28 @@ export default function DMIdentityCard({
             />
           </motion.div>
 
-          {/* Micro Bottom Footer on Identity Card (reveals smoothly when framed) */}
+          {/* Micro Bottom Footer on Identity Card */}
           <div
-            className={`absolute bottom-3 left-4 right-4 flex items-center justify-between text-[7px] font-mono tracking-wider text-[#788477] uppercase border-t border-[#DED9CE]/60 pt-2 transition-opacity duration-500 ${
+            className={`absolute bottom-3 left-4 right-4 flex items-center justify-between text-[7px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-subtle)] pt-2 transition-opacity duration-500 ${
               isFramed ? 'opacity-100' : 'opacity-0'
             }`}
           >
             <span>IDENTITY FOLIO</span>
-            <span className="text-[#B96F52] font-semibold">01 / PROFILE</span>
+            <span className="text-[var(--accent)] font-semibold">01 / PROFILE</span>
           </div>
         </div>
 
         {/* ==================== BACK FACE: REAL PROFILE PHOTO (FULL EDGE-TO-EDGE COVER) ==================== */}
         <div
-          className="absolute inset-0 overflow-hidden bg-[#F7F6F2]"
+          className="absolute inset-0 overflow-hidden bg-[var(--bg-primary)]"
           style={{
-            transform: 'rotateY(180deg) translateZ(1px)',
-            transformStyle: 'preserve-3d',
+            transform: 'rotateY(180deg)',
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             borderRadius: `${borderRadius}px`,
-            border: '1px solid #DED9CE',
-            boxShadow: '0 25px 60px rgba(37, 42, 39, 0.35)',
+            border: '1px solid var(--border-primary)',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.35)',
+            visibility: flipDeg >= 90 ? 'visible' : 'hidden',
           }}
         >
           {/* Full background coverage with Dev Mistry's actual profile portrait */}
@@ -190,7 +189,7 @@ export default function DMIdentityCard({
           />
 
           {/* Subtle Editorial Top Tag */}
-          <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[#252A27] bg-[#F7F6F2] px-2 py-0.5 rounded-[1px] border border-[#DED9CE] uppercase shadow-xs">
+          <div className="absolute top-2.5 left-2.5 font-mono text-[8px] tracking-wider text-[var(--text-primary)] bg-[var(--bg-primary)] px-2 py-0.5 rounded-[1px] border border-[var(--border-primary)] uppercase shadow-xs">
             01 / PROFILE
           </div>
 
@@ -201,7 +200,8 @@ export default function DMIdentityCard({
                 e.stopPropagation();
                 if (onOpenSection) onOpenSection('about');
               }}
-              className="font-mono text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-[1px] border border-[#DED9CE] bg-[#F7F6F2]/90 text-[#252A27] hover:border-[#B96F52] hover:bg-[#B96F52] hover:text-[#F7F6F2] hover:font-semibold transition-all shadow-sm cursor-pointer flex items-center gap-1"
+              data-cursor="button"
+              className="font-mono text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-[1px] border border-[var(--border-primary)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[#F7F6F2] hover:font-semibold transition-all shadow-sm cursor-pointer flex items-center gap-1"
             >
               <span>ABOUT DEV →</span>
             </button>

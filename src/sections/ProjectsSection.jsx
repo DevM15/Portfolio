@@ -6,30 +6,31 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
     : projects.filter((p) => p.category === activeFilter);
 
   return (
-    <div className="w-full h-full flex flex-col justify-between py-16 px-6 md:px-16 max-w-[1600px] mx-auto select-none overflow-y-auto no-scrollbar">
+    <div className="w-full h-full flex flex-col justify-between py-16 px-6 md:px-16 max-w-[1600px] mx-auto select-none overflow-y-auto no-scrollbar text-[var(--text-primary)]">
       {/* Top Section Metadata */}
-      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[#788477] uppercase border-b border-[#DED9CE] pb-4 flex-shrink-0">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-primary)] pb-4 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <span className="text-[#B96F52] font-semibold">04 / PROJECTS</span>
-          <span className="text-black/10">•</span>
-          <span className="text-[#788477]">SYSTEM SPECIFICATIONS & ARCHITECTURE</span>
+          <span className="text-[var(--accent)] font-semibold">04 / PROJECTS</span>
+          <span className="opacity-40">•</span>
+          <span className="text-[var(--text-secondary)]">SYSTEM SPECIFICATIONS & ARCHITECTURE</span>
         </div>
-        <div className="hidden sm:block text-[#788477]">0{filtered.length} / 0{projects.length} SYSTEMS</div>
+        <div className="hidden sm:block text-[var(--text-secondary)]">0{filtered.length} / 0{projects.length} SYSTEMS</div>
       </div>
 
       {/* Main Layout: Filters & Technical Cards Grid */}
       <div className="my-auto py-8">
         {/* Filters Strip */}
         <div className="flex flex-wrap items-center gap-3 font-mono text-xs tracking-normal uppercase mb-8">
-          <span className="text-[#788477] text-[10px] mr-2">CATEGORY:</span>
+          <span className="text-[var(--text-secondary)] text-[10px] mr-2">CATEGORY:</span>
           {filters.map((f) => (
             <button
               key={f}
               onClick={() => onFilterChange(f)}
+              data-cursor="button"
               className={`px-3 py-1 transition-all rounded-[2px] cursor-pointer ${
                 activeFilter === f
-                  ? 'bg-[#B96F52] text-[#F7F6F2] font-semibold shadow-sm'
-                  : 'text-[#788477] hover:text-[#252A27] bg-[#FFFFFF] border border-[#DED9CE]'
+                  ? 'bg-[var(--accent)] text-[#F7F6F2] font-semibold shadow-sm'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-surface)] border border-[var(--border-primary)]'
               }`}
             >
               {f}
@@ -46,53 +47,54 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
               onClick={() => onOpenProject(p)}
-              className="group cursor-pointer flex flex-col bg-[#FFFFFF] border border-[#DED9CE] rounded-[2px] p-5 hover:border-[#B96F52] transition-all shadow-sm hover:shadow-md"
+              data-cursor="project"
+              className="group cursor-pointer flex flex-col bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-[2px] p-5 hover:border-[var(--accent)] transition-all shadow-sm hover:shadow-md"
             >
-              {/* Project Image Container */}
-              <div className="relative w-full aspect-[16/10] overflow-hidden rounded-[1px] mb-4 bg-[#F7F6F2]">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-[1px] bg-[var(--bg-primary)] mb-4">
                 <img
                   src={p.image}
                   alt={p.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover contrast-[1.03] transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute top-2 right-2 bg-[#F7F6F2]/90 border border-[#DED9CE] text-[8px] font-mono tracking-wider text-[#252A27] px-2 py-0.5 rounded-[1px]">
-                  {p.category}
+                <div className="absolute top-2 right-2 bg-[var(--bg-primary)]/90 border border-[var(--border-primary)] text-[8px] font-mono tracking-wider text-[var(--text-primary)] px-2 py-0.5 rounded-[1px]">
+                  {p.year}
                 </div>
               </div>
 
-              {/* Title & Description */}
+              <div className="flex items-baseline justify-between mb-2">
+                <span className="font-mono text-[9px] tracking-wider text-[var(--accent)] uppercase font-semibold">
+                  {p.num} // {p.badge}
+                </span>
+                <span className="font-mono text-[8px] tracking-wider text-[var(--text-secondary)] uppercase">
+                  {p.category}
+                </span>
+              </div>
+
               <div className="flex items-center justify-between mb-2">
-                <h4 className="font-display font-bold text-lg text-[#252A27] group-hover:text-[#B96F52] transition-colors">
+                <h4 className="font-display font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">
                   {p.title}
                 </h4>
-                <span className="text-[#B96F52] text-sm group-hover:translate-x-0.5 transition-transform">↗</span>
+                <span className="text-[var(--accent)] text-sm group-hover:translate-x-0.5 transition-transform">↗</span>
               </div>
-              <p className="font-sans text-xs text-[#788477] line-clamp-2 leading-relaxed mb-4">
-                {p.description}
+
+              <p className="font-sans text-xs text-[var(--text-secondary)] line-clamp-2 leading-relaxed mb-4">
+                {p.type}
               </p>
 
-              {/* Tags */}
-              <div className="flex flex-wrap gap-1.5 mt-auto pt-3 border-t border-[#DED9CE]/60">
-                {p.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="font-mono text-[8px] tracking-wider text-[#788477] bg-[#F7F6F2] px-2 py-0.5 rounded-[1px]"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              <div className="mt-auto pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between text-[8px] font-mono uppercase text-[var(--text-secondary)]">
+                <span>SPECIFICATION VIEW</span>
+                <span className="text-[var(--accent)] font-semibold">INSPECT →</span>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Bottom Technical Note */}
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[#788477] uppercase border-t border-[#DED9CE] pt-4 flex-shrink-0">
-        <span>04 / 08 ARCHITECTURAL SYSTEMS</span>
-        <span>NEXT: TECHNICAL SKILLS →</span>
+      {/* Bottom Section Metadata */}
+      <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-primary)] pt-4 flex-shrink-0">
+        <span>ARCHITECTURAL WORK CATALOG</span>
+        <span>MUMBAI • 2026</span>
       </div>
     </div>
   );
 }
-

@@ -21,8 +21,7 @@ const CURATED_PROJECTS = [
     tech: ['REACT', 'CANVAS API', 'WEB WORKERS'],
     image: './img/project1.png',
     sectionId: 'projects',
-    accent: '#B96F52',
-    position: 'left', // Primary Left Anchor
+    position: 'left',
   },
   {
     id: '02',
@@ -35,8 +34,7 @@ const CURATED_PROJECTS = [
     tech: ['LANGGRAPH', 'FASTAPI', 'MCP CLIENT'],
     image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
     sectionId: 'skills',
-    accent: '#788477',
-    position: 'right', // Primary Right Anchor
+    position: 'right',
   },
   {
     id: '03',
@@ -49,8 +47,7 @@ const CURATED_PROJECTS = [
     tech: ['AWS ECS', 'TERRAFORM', 'DOCKER'],
     image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=80',
     sectionId: 'skills',
-    accent: '#B96F52',
-    position: 'bg-left', // Ambient background left
+    position: 'bg-left',
   },
   {
     id: '04',
@@ -63,15 +60,13 @@ const CURATED_PROJECTS = [
     tech: ['JAVASCRIPT', 'WEBASSEMBLY', 'BUFFERS'],
     image: './img/project2.png',
     sectionId: 'journey',
-    accent: '#788477',
-    position: 'bg-right', // Ambient background right
+    position: 'bg-right',
   },
 ];
 
 export default function HomeSection({
   onOpenSection,
   onNavigateToProjects,
-  transitionPhase = 'COMPLETED',
   phaseIndex = 10,
 }) {
   const [selectedExhibitionIndex, setSelectedExhibitionIndex] = useState(0);
@@ -97,7 +92,7 @@ export default function HomeSection({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full flex flex-col items-center justify-center select-none overflow-hidden outline-none px-4 sm:px-8 md:px-12"
+      className="relative w-full h-full flex flex-col items-center justify-center select-none overflow-hidden outline-none px-4 sm:px-8 md:px-12 text-[var(--text-primary)]"
     >
       {/* ==================== 1. INITIAL ENTRANCE GREETING ==================== */}
       <AnimatePresence>
@@ -109,7 +104,7 @@ export default function HomeSection({
               y: isGreetingPhase ? 0 : -16,
             }}
             exit={{ opacity: 0, y: -20, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            className="absolute top-[calc(50%+165px)] sm:top-[calc(50%+185px)] md:top-[calc(50%+205px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
+            className="absolute top-[calc(50%+130px)] sm:top-[calc(50%+150px)] md:top-[calc(50%+165px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
           >
             <motion.h1
               initial={{ opacity: 0, y: 18 }}
@@ -119,9 +114,9 @@ export default function HomeSection({
                 delay: 1.0,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none"
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-black text-[var(--text-primary)] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none"
             >
-              HELLO, I'M DEV<span className="text-[#B96F52]">.</span>
+              HELLO, I'M DEV<span className="text-[var(--accent)]">.</span>
             </motion.h1>
 
             <motion.p
@@ -132,7 +127,7 @@ export default function HomeSection({
                 delay: 1.3,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-sans font-medium text-[#788477] tracking-normal select-none"
+              className="mt-3 sm:mt-4 text-xs sm:text-base md:text-lg lg:text-xl font-mono font-medium text-[var(--text-secondary)] tracking-[0.16em] sm:tracking-[0.24em] uppercase select-none"
             >
               DESIGNING & BUILDING DIGITAL EXPERIENCES.
             </motion.p>
@@ -143,15 +138,15 @@ export default function HomeSection({
       {/* ==================== 2. EDITORIAL HERO EXHIBITION STAGE ==================== */}
       <div className="relative w-full max-w-[1420px] h-full flex flex-col justify-center items-center py-4">
 
-        {/* Ambient Subtle Geometric Horizon Guides (supportive, low-contrast) */}
+        {/* Ambient Subtle Geometric Horizon Guides */}
         <div
           className={`absolute inset-x-0 top-1/2 -translate-y-1/2 h-[480px] pointer-events-none transition-opacity duration-1000 ${
             isBgTransformed ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <div className="absolute left-0 right-0 top-0 h-px bg-[#DED9CE]/60" />
-          <div className="absolute left-0 right-0 bottom-0 h-px bg-[#DED9CE]/60" />
-          <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-[#DED9CE]/30 border-dashed" />
+          <div className="absolute left-0 right-0 top-0 h-px bg-[var(--border-subtle)]" />
+          <div className="absolute left-0 right-0 bottom-0 h-px bg-[var(--border-subtle)]" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-[var(--border-subtle)]/50 border-dashed" />
         </div>
 
         {/* --- MAIN HERO ROW: 3-ZONE BALANCED EDITORIAL COMPOSITION --- */}
@@ -172,37 +167,37 @@ export default function HomeSection({
           >
             {/* Fine Header Meta */}
             <div className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-[#B96F52]" />
-              <span className="font-mono text-[10px] tracking-wider text-[#788477] uppercase font-medium">
+              <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
+              <span className="font-mono text-[10px] tracking-wider text-[var(--text-secondary)] uppercase font-medium">
                 PROFILE & EXHIBITION / 2026
               </span>
             </div>
 
-            {/* Main Typographic Hierarchy: Natural Proportions, Clean Sans-Serif */}
+            {/* Main Typographic Hierarchy */}
             <div className="space-y-2">
-              <span className="font-mono text-xs tracking-wider text-[#B96F52] uppercase block font-semibold">
+              <span className="font-mono text-xs tracking-wider text-[var(--accent)] uppercase block font-semibold">
                 FULL STACK DEVELOPER
               </span>
-              <h1 className="text-4xl sm:text-5xl xl:text-6xl font-display font-extrabold text-[#252A27] tracking-tight leading-[1.0] uppercase">
+              <h1 className="text-4xl sm:text-5xl xl:text-6xl font-display font-extrabold text-[var(--text-primary)] tracking-tight leading-[1.0] uppercase">
                 DEV MISTRY
               </h1>
             </div>
 
             {/* Contemporary Editorial Statement */}
-            <p className="font-sans text-sm sm:text-base text-[#788477] font-normal leading-relaxed max-w-md">
+            <p className="font-sans text-sm sm:text-base text-[var(--text-secondary)] font-normal leading-relaxed max-w-md">
               Designing and building digital experiences. Specialized in deterministic cloud architecture, high-availability web platforms, and autonomous agentic swarms.
             </p>
 
             {/* Restrained Metadata Strip */}
-            <div className="flex items-center gap-6 pt-1 font-mono text-[11px] text-[#788477] border-t border-[#DED9CE] pt-4">
+            <div className="flex items-center gap-6 pt-1 font-mono text-[11px] text-[var(--text-secondary)] border-t border-[var(--border-primary)] pt-4">
               <div className="flex flex-col">
-                <span className="text-[9px] text-[#A2A9A1] uppercase tracking-wider">BASE LOCATION</span>
-                <span className="font-semibold text-[#252A27] mt-0.5">MUMBAI, INDIA</span>
+                <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider">BASE LOCATION</span>
+                <span className="font-semibold text-[var(--text-primary)] mt-0.5">MUMBAI, INDIA</span>
               </div>
-              <div className="w-px h-8 bg-[#DED9CE]" />
+              <div className="w-px h-8 bg-[var(--border-primary)]" />
               <div className="flex flex-col">
-                <span className="text-[9px] text-[#A2A9A1] uppercase tracking-wider">STATUS</span>
-                <span className="font-semibold text-[#B96F52] mt-0.5">OPEN FOR SELECT CONTRACTS</span>
+                <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider">STATUS</span>
+                <span className="font-semibold text-[var(--accent)] mt-0.5">OPEN FOR SELECT CONTRACTS</span>
               </div>
             </div>
 
@@ -210,7 +205,8 @@ export default function HomeSection({
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={() => onOpenSection && onOpenSection('about')}
-                className="group px-5 py-2.5 bg-[#252A27] hover:bg-[#B96F52] text-[#F7F6F2] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] shadow-sm hover:shadow-md flex items-center gap-2 cursor-pointer"
+                data-cursor="button"
+                className="group px-5 py-2.5 bg-[var(--text-primary)] text-[var(--bg-primary)] hover:bg-[var(--accent)] hover:text-[#F7F6F2] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] shadow-sm hover:shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <span>ABOUT SPECIFICATION</span>
                 <span className="transition-transform group-hover:translate-x-1 duration-200">→</span>
@@ -219,7 +215,7 @@ export default function HomeSection({
               <button
                 onClick={() => onNavigateToProjects && onNavigateToProjects()}
                 data-cursor="archive"
-                className="px-4 py-2.5 bg-[#FFFFFF] hover:bg-[#F7F6F2] text-[#252A27] hover:text-[#B96F52] border border-[#DED9CE] hover:border-[#B96F52] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] cursor-pointer"
+                className="px-4 py-2.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] hover:text-[var(--accent)] border border-[var(--border-primary)] hover:border-[var(--accent)] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] cursor-pointer"
               >
                 VIEW ARCHIVE
               </button>
@@ -232,7 +228,7 @@ export default function HomeSection({
 
               {/* Background ambient framing glow */}
               <div
-                className={`absolute -inset-4 bg-gradient-to-b from-[#DED9CE]/30 via-transparent to-[#DED9CE]/20 rounded-lg pointer-events-none transition-opacity duration-700 ${
+                className={`absolute -inset-4 bg-gradient-to-b from-[var(--border-subtle)]/40 via-transparent to-[var(--border-subtle)]/20 rounded-lg pointer-events-none transition-opacity duration-700 ${
                   isCardFlipped ? 'opacity-100' : 'opacity-0'
                 }`}
               />
@@ -262,7 +258,7 @@ export default function HomeSection({
                 />
               </motion.div>
 
-              {/* Subtle Editorial Caption Tag underneath Portrait */}
+              {/* Editorial Caption Tag underneath Portrait */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{
@@ -270,10 +266,10 @@ export default function HomeSection({
                   y: isHeroRevealed ? 0 : 10,
                 }}
                 transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute -bottom-8 flex items-center justify-between w-full px-1 font-mono text-[9px] tracking-wider text-[#788477] uppercase pointer-events-none"
+                className="absolute -bottom-8 flex items-center justify-between w-full px-1 font-mono text-[9px] tracking-wider text-[var(--text-secondary)] uppercase pointer-events-none"
               >
                 <span>DEV MISTRY // PORTRAIT</span>
-                <span className="text-[#B96F52] font-semibold">FIG. 01</span>
+                <span className="text-[var(--accent)] font-semibold">FIG. 01</span>
               </motion.div>
             </div>
           </div>
@@ -289,10 +285,10 @@ export default function HomeSection({
                 y: isProjectsRevealed ? 0 : -12,
               }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center justify-between border-b border-[#DED9CE] pb-2 font-mono text-[10px] tracking-wider text-[#788477] uppercase"
+              className="flex items-center justify-between border-b border-[var(--border-primary)] pb-2 font-mono text-[10px] tracking-wider text-[var(--text-secondary)] uppercase"
             >
               <div className="flex items-center gap-2">
-                <span className="text-[#B96F52] font-semibold">SELECTED EXHIBITION</span>
+                <span className="text-[var(--accent)] font-semibold">SELECTED EXHIBITION</span>
                 <span>•</span>
                 <span>WORKS</span>
               </div>
@@ -303,8 +299,8 @@ export default function HomeSection({
                     onClick={() => setSelectedExhibitionIndex(i)}
                     className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
                       i === selectedExhibitionIndex % CURATED_PROJECTS.length
-                        ? 'bg-[#B96F52] scale-125'
-                        : 'bg-[#DED9CE] hover:bg-[#788477]'
+                        ? 'bg-[var(--accent)] scale-125'
+                        : 'bg-[var(--border-primary)] hover:bg-[var(--text-secondary)]'
                     }`}
                     title={`View Exhibition Piece 0${i + 1}`}
                   />
@@ -323,42 +319,42 @@ export default function HomeSection({
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               onClick={() => onOpenSection && onOpenSection(rightProject.sectionId)}
               data-cursor="project"
-              className="group relative bg-[#FFFFFF] border border-[#DED9CE] hover:border-[#B96F52] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(37,42,39,0.06)] hover:shadow-[0_16px_40px_rgba(185,111,82,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
+              className="group relative bg-[var(--bg-surface)] border border-[var(--border-primary)] hover:border-[var(--accent)] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
             >
-              <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[#ECE8DE] bg-[#F7F6F2]">
+              <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[var(--border-subtle)] bg-[var(--bg-primary)]">
                 <img
                   src={rightProject.image}
                   alt={rightProject.title}
                   className="w-full h-full object-cover contrast-[1.03] transition-transform duration-500 group-hover:scale-108"
                 />
-                <div className="absolute top-1 left-1 font-mono text-[7px] text-[#252A27] bg-[#F7F6F2] px-1 py-0.2 rounded-[1px] border border-[#DED9CE]">
+                <div className="absolute top-1 left-1 font-mono text-[7px] text-[var(--text-primary)] bg-[var(--bg-primary)] px-1 py-0.2 rounded-[1px] border border-[var(--border-subtle)]">
                   {rightProject.category}
                 </div>
               </div>
 
               <div className="flex flex-col justify-between flex-grow min-w-0 py-0.5">
                 <div>
-                  <div className="flex items-center justify-between font-mono text-[9px] text-[#788477]">
+                  <div className="flex items-center justify-between font-mono text-[9px] text-[var(--text-secondary)]">
                     <span>{rightProject.num}</span>
                     <span>{rightProject.year}</span>
                   </div>
-                  <h3 className="font-display font-bold text-sm sm:text-base text-[#252A27] group-hover:text-[#B96F52] tracking-tight leading-snug truncate mt-1 transition-colors">
+                  <h3 className="font-display font-bold text-sm sm:text-base text-[var(--text-primary)] group-hover:text-[var(--accent)] tracking-tight leading-snug truncate mt-1 transition-colors">
                     {rightProject.title}
                   </h3>
-                  <p className="font-sans text-[11px] text-[#788477] line-clamp-1 mt-0.5">
+                  <p className="font-sans text-[11px] text-[var(--text-secondary)] line-clamp-1 mt-0.5">
                     {rightProject.type}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 mt-2 border-t border-[#F2EFE8] font-mono text-[9px]">
-                  <div className="flex gap-1.5 text-[#788477] text-[8px]">
+                <div className="flex items-center justify-between pt-2 mt-2 border-t border-[var(--border-subtle)] font-mono text-[9px]">
+                  <div className="flex gap-1.5 text-[var(--text-secondary)] text-[8px]">
                     {rightProject.tech.slice(0, 2).map((t) => (
-                      <span key={t} className="px-1.5 py-0.5 bg-[#F7F6F2] rounded-[1px] border border-[#ECE8DE]">
+                      <span key={t} className="px-1.5 py-0.5 bg-[var(--bg-primary)] rounded-[1px] border border-[var(--border-subtle)]">
                         {t}
                       </span>
                     ))}
                   </div>
-                  <span className="text-[#B96F52] font-semibold group-hover:translate-x-1 transition-transform duration-200">
+                  <span className="text-[var(--accent)] font-semibold group-hover:translate-x-1 transition-transform duration-200">
                     OPEN →
                   </span>
                 </div>
@@ -376,42 +372,42 @@ export default function HomeSection({
               transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               onClick={() => onOpenSection && onOpenSection(leftProject.sectionId)}
               data-cursor="project"
-              className="group relative bg-[#FFFFFF] border border-[#DED9CE] hover:border-[#B96F52] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(37,42,39,0.06)] hover:shadow-[0_16px_40px_rgba(185,111,82,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
+              className="group relative bg-[var(--bg-surface)] border border-[var(--border-primary)] hover:border-[var(--accent)] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
             >
-              <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[#ECE8DE] bg-[#F7F6F2]">
+              <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[var(--border-subtle)] bg-[var(--bg-primary)]">
                 <img
                   src={leftProject.image}
                   alt={leftProject.title}
                   className="w-full h-full object-cover contrast-[1.03] transition-transform duration-500 group-hover:scale-108"
                 />
-                <div className="absolute top-1 left-1 font-mono text-[7px] text-[#252A27] bg-[#F7F6F2] px-1 py-0.2 rounded-[1px] border border-[#DED9CE]">
+                <div className="absolute top-1 left-1 font-mono text-[7px] text-[var(--text-primary)] bg-[var(--bg-primary)] px-1 py-0.2 rounded-[1px] border border-[var(--border-subtle)]">
                   {leftProject.category}
                 </div>
               </div>
 
               <div className="flex flex-col justify-between flex-grow min-w-0 py-0.5">
                 <div>
-                  <div className="flex items-center justify-between font-mono text-[9px] text-[#788477]">
+                  <div className="flex items-center justify-between font-mono text-[9px] text-[var(--text-secondary)]">
                     <span>{leftProject.num}</span>
                     <span>{leftProject.year}</span>
                   </div>
-                  <h3 className="font-display font-bold text-sm sm:text-base text-[#252A27] group-hover:text-[#B96F52] tracking-tight leading-snug truncate mt-1 transition-colors">
+                  <h3 className="font-display font-bold text-sm sm:text-base text-[var(--text-primary)] group-hover:text-[var(--accent)] tracking-tight leading-snug truncate mt-1 transition-colors">
                     {leftProject.title}
                   </h3>
-                  <p className="font-sans text-[11px] text-[#788477] line-clamp-1 mt-0.5">
+                  <p className="font-sans text-[11px] text-[var(--text-secondary)] line-clamp-1 mt-0.5">
                     {leftProject.type}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 mt-2 border-t border-[#F2EFE8] font-mono text-[9px]">
-                  <div className="flex gap-1.5 text-[#788477] text-[8px]">
+                <div className="flex items-center justify-between pt-2 mt-2 border-t border-[var(--border-subtle)] font-mono text-[9px]">
+                  <div className="flex gap-1.5 text-[var(--text-secondary)] text-[8px]">
                     {leftProject.tech.slice(0, 2).map((t) => (
-                      <span key={t} className="px-1.5 py-0.5 bg-[#F7F6F2] rounded-[1px] border border-[#ECE8DE]">
+                      <span key={t} className="px-1.5 py-0.5 bg-[var(--bg-primary)] rounded-[1px] border border-[var(--border-subtle)]">
                         {t}
                       </span>
                     ))}
                   </div>
-                  <span className="text-[#B96F52] font-semibold group-hover:translate-x-1 transition-transform duration-200">
+                  <span className="text-[var(--accent)] font-semibold group-hover:translate-x-1 transition-transform duration-200">
                     OPEN →
                   </span>
                 </div>
@@ -426,23 +422,23 @@ export default function HomeSection({
                 y: isFullySettled ? 0 : 12,
               }}
               transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center justify-between p-2.5 bg-[#FFFFFF]/70 border border-[#ECE8DE] rounded-[2px] font-mono text-[9px] text-[#788477]"
+              className="flex items-center justify-between p-2.5 bg-[var(--bg-surface)]/70 border border-[var(--border-subtle)] rounded-[2px] font-mono text-[9px] text-[var(--text-secondary)]"
             >
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#788477]" />
-                <span className="text-[#252A27] font-medium">MORE ARCHIVED WORKS:</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-secondary)]" />
+                <span className="text-[var(--text-primary)] font-medium">MORE ARCHIVED WORKS:</span>
               </div>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => onOpenSection && onOpenSection(bgLeftProject.sectionId)}
-                  className="hover:text-[#B96F52] transition-colors cursor-pointer"
+                  className="hover:text-[var(--accent)] transition-colors cursor-pointer"
                 >
                   {bgLeftProject.title.split(' ')[0]} ↗
                 </button>
                 <span>/</span>
                 <button
                   onClick={() => onOpenSection && onOpenSection(bgRightProject.sectionId)}
-                  className="hover:text-[#B96F52] transition-colors cursor-pointer"
+                  className="hover:text-[var(--accent)] transition-colors cursor-pointer"
                 >
                   {bgRightProject.title.split(' ')[0]} ↗
                 </button>
