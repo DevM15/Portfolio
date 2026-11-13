@@ -73,7 +73,7 @@ export default function DMIdentityCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full h-full select-none will-change-transform flex items-center justify-center"
+      className="relative flex items-center justify-center w-full h-full select-none will-change-transform"
       style={{
         width: widthStyle,
         height: heightStyle,
@@ -141,7 +141,7 @@ export default function DMIdentityCard({
                 D
               </span>
               <span
-                className="relative block font-display font-black text-7xl sm:text-8xl leading-none tracking-tight select-none"
+                className="relative block font-black leading-none tracking-tight select-none font-display text-7xl sm:text-8xl"
                 style={{
                   background:
                     'linear-gradient(135deg, var(--text-primary) 0%, #353D38 35%, #788477 50%, var(--text-primary) 70%, #151916 100%)',
@@ -165,7 +165,7 @@ export default function DMIdentityCard({
                 M
               </span>
               <span
-                className="relative block font-display font-black text-7xl sm:text-8xl leading-none tracking-tight select-none"
+                className="relative block font-black leading-none tracking-tight select-none font-display text-7xl sm:text-8xl"
                 style={{
                   background:
                     'linear-gradient(135deg, var(--text-primary) 0%, #4D5750 35%, #8FA48E 50%, var(--text-primary) 70%, #151916 100%)',
@@ -225,7 +225,7 @@ export default function DMIdentityCard({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="relative w-full h-full flex flex-col justify-between"
+                className="relative flex flex-col justify-between w-full h-full"
               >
                 {/* Subtle Background Horizon & Soft Gradient */}
                 <div className="absolute inset-0 pointer-events-none">
@@ -296,7 +296,7 @@ export default function DMIdentityCard({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="relative w-full h-full flex flex-col justify-between"
+                className="relative flex flex-col justify-between w-full h-full"
               >
                 {/* Technical Blueprint Grid */}
                 <div
@@ -376,10 +376,10 @@ export default function DMIdentityCard({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="relative w-full h-full flex flex-col justify-between"
+                className="relative flex flex-col justify-between w-full h-full"
               >
                 {/* Top Lanyard Slot Graphic */}
-                <div className="absolute top-2 inset-x-0 flex justify-center z-20 pointer-events-none">
+                <div className="absolute inset-x-0 z-20 flex justify-center pointer-events-none top-2">
                   <div className="w-12 h-2 rounded-full bg-[var(--border-primary)] border border-white/20 shadow-inner flex items-center justify-center">
                     <div className="w-8 h-0.5 rounded-full bg-black/40" />
                   </div>
@@ -448,7 +448,7 @@ export default function DMIdentityCard({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="relative w-full h-full flex flex-col justify-between"
+                className="relative flex flex-col justify-between w-full h-full"
               >
                 {/* Swiss Top Monolithic Block */}
                 <div className="relative z-10 p-3.5 border-b border-[var(--border-primary)] flex items-start justify-between">
@@ -517,7 +517,7 @@ export default function DMIdentityCard({
                 </div>
 
                 {/* Central Decay Card Showcase */}
-                <div className="relative z-10 w-full flex-1 flex items-center justify-center p-2 overflow-hidden">
+                <div className="relative z-10 flex items-center justify-center flex-1 w-full p-2 overflow-hidden">
                   <DecayCard
                     image="/img/dev_pic.png"
                     width={260}

@@ -343,9 +343,7 @@ export default function App() {
   };
 
   return (
-    <div className={`relative w-full min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans transition-colors duration-400 select-none overflow-x-hidden ${
-      !isCompleted || currentViewId !== 'home' ? 'h-screen overflow-hidden' : ''
-    }`}>
+    <div className="relative w-full h-screen overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans transition-colors duration-400 select-none">
       {/* ==================== 1. VANTA.JS TOPOLOGY ANIMATED BACKGROUND ==================== */}
       <VantaTopologyBackground
         isRevealed={isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM)}
@@ -482,10 +480,7 @@ export default function App() {
       </motion.header>
 
       {/* ==================== HORIZONTAL EXHIBITION STAGE ==================== */}
-      <main className={`relative w-full z-10 ${currentViewId === 'home'
-        ? 'mt-[72px] mb-[56px] min-h-[calc(100vh-128px)]'
-        : 'h-[calc(100vh-128px)] mt-[72px] mb-[56px] overflow-hidden flex items-center justify-center'
-        }`}>
+      <main className="relative w-full h-[calc(100vh-128px)] mt-[72px] mb-[56px] overflow-hidden flex items-center justify-center z-10">
         <AnimatePresence mode="wait" custom={direction}>
           {currentViewId === 'home' && (
             /* 01 HOME (Hero + Horizontal Scroll Exhibition Rooms) */
