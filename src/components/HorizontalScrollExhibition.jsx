@@ -28,6 +28,7 @@ export default function HorizontalScrollExhibition({
   transitionPhase,
   phaseIndex,
   timelineStart,
+  isCompleted = true,
 }) {
   const scrollContainerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -56,7 +57,7 @@ export default function HorizontalScrollExhibition({
     restDelta: 0.001,
   });
 
-  // Total panels = 4 rooms. Total translation = 0% to -75% (each room is 100vw wide)
+  // Total panels = 4 rooms. Total translation = 0% to -75% (each room is 100% of pinned container)
   // [0, 0.33, 0.66, 1] map to [0%, -25%, -50%, -75%] of the 400% track width
   const xTranslation = useTransform(smoothProgress, [0, 1], ['0%', '-75%']);
 
@@ -133,17 +134,17 @@ export default function HorizontalScrollExhibition({
   return (
     <div
       ref={scrollContainerRef}
-      className="relative w-full h-[400vh] bg-transparent"
+      className={`relative w-full bg-transparent ${isCompleted ? 'h-[400vh]' : 'h-[calc(100vh-128px)]'}`}
     >
       {/* Pinned Viewport Stage */}
       <div className="sticky top-0 w-full h-[calc(100vh-128px)] overflow-hidden flex flex-col justify-between">
-        {/* Horizontal Sliding Track: 400% width holding 4 distinct 100vw panels */}
+        {/* Horizontal Sliding Track: 400% width holding 4 distinct 100% width panels */}
         <motion.div
-          style={{ x: xTranslation }}
-          className="flex h-full w-[400vw] will-change-transform"
+          style={{ x: isCompleted ? xTranslation : '0%' }}
+          className="flex h-full w-[400%] will-change-transform"
         >
           {/* ==================== PANEL 01: HERO EXHIBITION ==================== */}
-          <section className="relative w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden">
+          <section className="relative w-full h-full flex-shrink-0 flex items-center justify-center overflow-hidden" style={{ width: '25%' }}>
             <HomeSection
               onOpenSection={onOpenSection}
               onNavigateToProjects={onNavigateToProjects}
@@ -154,15 +155,19 @@ export default function HorizontalScrollExhibition({
             />
 
             {/* Room 01 Right Border Transition Guideline */}
-            <div className="absolute right-0 top-12 bottom-12 w-px bg-gradient-to-b from-transparent via-[var(--border-primary)] to-transparent pointer-events-none" />
-            <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3 font-mono text-[9px] text-[var(--text-secondary)] pointer-events-none select-none">
-              <span className="tracking-widest [writing-mode:vertical-lr] uppercase">SCROLL DOWN TO ENTER EXHIBITION</span>
-              <span className="text-[var(--accent)] animate-pulse">→</span>
-            </div>
+            {isCompleted && (
+              <>
+                <div className="absolute right-0 top-12 bottom-12 w-px bg-gradient-to-b from-transparent via-[var(--border-primary)] to-transparent pointer-events-none" />
+                <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3 font-mono text-[9px] text-[var(--text-secondary)] pointer-events-none select-none">
+                  <span className="tracking-widest [writing-mode:vertical-lr] uppercase">SCROLL DOWN TO ENTER EXHIBITION</span>
+                  <span className="text-[var(--accent)] animate-pulse">→</span>
+                </div>
+              </>
+            )}
           </section>
 
           {/* ==================== PANEL 02: ARCHITECTURAL SPECIFICATION ==================== */}
-          <section className="relative w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden px-8 md:px-16">
+          <section className="relative w-full h-full flex-shrink-0 flex items-center justify-center overflow-hidden px-8 md:px-16" style={{ width: '25%' }}>
             <motion.div
               style={{ x: room02Parallax }}
               className="w-full h-full max-w-[1600px] flex items-center justify-center"
@@ -175,7 +180,7 @@ export default function HorizontalScrollExhibition({
           </section>
 
           {/* ==================== PANEL 03: TECHNICAL MAP & CAPABILITIES ==================== */}
-          <section className="relative w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden px-8 md:px-16">
+          <section className="relative w-full h-full flex-shrink-0 flex items-center justify-center overflow-hidden px-8 md:px-16" style={{ width: '25%' }}>
             <motion.div
               style={{ x: room03Parallax }}
               className="w-full h-full max-w-[1600px] flex items-center justify-center"
@@ -188,7 +193,7 @@ export default function HorizontalScrollExhibition({
           </section>
 
           {/* ==================== PANEL 04: EVOLUTION TIMELINE & VINYL LAUNCH ==================== */}
-          <section className="relative w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden px-8 md:px-16">
+          <section className="relative w-full h-full flex-shrink-0 flex items-center justify-center overflow-hidden px-8 md:px-16" style={{ width: '25%' }}>
             <motion.div
               style={{ x: room04Parallax }}
               className="w-full h-full max-w-[1600px] flex flex-col justify-between py-8"
@@ -216,48 +221,50 @@ export default function HorizontalScrollExhibition({
         </motion.div>
 
         {/* ==================== EXHIBITION NAVIGATION HUD ==================== */}
-        <div className="pointer-events-auto absolute bottom-2 left-8 right-8 z-30 flex items-center justify-between font-mono text-[10px] text-[var(--text-secondary)]">
-          {/* Active Room Title */}
-          <div className="flex items-center gap-2.5 bg-[var(--bg-surface)]/80 backdrop-blur-sm px-3 py-1 border border-[var(--border-subtle)] rounded-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-            <span className="text-[var(--text-primary)] font-medium">
-              {rooms[activeRoomIndex]?.name}
-            </span>
-          </div>
-
-          {/* Room Step Indicators */}
-          <div className="flex items-center gap-2 bg-[var(--bg-surface)]/80 backdrop-blur-sm px-3 py-1 border border-[var(--border-subtle)] rounded-full">
-            {rooms.map((room, idx) => (
-              <button
-                key={room.id}
-                onClick={() => scrollToRoom(idx)}
-                data-cursor="button"
-                className={`flex items-center gap-1 px-2 py-0.5 rounded-full transition-all cursor-pointer ${
-                  activeRoomIndex === idx
-                    ? 'bg-[var(--accent)] text-[#F7F6F2] font-semibold'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                }`}
-              >
-                <span>{room.num}</span>
-                <span className="hidden xl:inline text-[9px]">{room.id.toUpperCase()}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Progress Bar */}
-          <div className="hidden sm:flex items-center gap-2.5 bg-[var(--bg-surface)]/80 backdrop-blur-sm px-3 py-1.5 border border-[var(--border-subtle)] rounded-full">
-            <span className="text-[9px]">PROGRESS</span>
-            <div className="w-24 h-1 rounded-full bg-[var(--border-subtle)] overflow-hidden">
-              <motion.div
-                style={{ scaleX: smoothProgress }}
-                className="h-full bg-[var(--accent)] origin-left"
-              />
+        {isCompleted && (
+          <div className="pointer-events-auto absolute bottom-2 left-8 right-8 z-30 flex items-center justify-between font-mono text-[10px] text-[var(--text-secondary)]">
+            {/* Active Room Title */}
+            <div className="flex items-center gap-2.5 bg-[var(--bg-surface)]/80 backdrop-blur-sm px-3 py-1 border border-[var(--border-subtle)] rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+              <span className="text-[var(--text-primary)] font-medium">
+                {rooms[activeRoomIndex]?.name}
+              </span>
             </div>
-            <span className="text-[9px] text-[var(--text-primary)] font-semibold">
-              {Math.round((activeRoomIndex / 3) * 100)}%
-            </span>
+
+            {/* Room Step Indicators */}
+            <div className="flex items-center gap-2 bg-[var(--bg-surface)]/80 backdrop-blur-sm px-3 py-1 border border-[var(--border-subtle)] rounded-full">
+              {rooms.map((room, idx) => (
+                <button
+                  key={room.id}
+                  onClick={() => scrollToRoom(idx)}
+                  data-cursor="button"
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded-full transition-all cursor-pointer ${
+                    activeRoomIndex === idx
+                      ? 'bg-[var(--accent)] text-[#F7F6F2] font-semibold'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  }`}
+                >
+                  <span>{room.num}</span>
+                  <span className="hidden xl:inline text-[9px]">{room.id.toUpperCase()}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Progress Bar */}
+            <div className="hidden sm:flex items-center gap-2.5 bg-[var(--bg-surface)]/80 backdrop-blur-sm px-3 py-1.5 border border-[var(--border-subtle)] rounded-full">
+              <span className="text-[9px]">PROGRESS</span>
+              <div className="w-24 h-1 rounded-full bg-[var(--border-subtle)] overflow-hidden">
+                <motion.div
+                  style={{ scaleX: smoothProgress }}
+                  className="h-full bg-[var(--accent)] origin-left"
+                />
+              </div>
+              <span className="text-[9px] text-[var(--text-primary)] font-semibold">
+                {Math.round((activeRoomIndex / 3) * 100)}%
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

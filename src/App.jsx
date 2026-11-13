@@ -327,8 +327,8 @@ export default function App() {
   };
 
   return (
-    <div className={`relative w-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans transition-colors duration-400 select-none ${
-      currentViewId === 'home' ? 'min-h-screen overflow-x-hidden overflow-y-auto' : 'h-screen overflow-hidden'
+    <div className={`relative w-full min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans transition-colors duration-400 select-none ${
+      currentViewId === 'home' && isCompleted ? 'overflow-y-auto overflow-x-hidden' : 'h-screen overflow-hidden'
     }`}>
       {/* ==================== 1. VANTA.JS TOPOLOGY ANIMATED BACKGROUND ==================== */}
       <VantaTopologyBackground
@@ -368,7 +368,7 @@ export default function App() {
       >
         <div className="w-full max-w-[1720px] mx-auto flex items-center justify-between">
           {/* Brand & Personal Metadata */}
-          <div className="flex items-center gap-4 sm:gap-6 md:gap-8 pointer-events-auto">
+          <div className="flex items-center gap-4 pointer-events-auto sm:gap-6 md:gap-8">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{
@@ -423,7 +423,7 @@ export default function App() {
           </div>
 
           {/* Navigation Controls: Segmented Pill Nav + Theme Toggle */}
-          <div className="flex items-center gap-3 sm:gap-5 pointer-events-auto">
+          <div className="flex items-center gap-3 pointer-events-auto sm:gap-5">
             <nav className="flex items-center gap-1 sm:gap-1.5 p-1 rounded-full bg-[var(--bg-surface)]/90 border border-[var(--border-primary)] shadow-xs">
               {NAV_SECTIONS.map((sec, idx) => {
                 const isActive =
@@ -440,11 +440,10 @@ export default function App() {
                       y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -12,
                     }}
                     transition={{ duration: 0.5, delay: 0.3 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                    className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${
-                      isActive && !contactOpen
+                    className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${isActive && !contactOpen
                         ? 'bg-[var(--accent)] text-[#F7F6F2] shadow-xs'
                         : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)]'
-                    }`}
+                      }`}
                   >
                     {sec.label}
                   </motion.button>
@@ -467,11 +466,10 @@ export default function App() {
       </motion.header>
 
       {/* ==================== HORIZONTAL EXHIBITION STAGE ==================== */}
-      <main className={`relative w-full z-10 ${
-        currentViewId === 'home'
+      <main className={`relative w-full z-10 ${currentViewId === 'home'
           ? 'mt-[72px] mb-[56px] min-h-[calc(100vh-128px)]'
           : 'h-[calc(100vh-128px)] mt-[72px] mb-[56px] overflow-hidden flex items-center justify-center'
-      }`}>
+        }`}>
         <AnimatePresence mode="wait" custom={direction}>
           {currentViewId === 'home' && (
             /* 01 HOME (Hero + Horizontal Scroll Exhibition Rooms) */
@@ -491,6 +489,7 @@ export default function App() {
                 transitionPhase={transitionPhase}
                 phaseIndex={phaseIndex}
                 timelineStart={timelineStart}
+                isCompleted={isCompleted}
               />
             </motion.div>
           )}
@@ -619,7 +618,7 @@ export default function App() {
         className="fixed bottom-0 left-0 right-0 z-40 h-[56px] px-6 sm:px-10 md:px-14 flex items-center justify-between font-mono text-xs tracking-wider uppercase text-[var(--text-secondary)] pointer-events-none bg-[var(--bg-primary)]/85 backdrop-blur-md border-t border-[var(--border-primary)] shadow-[0_-4px_24px_-4px_rgba(0,0,0,0.04)] transition-colors duration-400"
       >
         <div className="w-full max-w-[1720px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4 pointer-events-auto">
+          <div className="flex items-center gap-3 pointer-events-auto sm:gap-4">
             <span className="text-[var(--text-primary)] font-semibold text-xs tracking-wider font-mono">
               PORTFOLIO <span className="text-[var(--accent)]">/</span> 2026
             </span>
