@@ -64,13 +64,21 @@ export default function CustomCursor() {
       const target = e.target;
       if (!target || !(target instanceof HTMLElement)) return;
 
+      const recordItem = target.closest('[data-cursor="record"]');
       const projectCard = target.closest('[data-cursor="project"], .group.cursor-pointer');
       const profilePhoto = target.closest('[data-cursor="profile"]');
       const archiveLink = target.closest('[data-cursor="archive"]');
       const primaryBtn = target.closest('button:not([data-cursor="none"]), [data-cursor="button"]');
       const navLink = target.closest('.flip-nav-link, a, nav button, [role="button"]');
 
-      if (profilePhoto) {
+      if (recordItem) {
+        el.dataset.hover = 'true';
+        if (labelEl) {
+          labelEl.textContent = 'PLAY';
+          labelEl.style.opacity = '1';
+          labelEl.style.transform = 'translate(14px, 14px) scale(1)';
+        }
+      } else if (profilePhoto) {
         el.dataset.hover = 'true';
         if (labelEl) {
           labelEl.textContent = 'ABOUT';

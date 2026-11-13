@@ -397,7 +397,7 @@ export default function DMIdentityCard({
               </span>
               <div className="flex items-center gap-1.5 text-[7px] text-[var(--text-secondary)]">
                 <span>PORTRAIT</span>
-                <span>//</span>
+                <span>{'//'}</span>
                 <span className="text-[var(--accent)] font-semibold">FIG. 01</span>
               </div>
             </div>

@@ -34,7 +34,7 @@ const ALL_VIEWS = [
   { id: 'contact', label: 'CONTACT', num: '08' },
 ];
 
-// All Projects Catalog (Curated Technical Developer Works)
+// All Projects Catalog (Curated Technical Developer Works formatted as Vinyl Discography)
 const WORK_PROJECTS = [
   {
     id: '01',
@@ -42,9 +42,15 @@ const WORK_PROJECTS = [
     title: 'ARCADE SYSTEM',
     badge: 'SYSTEM SPEC',
     type: 'WEB PLATFORM / JAVASCRIPT / CANVAS',
+    description: 'Developed an interactive responsive web platform using HTML5, CSS3, and JavaScript featuring architectural canvas graphics, design showcases, and client-side games.',
     year: '2026',
     category: 'WEB ARCHITECTURE',
     image: './img/project1.png',
+    liveUrl: 'https://devm15.github.io/Arcade/',
+    githubUrl: 'https://github.com/DevM15/Arcade',
+    tags: ['HTML5', 'CSS3', 'JAVASCRIPT', 'CANVAS'],
+    color: '#8A5CF5',
+    accent: '#B96F52',
   },
   {
     id: '02',
@@ -52,9 +58,15 @@ const WORK_PROJECTS = [
     title: 'PDF DECODER RUNTIME',
     badge: 'VIEW ARCHIVE',
     type: 'BINARY ENGINE / CLIENT-SIDE EXTRACTION',
+    description: 'Client-side binary manipulation engine built with JavaScript and Web APIs allowing instantaneous merging, splitting, buffer parsing, and image-to-PDF conversion with zero server latency.',
     year: '2026',
     category: 'SYSTEM TOOLS',
     image: './img/project2.png',
+    liveUrl: 'https://devm15.github.io/PDFdecoder/',
+    githubUrl: 'https://github.com/DevM15/PDFdecoder',
+    tags: ['JAVASCRIPT', 'PDF-LIB', 'CLIENT BUFFER', 'WEB WORKERS'],
+    color: '#3B82F6',
+    accent: '#65E6D2',
   },
   {
     id: '03',
@@ -62,9 +74,15 @@ const WORK_PROJECTS = [
     title: 'FUTUREDESKS WORKSPACE',
     badge: 'VIEW CASE',
     type: 'CLOUD DASHBOARD / DISTRIBUTED ARCHITECTURE',
+    description: 'Full-stack enterprise workspace dashboard with responsive layouts, cloud session routing, and distributed architecture components for remote teams.',
     year: '2025',
     category: 'CLOUD / AWS',
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1000&q=80',
+    image: './img/project3.png',
+    liveUrl: 'https://devm15.github.io/Futuredesks/',
+    githubUrl: 'https://github.com/DevM15/Futuredesks',
+    tags: ['BOOTSTRAP', 'JAVASCRIPT', 'RESPONSIVE', 'REST API'],
+    color: '#F97316',
+    accent: '#B96F52',
   },
   {
     id: '04',
@@ -72,9 +90,14 @@ const WORK_PROJECTS = [
     title: 'AGENTIC CONSENSUS FABRIC',
     badge: 'VIEW CORE',
     type: 'AUTONOMOUS REASONING / LANGGRAPH / MCP',
+    description: 'Autonomous reasoning mesh orchestrating specialized agent swarms with Model Context Protocol (MCP) tool bindings, deterministic state machines, and consensus voting.',
     year: '2026',
     category: 'AGENTIC AI',
     image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
+    githubUrl: 'https://github.com/DevM15',
+    tags: ['LANGGRAPH', 'PYTHON', 'MCP PROTOCOL', 'FASTAPI'],
+    color: '#10B981',
+    accent: '#8FA48E',
   },
   {
     id: '05',
@@ -82,9 +105,14 @@ const WORK_PROJECTS = [
     title: 'NEURAL STREAM TELEMETRY',
     badge: 'VIEW PIPELINE',
     type: 'DISTRIBUTED OBSERVABILITY / FASTAPI / REDIS',
+    description: 'High-throughput real-time telemetry pipeline capturing distributed microservice metrics with async streaming, Redis Pub/Sub, and Prometheus-compatible metrics scraping.',
     year: '2025',
     category: 'SYSTEM TOOLS',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80',
+    githubUrl: 'https://github.com/DevM15',
+    tags: ['FASTAPI', 'REDIS', 'DOCKER', 'PROMETHEUS'],
+    color: '#EC4899',
+    accent: '#C98265',
   },
   {
     id: '06',
@@ -92,9 +120,14 @@ const WORK_PROJECTS = [
     title: 'MULTI-REGION MESH CLUSTER',
     badge: 'VIEW CLOUD',
     type: 'TERRAFORM IAC / AWS ECS / ZERO-TRUST',
+    description: 'Zero-trust multi-region container orchestration deployed via Terraform IaC on AWS ECS Fargate with automated failover routing, ALB ingress, and encrypted VPC peering.',
     year: '2026',
     category: 'CLOUD / AWS',
     image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=80',
+    githubUrl: 'https://github.com/DevM15',
+    tags: ['AWS ECS', 'TERRAFORM', 'VPC PEERING', 'FARGATE'],
+    color: '#06B6D4',
+    accent: '#788477',
   },
 ];
 

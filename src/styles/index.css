@@ -217,3 +217,13 @@ button:active:not([disabled]) {
     opacity: 1;
   }
 }
+
+/* Vinyl Record & Turntable Platter Continuous Rotation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
