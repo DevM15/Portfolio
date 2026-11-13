@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import ParticleText from '../components/ParticleText/ParticleText';
 
 export default function ContactSection({ onOpenMessage }) {
   return (
@@ -25,13 +26,34 @@ export default function ContactSection({ onOpenMessage }) {
             <span className="font-mono text-[10px] tracking-wider text-[var(--accent)] uppercase block mb-3 font-medium">
               WHAT'S NEXT
             </span>
-            <h2 className="text-4xl sm:text-6xl md:text-8xl font-display font-bold text-[var(--text-primary)] uppercase tracking-tight leading-[0.9] mb-6">
-              LET'S
-              <br />
-              BUILD
-              <br />
-              <span className="text-[var(--accent)]">SOMETHING.</span>
-            </h2>
+            <div
+              className="w-full h-[180px] sm:h-[220px] md:h-[260px] relative mb-4 -ml-2"
+              data-cursor="explore"
+            >
+              <ParticleText
+                text="LET'S BUILD."
+                particleSize={2.5}
+                density={3.5}
+                color="var(--text-primary)"
+                highlightColor="var(--accent)"
+                highlightMode="motion"
+                shape="circle"
+                intro="gather"
+                scatter={160}
+                gatherDuration={1500}
+                stagger={380}
+                clickBurst={true}
+                burstStrength={1.2}
+                pointerRepel={40}
+                repelRadius={120}
+                idleDrift={0.6}
+                trigger="hover"
+                fontSize="clamp(3rem, 7.5vw, 6.5rem)"
+                fontWeight={800}
+                fontFamily="inherit"
+                glow={true}
+              />
+            </div>
             <p className="font-sans text-base sm:text-lg text-[var(--text-secondary)] font-normal leading-relaxed max-w-lg mb-8">
               Available for architectural consulting, full-stack systems engineering, and autonomous AI workflow deployments.
             </p>
