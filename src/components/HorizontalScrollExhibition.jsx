@@ -64,6 +64,9 @@ export default function HorizontalScrollExhibition({
           onOpenSection={onOpenSection}
           onNavigateToProjects={onNavigateToProjects}
           onNavigateToContact={onNavigateToContact}
+          transitionPhase={transitionPhase}
+          phaseIndex={phaseIndex}
+          timelineStart={timelineStart}
         />
       ),
     },
@@ -88,7 +91,7 @@ export default function HorizontalScrollExhibition({
       category: 'CAREER MILESTONES 2022–2026',
       component: <JourneySection onBack={() => goToCard(0)} />,
     },
-  ], [onOpenSection, onNavigateToProjects, onNavigateToContact, goToCard]);
+  ], [onOpenSection, onNavigateToProjects, onNavigateToContact, transitionPhase, phaseIndex, timelineStart, goToCard]);
 
   // Synchronize active card index with spring output
   useEffect(() => {
@@ -179,6 +182,22 @@ export default function HorizontalScrollExhibition({
     const nearest = Math.round(progressTargetRef.current);
     goToCard(nearest);
   };
+
+  // If initial entrance greeting timeline is still progressing, show HomeSection entrance
+  if (!isCompleted) {
+    return (
+      <div className="w-full h-full flex items-center justify-center overflow-hidden">
+        <HomeSection
+          onOpenSection={onOpenSection}
+          onNavigateToProjects={onNavigateToProjects}
+          onNavigateToContact={onNavigateToContact}
+          transitionPhase={transitionPhase}
+          phaseIndex={phaseIndex}
+          timelineStart={timelineStart}
+        />
+      </div>
+    );
+  }
 
   const activeRoom = WORKSPACE_ROOMS[activeCardIndex] || WORKSPACE_ROOMS[0];
 
