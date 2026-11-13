@@ -1,26 +1,18 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import DecayCard from '../DecayCard/DecayCard';
 
 /**
  * DMIdentityCard:
  * Multi-Iteration Identity Card System.
  *
- * Provides 4 distinct architectural and editorial design iterations that can be switched live:
+ * Provides 5 distinct architectural and editorial design iterations that can be switched live:
  * 
- * 1. "editorial" (Iteration 01 - Magazine / Gallery Specification):
- *    - Pure minimalist editorial folio layout.
- *    - Monolithic typography, subtle border ticks, clean negative space, and integrated portrait frame.
- * 
- * 2. "architectural" (Iteration 02 - Technical Blueprint & Engineering Spec):
- *    - Fine blueprint grid, crosshair reticle, datum markers, measurement ticks, and technical specimen tag.
- * 
- * 3. "pass" (Iteration 03 - Contemporary ID Pass / Security Badge):
- *    - Physical access pass aesthetic: top lanyard cutout slot, magnetic barcode stripe, microchip emblem,
- *      large bold initials, and verified biometric stamp.
- * 
- * 4. "curated" (Iteration 04 - Swiss Studio Minimalist / Framing Exhibition):
- *    - Strict Swiss typography layout with asymmetrical balance, bold black & terracotta accents,
- *      and ultra-crisp editorial badges.
+ * 1. "editorial" (Iteration 01 - Magazine / Gallery Specification)
+ * 2. "architectural" (Iteration 02 - Technical Blueprint & Engineering Spec)
+ * 3. "pass" (Iteration 03 - Contemporary ID Pass / Security Badge)
+ * 4. "curated" (Iteration 04 - Swiss Studio Minimalist / Framing Exhibition)
+ * 5. "decay" (Iteration 05 - WebGL Decay Shader Specimen)
  */
 
 export const CARD_ITERATIONS = [
@@ -28,6 +20,7 @@ export const CARD_ITERATIONS = [
   { id: 'architectural', label: '02 · BLUEPRINT', name: 'Architectural Blueprint' },
   { id: 'pass', label: '03 · ID PASS', name: 'Physical Studio Pass' },
   { id: 'curated', label: '04 · SWISS', name: 'Swiss Minimalist' },
+  { id: 'decay', label: '05 · DECAY', name: 'WebGL Decay Shader' },
 ];
 
 export default function DMIdentityCard({
@@ -499,6 +492,73 @@ export default function DMIdentityCard({
                     className="px-2 py-1 rounded-[1px] bg-[var(--text-primary)] text-[var(--bg-primary)] font-mono text-[7px] font-bold tracking-wider uppercase hover:bg-[var(--accent)] hover:text-[#F7F6F2] transition-colors cursor-pointer"
                   >
                     VIEW ARCHIVE →
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* -------------------- ITERATION 5: WEBGL DECAY SHADER SPECIMEN -------------------- */}
+            {iteration === 'decay' && (
+              <motion.div
+                key="iter-decay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="relative w-full h-full flex flex-col justify-between overflow-hidden bg-[var(--bg-surface)]"
+              >
+                {/* Top Shader Tag */}
+                <div className="relative z-20 px-3.5 pt-2.5 pb-2 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/80 backdrop-blur-xs font-mono text-[7.5px] uppercase tracking-wider text-[var(--text-secondary)]">
+                  <div className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-ping" />
+                    <span>DECAY SHADER // 05</span>
+                  </div>
+                  <span className="text-[var(--accent)] font-semibold">MOVE CURSOR</span>
+                </div>
+
+                {/* Central Decay Card Showcase */}
+                <div className="relative z-10 w-full flex-1 flex items-center justify-center p-2 overflow-hidden">
+                  <DecayCard
+                    image="/img/dev_pic.png"
+                    width={260}
+                    height={340}
+                    intensity={0.5}
+                    sensitivity={0.5}
+                    hoverDecay={0.08}
+                    recovery={0.6}
+                    idle={0.3}
+                    grain={0.25}
+                    detail={5}
+                    pattern={4}
+                    flow={0.3}
+                    chroma={0.15}
+                    travel={30}
+                    tilt={8}
+                    scope="card"
+                    radius={2}
+                  >
+                    <div className="font-mono text-[7px] uppercase tracking-wider bg-black/60 backdrop-blur-md p-2 rounded-[2px] border border-white/20">
+                      <div className="flex items-center justify-between text-[var(--accent)] font-bold text-[7.5px] mb-0.5">
+                        <span>DEV MISTRY</span>
+                        <span>05 / DECAY</span>
+                      </div>
+                      <div className="text-white/80 text-[6.5px]">INTERACTIVE SIMPLEX SHADER</div>
+                    </div>
+                  </DecayCard>
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="relative z-20 p-2.5 flex items-center justify-between border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/90 font-mono text-[7px] text-[var(--text-secondary)] uppercase">
+                  <span>GLSL TURBULENCE</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onOpenSection) onOpenSection('about');
+                    }}
+                    data-cursor="button"
+                    className="px-2 py-0.5 rounded-[1px] bg-[var(--accent)] text-[#F7F6F2] font-bold cursor-pointer"
+                  >
+                    OPEN ABOUT →
                   </button>
                 </div>
               </motion.div>
