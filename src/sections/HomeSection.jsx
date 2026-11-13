@@ -77,6 +77,7 @@ export default function HomeSection({
   const isGreetingExit = phaseIndex >= 1;       // GREETING_EXIT
   const isCardFormed = phaseIndex >= 2;         // CARD_FORMATION
   const isCardFlipped = phaseIndex >= 3;        // CARD_FLIP (180deg flip)
+  // eslint-disable-next-line no-unused-vars
   const isBgTransformed = phaseIndex >= 4;      // BACKGROUND_TRANSFORM
   const isProfileTrans = phaseIndex >= 6;       // PROFILE_TRANSITION
   const isHeroRevealed = phaseIndex >= 7;       // HERO_REVEAL (Intro text glides in)

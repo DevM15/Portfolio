@@ -79,7 +79,7 @@ export default function DMIdentityCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="relative select-none flex items-center justify-center w-full h-full group/card"
+      className="relative flex items-center justify-center w-full h-full select-none group/card"
       style={{
         width: widthStyle,
         height: heightStyle,
@@ -92,9 +92,8 @@ export default function DMIdentityCard({
         className="relative w-full h-full transition-shadow duration-500 ease-out"
         style={{
           transformStyle: 'preserve-3d',
-          transform: `rotateY(${flipDeg + effectiveTiltY}deg) rotateX(${effectiveTiltX}deg) translateZ(${
-            isLifted || isHovered ? 24 : 0
-          }px)`,
+          transform: `rotateY(${flipDeg + effectiveTiltY}deg) rotateX(${effectiveTiltX}deg) translateZ(${isLifted || isHovered ? 24 : 0
+            }px)`,
           transition: isHovered
             ? 'transform 0.15s ease-out, box-shadow 0.4s ease'
             : 'transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease',
@@ -103,8 +102,8 @@ export default function DMIdentityCard({
             ? isHovered
               ? '0 30px 70px -15px rgba(0, 0, 0, 0.28), 0 0 0 1px var(--accent)'
               : isLifted
-              ? '0 25px 60px -12px rgba(0, 0, 0, 0.22), 0 0 0 1px var(--border-primary)'
-              : '0 14px 36px -10px rgba(0, 0, 0, 0.14), 0 0 0 1px var(--border-primary)'
+                ? '0 25px 60px -12px rgba(0, 0, 0, 0.22), 0 0 0 1px var(--border-primary)'
+                : '0 14px 36px -10px rgba(0, 0, 0, 0.14), 0 0 0 1px var(--border-primary)'
             : 'none',
         }}
       >
@@ -124,14 +123,13 @@ export default function DMIdentityCard({
         >
           {/* Subtle Warm Paper Texture Grain Overlay (visible when framed) */}
           {isFramed && (
-            <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-multiply transition-opacity duration-500 bg-subtle-grain" />
+            <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none opacity-20 mix-blend-multiply bg-subtle-grain" />
           )}
 
           {/* Micro Top Header on Identity Card */}
           <div
-            className={`absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-subtle)] pb-2 transition-opacity duration-500 ${
-              isFramed ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-subtle)] pb-2 transition-opacity duration-500 ${isFramed ? 'opacity-100' : 'opacity-0'
+              }`}
           >
             <span className="flex items-center gap-1.5 font-semibold text-[var(--text-primary)]">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
@@ -149,7 +147,7 @@ export default function DMIdentityCard({
               delay: 0.2,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="relative flex items-center justify-center my-auto overflow-hidden px-4 py-2"
+            className="relative flex items-center justify-center px-4 py-2 my-auto overflow-hidden"
           >
             {/* D Letter */}
             <div className="relative inline-block">
@@ -161,7 +159,7 @@ export default function DMIdentityCard({
                 D
               </span>
               <span
-                className="relative block font-display font-black text-7xl sm:text-8xl leading-none tracking-tight select-none"
+                className="relative block font-black leading-none tracking-tight select-none font-display text-7xl sm:text-8xl"
                 style={{
                   background:
                     'linear-gradient(135deg, #1C1E1D 0%, #353A37 38%, #8E9691 52%, #262927 68%, #0F1110 100%)',
@@ -184,7 +182,7 @@ export default function DMIdentityCard({
                 M
               </span>
               <span
-                className="relative block font-display font-black text-7xl sm:text-8xl leading-none tracking-tight select-none"
+                className="relative block font-black leading-none tracking-tight select-none font-display text-7xl sm:text-8xl"
                 style={{
                   background:
                     'linear-gradient(135deg, #1C1E1D 0%, #353A37 34%, #9BA39E 48%, #4A514D 60%, #151817 100%)',
@@ -217,9 +215,8 @@ export default function DMIdentityCard({
 
           {/* Micro Bottom Footer on Identity Card */}
           <div
-            className={`absolute bottom-3 left-4 right-4 flex items-center justify-between text-[7px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-subtle)] pt-2 transition-opacity duration-500 ${
-              isFramed ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`absolute bottom-3 left-4 right-4 flex items-center justify-between text-[7px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-subtle)] pt-2 transition-opacity duration-500 ${isFramed ? 'opacity-100' : 'opacity-0'
+              }`}
           >
             <span>IDENTITY FOLIO</span>
             <span className="text-[var(--accent)] font-semibold">01 / PROFILE</span>
@@ -239,7 +236,7 @@ export default function DMIdentityCard({
           }}
         >
           {/* ----- LAYER 1: ARCHITECTURAL CARD BACKGROUND & GRID ----- */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
             {/* Subtle Technical Grid Lines */}
             <div
               className="absolute inset-0 opacity-[0.35] transition-opacity duration-500"
@@ -253,7 +250,7 @@ export default function DMIdentityCard({
 
             {/* Ambient Radial Spotlight (Accentuates Portrait Silhouette) */}
             <div
-              className="absolute inset-0 opacity-80 pointer-events-none transition-all duration-700"
+              className="absolute inset-0 transition-all duration-700 pointer-events-none opacity-80"
               style={{
                 background:
                   'radial-gradient(ellipse at 50% 45%, var(--bg-surface-elevated) 0%, var(--bg-surface) 72%)',
@@ -307,9 +304,8 @@ export default function DMIdentityCard({
               ].map((tick, i) => (
                 <div key={i} className="flex items-center gap-1">
                   <div
-                    className={`h-px bg-[var(--border-primary)] transition-all duration-300 ${tick.width} ${
-                      isHovered ? 'bg-[var(--accent)]' : ''
-                    }`}
+                    className={`h-px bg-[var(--border-primary)] transition-all duration-300 ${tick.width} ${isHovered ? 'bg-[var(--accent)]' : ''
+                      }`}
                   />
                   {tick.label && (
                     <span className="font-mono text-[6px] text-[var(--text-muted)] tracking-tighter">
@@ -374,7 +370,7 @@ export default function DMIdentityCard({
               Cutout photograph positioned centrally with natural object-fit: contain.
               Anchored to the bottom boundary, occupying the natural vertical span without being cut off.
           */}
-          <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-20 overflow-hidden">
+          <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
             <img
               src="/img/dev_pic.png"
               alt="Dev Mistry"

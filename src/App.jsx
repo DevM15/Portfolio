@@ -5,7 +5,7 @@ import SpatialCanvasBackground from './components/SpatialCanvasBackground';
 import VantaTopologyBackground from './components/VantaTopologyBackground';
 import ThemeToggle from './components/ThemeToggle';
 import { useTransitionTimeline, TRANSITION_PHASES } from './utils/useTransitionTimeline';
-import HomeSection from './sections/HomeSection';
+import HorizontalScrollExhibition from './components/HorizontalScrollExhibition';
 import AboutSection from './sections/AboutSection';
 import InternshipSection from './sections/InternshipSection';
 import ProjectsSection from './sections/ProjectsSection';
@@ -227,7 +227,9 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-screen h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-hidden select-none font-sans transition-colors duration-400">
+    <div className={`relative w-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans transition-colors duration-400 select-none ${
+      currentViewId === 'home' ? 'min-h-screen overflow-x-hidden overflow-y-auto' : 'h-screen overflow-hidden'
+    }`}>
       {/* ==================== 1. VANTA.JS TOPOLOGY ANIMATED BACKGROUND ==================== */}
       <VantaTopologyBackground
         isRevealed={isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM)}
@@ -365,10 +367,14 @@ export default function App() {
       </motion.header>
 
       {/* ==================== HORIZONTAL EXHIBITION STAGE ==================== */}
-      <main className="relative w-full h-[calc(100vh-128px)] mt-[72px] mb-[56px] z-10 overflow-hidden flex items-center justify-center">
+      <main className={`relative w-full z-10 ${
+        currentViewId === 'home'
+          ? 'mt-[72px] mb-[56px] min-h-[calc(100vh-128px)]'
+          : 'h-[calc(100vh-128px)] mt-[72px] mb-[56px] overflow-hidden flex items-center justify-center'
+      }`}>
         <AnimatePresence mode="wait" custom={direction}>
           {currentViewId === 'home' && (
-            /* 01 HOME (Hero + Horizontal Section Cards + Previews) */
+            /* 01 HOME (Hero + Horizontal Scroll Exhibition Rooms) */
             <motion.div
               key="scene-home"
               custom={direction}
@@ -376,9 +382,9 @@ export default function App() {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="flex items-center justify-center w-full h-full"
+              className="w-full"
             >
-              <HomeSection
+              <HorizontalScrollExhibition
                 onOpenSection={(secId) => navigateToView(secId)}
                 onNavigateToProjects={() => navigateToView('projects')}
                 onNavigateToContact={() => navigateToView('contact')}
