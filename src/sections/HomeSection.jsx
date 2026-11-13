@@ -138,17 +138,6 @@ export default function HomeSection({
       {/* ==================== 2. EDITORIAL HERO EXHIBITION STAGE ==================== */}
       <div className="relative w-full max-w-[1420px] h-full flex flex-col justify-center items-center py-4">
 
-        {/* Ambient Subtle Geometric Horizon Guides */}
-        <div
-          className={`absolute inset-x-0 top-1/2 -translate-y-1/2 h-[480px] pointer-events-none transition-opacity duration-1000 ${
-            isBgTransformed ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <div className="absolute left-0 right-0 top-0 h-px bg-[var(--border-subtle)]" />
-          <div className="absolute left-0 right-0 bottom-0 h-px bg-[var(--border-subtle)]" />
-          <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-[var(--border-subtle)]/50 border-dashed" />
-        </div>
-
         {/* --- MAIN HERO ROW: 3-ZONE BALANCED EDITORIAL COMPOSITION --- */}
         <div className="relative z-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
 

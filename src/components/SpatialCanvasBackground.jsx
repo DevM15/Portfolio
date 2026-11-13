@@ -140,13 +140,16 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       ctx.lineWidth = 0.75;
       ctx.beginPath();
 
-      // Top and Bottom Structural Margins
-      const topMargin = 88;
-      const bottomMargin = height - 76;
-      ctx.moveTo(32, topMargin);
-      ctx.lineTo(width - 32, topMargin);
-      ctx.moveTo(32, bottomMargin);
-      ctx.lineTo(width - 32, bottomMargin);
+      // Top and Bottom Structural Margins (drawn only in standalone canvas mode)
+      const topMargin = 80;
+      const bottomMargin = height - 64;
+
+      if (!hasVanta) {
+        ctx.moveTo(32, topMargin);
+        ctx.lineTo(width - 32, topMargin);
+        ctx.moveTo(32, bottomMargin);
+        ctx.lineTo(width - 32, bottomMargin);
+      }
 
       // Golden ratio architectural vertical accents
       const leftColX = Math.round(width * 0.08 + mx * 4);
