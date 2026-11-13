@@ -1,68 +1,51 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DMIdentityCard from '../components/entrance/DMIdentityCard';
 import TechText from '../components/TechText/TechText';
+import FlexCarousel from '../components/FlexCarousel/FlexCarousel';
 
 /**
  * Curated Exhibition Projects:
  * Replaces the 12 floating cards with an art-directed editorial curation.
- * Features 2 primary prominent exhibition pieces (Left & Right),
- * 2 subtle ambient pieces in the backdrop,
- * and quick-switch tabs to explore all 6 key disciplines.
+ * Features WebGL FlexCarousel from React Bits with liquid glass refraction.
  */
-const CURATED_PROJECTS = [
+const CAROUSEL_ITEMS = [
   {
-    id: '01',
-    num: '01 / AI IDE',
-    title: 'Kart Editor Web IDE',
-    role: 'Lead Architect',
-    type: 'In-Browser WebContainers & Local LLM',
-    year: '2026',
-    category: 'AGENTIC AI',
-    tech: ['NEXT.JS', 'WEBCONTAINERS', 'MONACO'],
-    image: 'https://raw.githubusercontent.com/devm15/Kart/main/public/image.png',
-    sectionId: 'projects',
-    position: 'left',
+    src: 'https://raw.githubusercontent.com/devm15/Kart/main/public/image.png',
+    alt: 'Kart Editor Web IDE',
+    title: 'Kart Editor',
+    subtitle: '01 / AI WEB IDE'
   },
   {
-    id: '02',
-    num: '02 / CRYPTO',
-    title: 'CoinPulse Analytics',
-    role: 'Full Stack Engineer',
-    type: 'Interactive Candlestick Analytics & Metrics',
-    year: '2026',
-    category: 'WEB ARCHITECTURE',
-    tech: ['NEXT.JS', 'TYPESCRIPT', 'LIGHTWEIGHT-CHARTS'],
-    image: 'https://raw.githubusercontent.com/devm15/coinpulse/main/public/readme/readme-hero.webp',
-    sectionId: 'projects',
-    position: 'right',
+    src: 'https://raw.githubusercontent.com/devm15/coinpulse/main/public/readme/readme-hero.webp',
+    alt: 'CoinPulse Analytics Platform',
+    title: 'CoinPulse',
+    subtitle: '02 / CRYPTO ANALYTICS'
   },
   {
-    id: '03',
-    num: '03 / 3D TRAVEL',
-    title: 'Travel Planner Dynamic',
-    role: 'Creative Developer',
-    type: '3D WebGL Globe & Route Engine',
-    year: '2026',
-    category: 'WEB ARCHITECTURE',
-    tech: ['REACT-GLOBE.GL', 'PRISMA', 'GOOGLE MAPS'],
-    image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1000&q=80',
-    sectionId: 'projects',
-    position: 'bg-left',
+    src: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1000&q=80',
+    alt: 'Travel Planner Dynamic Route Engine',
+    title: 'Travel Planner',
+    subtitle: '03 / 3D WEBGL GLOBE'
   },
   {
-    id: '04',
-    num: '04 / AI NEWS',
-    title: 'NewsMan Engine',
-    role: 'Systems Engineer',
-    type: 'Google Gemini AI Aggregator & Scraper',
-    year: '2025',
-    category: 'AGENTIC AI',
-    tech: ['GEMINI AI', 'OPENAI', 'EXPRESS'],
-    image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1000&q=80',
-    sectionId: 'projects',
-    position: 'bg-right',
+    src: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1000&q=80',
+    alt: 'NewsMan Engine AI News Aggregator',
+    title: 'NewsMan AI',
+    subtitle: '04 / GEMINI AI SCRAPER'
   },
+  {
+    src: 'https://images.unsplash.com/photo-1544396821-4dd40b938ad3?auto=format&fit=crop&w=1000&q=80',
+    alt: 'Sew Secure PDF Sharing Runtime',
+    title: 'Sew Cloud',
+    subtitle: '05 / CLOUD DOCUMENT SYSTEM'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
+    alt: 'Autonomous Swarm Fabric',
+    title: 'Swarm Fabric',
+    subtitle: '06 / AGENTIC NETWORK'
+  }
 ];
 
 export default function HomeSection({
@@ -70,7 +53,6 @@ export default function HomeSection({
   onNavigateToProjects,
   phaseIndex = 10,
 }) {
-  const [selectedExhibitionIndex, setSelectedExhibitionIndex] = useState(0);
   const containerRef = useRef(null);
 
   // Discrete Phase Indicators matching useTransitionTimeline
@@ -84,12 +66,6 @@ export default function HomeSection({
   const isHeroRevealed = phaseIndex >= 7;       // HERO_REVEAL (Intro text glides in)
   const isProjectsRevealed = phaseIndex >= 8;   // PROJECT_REVEAL (Editorial projects reveal)
   const isFullySettled = phaseIndex >= 9;       // DECORATION_SETTLEMENT & COMPLETED
-
-  // Featured pair based on selected index
-  const leftProject = CURATED_PROJECTS[selectedExhibitionIndex % CURATED_PROJECTS.length];
-  const rightProject = CURATED_PROJECTS[(selectedExhibitionIndex + 1) % CURATED_PROJECTS.length];
-  const bgLeftProject = CURATED_PROJECTS[(selectedExhibitionIndex + 2) % CURATED_PROJECTS.length];
-  const bgRightProject = CURATED_PROJECTS[(selectedExhibitionIndex + 3) % CURATED_PROJECTS.length];
 
   return (
     <div
@@ -152,9 +128,8 @@ export default function HomeSection({
               filter: isHeroRevealed ? 'blur(0px)' : 'blur(4px)',
             }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className={`flex flex-col justify-center space-y-6 lg:col-span-4 order-2 lg:order-1 ${
-              isHeroRevealed ? 'pointer-events-auto' : 'pointer-events-none'
-            }`}
+            className={`flex flex-col justify-center space-y-6 lg:col-span-4 order-2 lg:order-1 ${isHeroRevealed ? 'pointer-events-auto' : 'pointer-events-none'
+              }`}
           >
             {/* Fine Header Meta */}
             <div className="flex items-center gap-3">
@@ -244,9 +219,8 @@ export default function HomeSection({
 
               {/* Background ambient framing glow */}
               <div
-                className={`absolute -inset-4 bg-gradient-to-b from-[var(--border-subtle)]/40 via-transparent to-[var(--border-subtle)]/20 rounded-lg pointer-events-none transition-opacity duration-700 ${
-                  isCardFlipped ? 'opacity-100' : 'opacity-0'
-                }`}
+                className={`absolute -inset-4 bg-gradient-to-b from-[var(--border-subtle)]/40 via-transparent to-[var(--border-subtle)]/20 rounded-lg pointer-events-none transition-opacity duration-700 ${isCardFlipped ? 'opacity-100' : 'opacity-0'
+                  }`}
               />
 
               {/* The Central DM Identity Card (Transitions smoothly in 3D into the hero portrait) */}
@@ -289,8 +263,8 @@ export default function HomeSection({
             </div>
           </div>
 
-          {/* ==================== ZONE 3: SURROUNDING CURATED PROJECT EXHIBITION (COL 9-12) ==================== */}
-          <div className="lg:col-span-4 flex flex-col justify-center space-y-4 order-3">
+          {/* ==================== ZONE 3: WEBGL FLEX CAROUSEL EXHIBITION (COL 9-12) ==================== */}
+          <div className="lg:col-span-4 flex flex-col justify-center space-y-3 order-3">
 
             {/* Section Header for the Exhibition */}
             <motion.div
@@ -307,23 +281,12 @@ export default function HomeSection({
                 <span>•</span>
                 <span>WORKS</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                {CURATED_PROJECTS.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedExhibitionIndex(i)}
-                    className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
-                      i === selectedExhibitionIndex % CURATED_PROJECTS.length
-                        ? 'bg-[var(--accent)] scale-125'
-                        : 'bg-[var(--border-primary)] hover:bg-[var(--text-secondary)]'
-                    }`}
-                    title={`View Exhibition Piece 0${i + 1}`}
-                  />
-                ))}
-              </div>
+              <span className="text-[9px] text-[var(--text-muted)]">
+                DRAG / WHEEL TO ROTATE
+              </span>
             </motion.div>
 
-            {/* Curated Piece 01 (Prominent Right Card) */}
+            {/* WebGL Flex Carousel Stage */}
             <motion.div
               initial={{ opacity: 0, x: 36, scale: 0.95 }}
               animate={{
@@ -332,104 +295,26 @@ export default function HomeSection({
                 scale: isProjectsRevealed ? 1 : 0.95,
               }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              onClick={() => onOpenSection && onOpenSection(rightProject.sectionId)}
-              data-cursor="project"
-              className="group relative bg-[var(--bg-surface)] border border-[var(--border-primary)] hover:border-[var(--accent)] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
+              className="relative w-full h-[360px] sm:h-[390px] md:h-[410px] lg:h-[420px] rounded-[3px] border border-[var(--border-primary)] bg-[var(--bg-surface)] overflow-hidden shadow-sm hover:border-[var(--accent)] transition-all duration-300"
             >
-              <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[var(--border-subtle)] bg-[var(--bg-primary)]">
-                <img
-                  src={rightProject.image}
-                  alt={rightProject.title}
-                  className="w-full h-full object-cover contrast-[1.03] transition-transform duration-500 group-hover:scale-108"
-                />
-                <div className="absolute top-1 left-1 font-mono text-[7px] text-[var(--text-primary)] bg-[var(--bg-primary)] px-1 py-0.2 rounded-[1px] border border-[var(--border-subtle)]">
-                  {rightProject.category}
-                </div>
-              </div>
-
-              <div className="flex flex-col justify-between flex-grow min-w-0 py-0.5">
-                <div>
-                  <div className="flex items-center justify-between font-mono text-[9px] text-[var(--text-secondary)]">
-                    <span>{rightProject.num}</span>
-                    <span>{rightProject.year}</span>
-                  </div>
-                  <h3 className="font-display font-bold text-sm sm:text-base text-[var(--text-primary)] group-hover:text-[var(--accent)] tracking-tight leading-snug truncate mt-1 transition-colors">
-                    {rightProject.title}
-                  </h3>
-                  <p className="font-sans text-[11px] text-[var(--text-secondary)] line-clamp-1 mt-0.5">
-                    {rightProject.type}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between pt-2 mt-2 border-t border-[var(--border-subtle)] font-mono text-[9px]">
-                  <div className="flex gap-1.5 text-[var(--text-secondary)] text-[8px]">
-                    {rightProject.tech.slice(0, 2).map((t) => (
-                      <span key={t} className="px-1.5 py-0.5 bg-[var(--bg-primary)] rounded-[1px] border border-[var(--border-subtle)]">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <span className="text-[var(--accent)] font-semibold group-hover:translate-x-1 transition-transform duration-200">
-                    OPEN →
-                  </span>
-                </div>
-              </div>
+              <FlexCarousel
+                items={CAROUSEL_ITEMS}
+                preset="liquid"
+                intro="rise"
+                cardHeight={0.52}
+                gap={14}
+                radius={4}
+                squeeze={0.2}
+                focusOnClick={true}
+                captions={true}
+                autoplay={false}
+                onSelect={() => {
+                  if (onNavigateToProjects) onNavigateToProjects();
+                }}
+              />
             </motion.div>
 
-            {/* Curated Piece 02 (Secondary Curated Piece) */}
-            <motion.div
-              initial={{ opacity: 0, x: 36, scale: 0.95 }}
-              animate={{
-                opacity: isProjectsRevealed ? 1 : 0,
-                x: isProjectsRevealed ? 0 : 36,
-                scale: isProjectsRevealed ? 1 : 0.95,
-              }}
-              transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              onClick={() => onOpenSection && onOpenSection(leftProject.sectionId)}
-              data-cursor="project"
-              className="group relative bg-[var(--bg-surface)] border border-[var(--border-primary)] hover:border-[var(--accent)] rounded-[2px] p-4 shadow-[0_10px_28px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.14)] transition-all duration-300 cursor-pointer overflow-hidden flex gap-4 items-center"
-            >
-              <div className="relative w-28 h-20 sm:w-32 sm:h-22 rounded-[1px] overflow-hidden flex-shrink-0 border border-[var(--border-subtle)] bg-[var(--bg-primary)]">
-                <img
-                  src={leftProject.image}
-                  alt={leftProject.title}
-                  className="w-full h-full object-cover contrast-[1.03] transition-transform duration-500 group-hover:scale-108"
-                />
-                <div className="absolute top-1 left-1 font-mono text-[7px] text-[var(--text-primary)] bg-[var(--bg-primary)] px-1 py-0.2 rounded-[1px] border border-[var(--border-subtle)]">
-                  {leftProject.category}
-                </div>
-              </div>
-
-              <div className="flex flex-col justify-between flex-grow min-w-0 py-0.5">
-                <div>
-                  <div className="flex items-center justify-between font-mono text-[9px] text-[var(--text-secondary)]">
-                    <span>{leftProject.num}</span>
-                    <span>{leftProject.year}</span>
-                  </div>
-                  <h3 className="font-display font-bold text-sm sm:text-base text-[var(--text-primary)] group-hover:text-[var(--accent)] tracking-tight leading-snug truncate mt-1 transition-colors">
-                    {leftProject.title}
-                  </h3>
-                  <p className="font-sans text-[11px] text-[var(--text-secondary)] line-clamp-1 mt-0.5">
-                    {leftProject.type}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between pt-2 mt-2 border-t border-[var(--border-subtle)] font-mono text-[9px]">
-                  <div className="flex gap-1.5 text-[var(--text-secondary)] text-[8px]">
-                    {leftProject.tech.slice(0, 2).map((t) => (
-                      <span key={t} className="px-1.5 py-0.5 bg-[var(--bg-primary)] rounded-[1px] border border-[var(--border-subtle)]">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <span className="text-[var(--accent)] font-semibold group-hover:translate-x-1 transition-transform duration-200">
-                    OPEN →
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Additional Subtle Ambient Thumbnails */}
+            {/* Quick Navigation Footer */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{
@@ -440,24 +325,16 @@ export default function HomeSection({
               className="flex items-center justify-between p-2.5 bg-[var(--bg-surface)]/70 border border-[var(--border-subtle)] rounded-[2px] font-mono text-[9px] text-[var(--text-secondary)]"
             >
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-secondary)]" />
-                <span className="text-[var(--text-primary)] font-medium">MORE ARCHIVED WORKS:</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+                <span className="text-[var(--text-primary)] font-medium">CLICK CENTER CARD TO INSPECT</span>
               </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => onOpenSection && onOpenSection(bgLeftProject.sectionId)}
-                  className="hover:text-[var(--accent)] transition-colors cursor-pointer"
-                >
-                  {bgLeftProject.title.split(' ')[0]} ↗
-                </button>
-                <span>/</span>
-                <button
-                  onClick={() => onOpenSection && onOpenSection(bgRightProject.sectionId)}
-                  className="hover:text-[var(--accent)] transition-colors cursor-pointer"
-                >
-                  {bgRightProject.title.split(' ')[0]} ↗
-                </button>
-              </div>
+              <button
+                onClick={() => onNavigateToProjects && onNavigateToProjects()}
+                data-cursor="archive"
+                className="hover:text-[var(--accent)] font-semibold transition-colors cursor-pointer"
+              >
+                VIEW ARCHIVE ↗
+              </button>
             </motion.div>
 
           </div>
