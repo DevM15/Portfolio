@@ -105,7 +105,7 @@ export default function HomeSection({
               y: isGreetingPhase ? 0 : -16,
             }}
             exit={{ opacity: 0, y: -20, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            className="absolute top-[calc(50%+130px)] sm:top-[calc(50%+150px)] md:top-[calc(50%+165px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
+            className="absolute top-[calc(50%+90px)] sm:top-[calc(50%+100px)] md:top-[calc(50%+115px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
           >
             <motion.h1
               initial={{ opacity: 0, y: 18 }}
@@ -214,7 +214,7 @@ export default function HomeSection({
 
           {/* ==================== ZONE 2: CENTRAL PROFILE IDENTITY (COL 5-8) ==================== */}
           <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2">
-            <div className="relative w-[250px] sm:w-[280px] md:w-[305px] lg:w-[325px] aspect-[0.68] flex items-center justify-center">
+            <div className="relative w-[260px] sm:w-[285px] md:w-[310px] lg:w-[330px] h-[385px] sm:h-[420px] md:h-[455px] lg:h-[485px] flex items-center justify-center">
 
               {/* Background ambient framing glow */}
               <div
@@ -225,7 +225,6 @@ export default function HomeSection({
 
               {/* The Central DM Identity Card (Transitions smoothly in 3D into the hero portrait) */}
               <motion.div
-                layoutId="dm-central-anchor"
                 data-cursor="profile"
                 animate={{
                   y: isProfileTrans ? 0 : isGreetingExit ? -8 : 0,

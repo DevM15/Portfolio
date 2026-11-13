@@ -75,434 +75,435 @@ export default function DMIdentityCard({
   }, []);
 
   return (
-    <div className="relative flex flex-col items-center">
-      {/* 3D Interactive Card Anchor */}
+    <div
+      ref={cardContainerRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full h-full select-none will-change-transform flex items-center justify-center"
+      style={{
+        width: widthStyle,
+        height: heightStyle,
+        perspective: 1200,
+      }}
+    >
       <div
-        ref={cardContainerRef}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className="relative select-none will-change-transform"
+        className="relative w-full h-full transition-transform duration-700 ease-out transform-gpu"
         style={{
-          width: widthStyle,
-          height: heightStyle,
-          perspective: 1200,
+          transformStyle: 'preserve-3d',
+          transform: `rotateY(${flipDeg}deg) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+          borderRadius: isFramed ? `${borderRadius}px` : '0px',
+          boxShadow: isFramed
+            ? isHovered
+              ? '0 30px 70px -15px rgba(0, 0, 0, 0.28), 0 0 0 1px var(--accent)'
+              : isLifted
+                ? '0 25px 60px -12px rgba(0, 0, 0, 0.22), 0 0 0 1px var(--border-primary)'
+                : '0 14px 36px -10px rgba(0, 0, 0, 0.14), 0 0 0 1px var(--border-primary)'
+            : 'none',
         }}
       >
+        {/* ==================== FRONT FACE: METALLIC DM MONOGRAM ==================== */}
         <div
-          className="relative w-full h-full transition-transform duration-700 ease-out transform-gpu"
+          className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden transition-all duration-500"
           style={{
-            transformStyle: 'preserve-3d',
-            transform: `rotateY(${flipDeg}deg) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+            transform: 'rotateY(0deg) translateZ(1px)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            backgroundColor: isFramed ? 'var(--bg-primary)' : 'transparent',
             borderRadius: isFramed ? `${borderRadius}px` : '0px',
-            boxShadow: isFramed
-              ? isHovered
-                ? '0 30px 70px -15px rgba(0, 0, 0, 0.28), 0 0 0 1px var(--accent)'
-                : isLifted
-                  ? '0 25px 60px -12px rgba(0, 0, 0, 0.22), 0 0 0 1px var(--border-primary)'
-                  : '0 14px 36px -10px rgba(0, 0, 0, 0.14), 0 0 0 1px var(--border-primary)'
-              : 'none',
+            border: isFramed ? '1px solid var(--border-primary)' : '1px solid transparent',
+            display: isFlipped ? 'none' : 'flex',
+            pointerEvents: isFlipped ? 'none' : 'auto',
           }}
         >
-          {/* ==================== FRONT FACE: METALLIC DM MONOGRAM ==================== */}
-          <div
-            className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden transition-all duration-500"
-            style={{
-              transform: 'rotateY(0deg)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              backgroundColor: isFramed ? 'var(--bg-primary)' : 'transparent',
-              borderRadius: isFramed ? `${borderRadius}px` : '0px',
-              border: isFramed ? '1px solid var(--border-primary)' : '1px solid transparent',
-              visibility: flipDeg >= 90 ? 'hidden' : 'visible',
-              pointerEvents: flipDeg >= 90 ? 'none' : 'auto',
-            }}
-          >
-            {isFramed && (
-              <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none opacity-20 mix-blend-multiply bg-subtle-grain" />
-            )}
+          {isFramed && (
+            <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none opacity-20 mix-blend-multiply bg-subtle-grain" />
+          )}
 
-            <div
-              className={`absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-subtle)] pb-2 transition-opacity duration-500 ${
-                isFramed ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <span className="flex items-center gap-1.5 font-semibold text-[var(--text-primary)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-                DEV MISTRY
+          <div
+            className={`absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-subtle)] pb-2 transition-opacity duration-500 ${
+              isFramed ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <span className="flex items-center gap-1.5 font-semibold text-[var(--text-primary)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+              DEV MISTRY
+            </span>
+            <span>EDITION / 2026</span>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.0, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex items-center justify-center px-4 py-2 my-auto select-none"
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            <div className="relative inline-block">
+              <span
+                className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[var(--border-subtle)] select-none blur-[2px]"
+                style={{ transform: 'translate3d(3px, 6px, -10px)' }}
+                aria-hidden="true"
+              >
+                D
               </span>
-              <span>EDITION / 2026</span>
+              <span
+                className="relative block font-display font-black text-7xl sm:text-8xl leading-none tracking-tight select-none"
+                style={{
+                  background:
+                    'linear-gradient(135deg, var(--text-primary) 0%, #353D38 35%, #788477 50%, var(--text-primary) 70%, #151916 100%)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  color: 'transparent',
+                  filter: 'drop-shadow(0 10px 18px rgba(0, 0, 0, 0.2))',
+                }}
+              >
+                D
+              </span>
+            </div>
+
+            <div className="relative inline-block -ml-3 sm:-ml-4">
+              <span
+                className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[var(--border-subtle)] select-none blur-[2px]"
+                style={{ transform: 'translate3d(3px, 6px, -10px)' }}
+                aria-hidden="true"
+              >
+                M
+              </span>
+              <span
+                className="relative block font-display font-black text-7xl sm:text-8xl leading-none tracking-tight select-none"
+                style={{
+                  background:
+                    'linear-gradient(135deg, var(--text-primary) 0%, #4D5750 35%, #8FA48E 50%, var(--text-primary) 70%, #151916 100%)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  color: 'transparent',
+                  filter: 'drop-shadow(0 10px 18px rgba(0, 0, 0, 0.2))',
+                }}
+              >
+                M
+              </span>
             </div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="relative flex items-center justify-center px-4 py-2 my-auto overflow-hidden"
-            >
-              <div className="relative inline-block">
-                <span
-                  className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[#C8C4B7]/40 select-none blur-[2px]"
-                  style={{ transform: 'translate3d(3px, 6px, 0px)' }}
-                  aria-hidden="true"
-                >
-                  D
-                </span>
-                <span
-                  className="relative z-10 font-display font-black text-7xl sm:text-8xl leading-none tracking-tight select-none"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, #1A1E1B 0%, #353D38 35%, #5A665E 50%, #252A27 70%, #151916 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    display: 'inline-block',
-                    filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25))',
-                  }}
-                >
-                  D
-                </span>
-              </div>
+              initial={{ x: '-120%', opacity: 0 }}
+              animate={{ x: '180%', opacity: [0, 0.65, 0.65, 0] }}
+              transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-0 pointer-events-none mix-blend-overlay"
+              style={{
+                background:
+                  'linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.85) 50%, transparent 80%)',
+                transform: 'skewX(-20deg)',
+              }}
+            />
+          </motion.div>
 
-              <div className="relative inline-block -ml-4 sm:-ml-5">
-                <span
-                  className="absolute inset-0 font-display font-black text-7xl sm:text-8xl leading-none text-[#C8C4B7]/40 select-none blur-[2px]"
-                  style={{ transform: 'translate3d(3px, 6px, 0px)' }}
-                  aria-hidden="true"
-                >
-                  M
-                </span>
-                <span
-                  className="relative z-10 font-display font-black text-7xl sm:text-8xl leading-none tracking-tight select-none"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, #2A312D 0%, #4D5750 35%, #788477 50%, #353D38 70%, #1A1E1B 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    display: 'inline-block',
-                    filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25))',
-                  }}
-                >
-                  M
-                </span>
-              </div>
-
-              <motion.div
-                initial={{ x: '-120%', opacity: 0 }}
-                animate={{ x: '180%', opacity: [0, 0.65, 0.65, 0] }}
-                transition={{ duration: 1.2, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute inset-0 pointer-events-none mix-blend-overlay"
-                style={{
-                  background:
-                    'linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.85) 50%, transparent 80%)',
-                  transform: 'skewX(-20deg)',
-                }}
-              />
-            </motion.div>
-
-            <div
-              className={`absolute bottom-3 left-4 right-4 flex items-center justify-between text-[7px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-subtle)] pt-2 transition-opacity duration-500 ${
-                isFramed ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <span>IDENTITY FOLIO</span>
-              <span className="text-[var(--accent)] font-semibold">01 / PROFILE</span>
-            </div>
-          </div>
-
-          {/* ==================== BACK FACE: MULTI-ITERATION DESIGN ==================== */}
           <div
-            className="absolute inset-0 overflow-hidden bg-[var(--bg-surface)] text-[var(--text-primary)] transition-colors duration-400"
-            style={{
-              transform: 'rotateY(180deg)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              borderRadius: `${borderRadius}px`,
-              border: isHovered ? '1px solid var(--accent)' : '1px solid var(--border-primary)',
-              visibility: flipDeg >= 90 ? 'visible' : 'hidden',
-            }}
+            className={`absolute bottom-3 left-4 right-4 flex items-center justify-between text-[7px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-subtle)] pt-2 transition-opacity duration-500 ${
+              isFramed ? 'opacity-100' : 'opacity-0'
+            }`}
           >
-            <AnimatePresence mode="wait">
-              {/* -------------------- ITERATION 1: EDITORIAL EXHIBITION -------------------- */}
-              {iteration === 'editorial' && (
-                <motion.div
-                  key="iter-editorial"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative w-full h-full flex flex-col justify-between"
-                >
-                  {/* Subtle Background Horizon & Soft Gradient */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background: 'radial-gradient(ellipse at 50% 40%, var(--bg-surface-elevated) 0%, var(--bg-surface) 80%)',
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-subtle-grain opacity-[var(--grain-opacity)] mix-blend-multiply" />
-                  </div>
+            <span>IDENTITY FOLIO</span>
+            <span className="text-[var(--accent)] font-semibold">01 / PROFILE</span>
+          </div>
+        </div>
 
-                  {/* Top Minimal Editorial Masthead */}
-                  <div className="relative z-10 px-4 pt-3 pb-2 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/75 backdrop-blur-xs font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)]">
-                    <div className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-                      <span>FOLIO // 01</span>
-                    </div>
-                    <span>DEV MISTRY</span>
-                    <span className="text-[var(--accent)] font-semibold">MUMBAI · 2026</span>
-                  </div>
-
-                  {/* Centered Transparent Cutout Portrait */}
-                  <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
-                    <img
-                      src="/img/dev_pic.png"
-                      alt="Dev Mistry"
-                      className="h-[84%] w-auto max-w-[84%] object-contain object-bottom transition-all duration-500 ease-out"
-                      style={{
-                        filter: isHovered
-                          ? 'drop-shadow(0 16px 26px rgba(0,0,0,0.28))'
-                          : 'drop-shadow(0 10px 18px rgba(0,0,0,0.18))',
-                      }}
-                    />
-                  </div>
-
-                  {/* Clean Bottom Editorial Metadata Block */}
-                  <div className="relative z-30 p-3 pt-6 flex items-end justify-between bg-gradient-to-t from-[var(--bg-surface)] via-[var(--bg-surface)]/90 to-transparent">
-                    <div className="flex flex-col font-mono tracking-wider">
-                      <span className="text-[10px] font-display font-black text-[var(--text-primary)] uppercase leading-none">
-                        DEV MISTRY
-                      </span>
-                      <span className="text-[7px] text-[var(--text-secondary)] uppercase mt-0.5">
-                        FULL STACK ARCHITECT
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onOpenSection) onOpenSection('about');
-                      }}
-                      data-cursor="button"
-                      className="px-2.5 py-1 rounded-[1px] border border-[var(--border-primary)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent)] hover:text-[var(--accent)] text-[7.5px] font-mono tracking-wider uppercase transition-all shadow-xs cursor-pointer flex items-center gap-1"
-                    >
-                      <span>PROFILE SPEC</span>
-                      <span className="text-[var(--accent)] font-bold">→</span>
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* -------------------- ITERATION 2: ARCHITECTURAL BLUEPRINT -------------------- */}
-              {iteration === 'architectural' && (
-                <motion.div
-                  key="iter-architectural"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative w-full h-full flex flex-col justify-between"
-                >
-                  {/* Technical Blueprint Grid */}
+        {/* ==================== BACK FACE: MULTI-ITERATION DESIGN ==================== */}
+        <div
+          className="absolute inset-0 overflow-hidden bg-[var(--bg-surface)] text-[var(--text-primary)] transition-colors duration-400"
+          style={{
+            transform: 'rotateY(180deg) translateZ(1px)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            borderRadius: `${borderRadius}px`,
+            border: isHovered ? '1px solid var(--accent)' : '1px solid var(--border-primary)',
+            display: isFlipped ? 'block' : 'none',
+            pointerEvents: isFlipped ? 'auto' : 'none',
+          }}
+        >
+          <AnimatePresence mode="wait">
+            {/* -------------------- ITERATION 1: EDITORIAL EXHIBITION -------------------- */}
+            {iteration === 'editorial' && (
+              <motion.div
+                key="iter-editorial"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="relative w-full h-full flex flex-col justify-between"
+              >
+                {/* Subtle Background Horizon & Soft Gradient */}
+                <div className="absolute inset-0 pointer-events-none">
                   <div
-                    className="absolute inset-0 opacity-[0.4] pointer-events-none"
+                    className="absolute inset-0"
                     style={{
-                      backgroundImage:
-                        'linear-gradient(to right, var(--border-subtle) 1px, transparent 1px), linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px)',
-                      backgroundSize: '20px 20px',
+                      background: 'radial-gradient(ellipse at 50% 40%, var(--bg-surface-elevated) 0%, var(--bg-surface) 80%)',
                     }}
                   />
-                  {/* Corner Precision Markers */}
-                  <div className="absolute top-2 left-2 w-2.5 h-2.5 border-t border-l border-[var(--border-primary)] pointer-events-none" />
-                  <div className="absolute top-2 right-2 w-2.5 h-2.5 border-t border-r border-[var(--border-primary)] pointer-events-none" />
-                  <div className="absolute bottom-2 left-2 w-2.5 h-2.5 border-b border-l border-[var(--border-primary)] pointer-events-none" />
-                  <div className="absolute bottom-2 right-2 w-2.5 h-2.5 border-b border-r border-[var(--border-primary)] pointer-events-none" />
+                  <div className="absolute inset-0 bg-subtle-grain opacity-[var(--grain-opacity)] mix-blend-multiply" />
+                </div>
 
-                  {/* Top Technical Metadata */}
-                  <div className="relative z-10 px-3.5 pt-2.5 pb-2 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/80 backdrop-blur-xs font-mono text-[7.5px] uppercase tracking-wider text-[var(--text-secondary)]">
-                    <span className="text-[var(--text-primary)] font-bold">SPEC: 01 // ID</span>
-                    <span className="text-[var(--accent)] flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-                      CALIBRATED
+                {/* Top Minimal Editorial Masthead */}
+                <div className="relative z-10 px-4 pt-3 pb-2 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/75 backdrop-blur-xs font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)]">
+                  <div className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+                    <span>FOLIO // 01</span>
+                  </div>
+                  <span>DEV MISTRY</span>
+                  <span className="text-[var(--accent)] font-semibold">MUMBAI · 2026</span>
+                </div>
+
+                {/* Centered Transparent Cutout Portrait */}
+                <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
+                  <img
+                    src="/img/dev_pic.png"
+                    alt="Dev Mistry"
+                    className="h-[84%] w-auto max-w-[84%] object-contain object-bottom transition-all duration-500 ease-out"
+                    style={{
+                      filter: isHovered
+                        ? 'drop-shadow(0 16px 26px rgba(0,0,0,0.28))'
+                        : 'drop-shadow(0 10px 18px rgba(0,0,0,0.18))',
+                    }}
+                  />
+                </div>
+
+                {/* Clean Bottom Editorial Metadata Block */}
+                <div className="relative z-30 p-3 pt-6 flex items-end justify-between bg-gradient-to-t from-[var(--bg-surface)] via-[var(--bg-surface)]/90 to-transparent">
+                  <div className="flex flex-col font-mono tracking-wider">
+                    <span className="text-[10px] font-display font-black text-[var(--text-primary)] uppercase leading-none">
+                      DEV MISTRY
                     </span>
-                    <span>19°N · 72°E</span>
-                  </div>
-
-                  {/* Left Measurement Ticks */}
-                  <div className="absolute left-2.5 top-12 bottom-14 flex flex-col justify-between items-start z-10 pointer-events-none font-mono text-[6px] text-[var(--text-muted)]">
-                    <span>+100</span>
-                    <span>+050</span>
-                    <span className="text-[var(--accent)]">DATUM</span>
-                    <span>-050</span>
-                  </div>
-
-                  {/* Right Reticle */}
-                  <div className="absolute right-3 top-14 w-6 h-6 rounded-full border border-dashed border-[var(--border-primary)] flex items-center justify-center z-10 pointer-events-none">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-                  </div>
-
-                  {/* Centered Transparent Cutout Portrait */}
-                  <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
-                    <img
-                      src="/img/dev_pic.png"
-                      alt="Dev Mistry"
-                      className="h-[84%] w-auto max-w-[84%] object-contain object-bottom"
-                      style={{
-                        filter: 'drop-shadow(0 12px 20px rgba(0,0,0,0.22))',
-                      }}
-                    />
-                  </div>
-
-                  {/* Bottom Blueprint Spec Banner */}
-                  <div className="relative z-30 p-3 pt-5 flex items-end justify-between bg-gradient-to-t from-[var(--bg-surface)] via-[var(--bg-surface)]/90 to-transparent">
-                    <div className="font-mono text-[7px] text-[var(--text-secondary)] uppercase">
-                      <div className="text-[var(--text-primary)] font-bold text-[8.5px]">DEV MISTRY</div>
-                      <div>FIG 01 · CORE ARCHITECTURE</div>
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onOpenSection) onOpenSection('about');
-                      }}
-                      data-cursor="button"
-                      className="px-2 py-0.5 rounded-[1px] border border-[var(--border-primary)] hover:border-[var(--accent)] text-[var(--accent)] font-mono text-[7px] uppercase cursor-pointer"
-                    >
-                      SPECS →
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* -------------------- ITERATION 3: CONTEMPORARY ID PASS / STUDIO BADGE -------------------- */}
-              {iteration === 'pass' && (
-                <motion.div
-                  key="iter-pass"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative w-full h-full flex flex-col justify-between"
-                >
-                  {/* Top Lanyard Slot Graphic */}
-                  <div className="absolute top-2 inset-x-0 flex justify-center z-20 pointer-events-none">
-                    <div className="w-12 h-2 rounded-full bg-[var(--border-primary)] border border-white/20 shadow-inner flex items-center justify-center">
-                      <div className="w-8 h-0.5 rounded-full bg-black/40" />
-                    </div>
-                  </div>
-
-                  {/* Top Header with Pass Chip & Status */}
-                  <div className="relative z-10 px-3.5 pt-5 pb-2 flex items-center justify-between border-b border-[var(--border-subtle)] font-mono text-[7px] uppercase tracking-wider text-[var(--text-secondary)]">
-                    <div className="flex items-center gap-1.5">
-                      {/* Gold Sim Microchip Emblem */}
-                      <div className="w-4 h-3 rounded-[1px] bg-amber-400/80 border border-amber-600/60 shadow-2xs grid grid-cols-2 gap-0.5 p-0.5">
-                        <div className="border-r border-amber-700/50" />
-                        <div className="border-l border-amber-700/50" />
-                      </div>
-                      <span className="font-bold text-[var(--text-primary)] text-[8px]">DM LABS PASS</span>
-                    </div>
-                    <span className="px-1.5 py-0.5 rounded-[1px] bg-emerald-500/15 text-emerald-600 font-bold border border-emerald-500/30">
-                      ACCESS: GRANTED
+                    <span className="text-[7px] text-[var(--text-secondary)] uppercase mt-0.5">
+                      FULL STACK ARCHITECT
                     </span>
                   </div>
 
-                  {/* Centered Transparent Cutout Portrait */}
-                  <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
-                    <img
-                      src="/img/dev_pic.png"
-                      alt="Dev Mistry"
-                      className="h-[82%] w-auto max-w-[82%] object-contain object-bottom"
-                      style={{
-                        filter: 'drop-shadow(0 14px 22px rgba(0,0,0,0.24))',
-                      }}
-                    />
-                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onOpenSection) onOpenSection('about');
+                    }}
+                    data-cursor="button"
+                    className="px-2.5 py-1 rounded-[1px] border border-[var(--border-primary)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent)] hover:text-[var(--accent)] text-[7.5px] font-mono tracking-wider uppercase transition-all shadow-xs cursor-pointer flex items-center gap-1"
+                  >
+                    <span>PROFILE SPEC</span>
+                    <span className="text-[var(--accent)] font-bold">→</span>
+                  </button>
+                </div>
+              </motion.div>
+            )}
 
-                  {/* Bottom Pass Barcode & Identity */}
-                  <div className="relative z-30 p-3 pt-5 flex items-end justify-between bg-gradient-to-t from-[var(--bg-surface)] via-[var(--bg-surface)]/90 to-transparent">
-                    <div className="flex flex-col">
-                      <span className="font-display font-black text-xs text-[var(--text-primary)] uppercase">
-                        DEV MISTRY
-                      </span>
-                      {/* Barcode Strip */}
-                      <div className="flex items-center gap-0.5 mt-1 h-3 opacity-70">
-                        {[2, 1, 3, 1, 2, 4, 1, 3, 2, 1, 4, 2, 1, 3, 2].map((w, idx) => (
-                          <div key={idx} className="bg-[var(--text-primary)] h-full" style={{ width: `${w}px` }} />
-                        ))}
-                      </div>
+            {/* -------------------- ITERATION 2: ARCHITECTURAL BLUEPRINT -------------------- */}
+            {iteration === 'architectural' && (
+              <motion.div
+                key="iter-architectural"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="relative w-full h-full flex flex-col justify-between"
+              >
+                {/* Technical Blueprint Grid */}
+                <div
+                  className="absolute inset-0 opacity-[0.4] pointer-events-none"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(to right, var(--border-subtle) 1px, transparent 1px), linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px)',
+                    backgroundSize: '20px 20px',
+                  }}
+                />
+                {/* Corner Precision Markers */}
+                <div className="absolute top-2 left-2 w-2.5 h-2.5 border-t border-l border-[var(--border-primary)] pointer-events-none" />
+                <div className="absolute top-2 right-2 w-2.5 h-2.5 border-t border-r border-[var(--border-primary)] pointer-events-none" />
+                <div className="absolute bottom-2 left-2 w-2.5 h-2.5 border-b border-l border-[var(--border-primary)] pointer-events-none" />
+                <div className="absolute bottom-2 right-2 w-2.5 h-2.5 border-b border-r border-[var(--border-primary)] pointer-events-none" />
+
+                {/* Top Technical Metadata */}
+                <div className="relative z-10 px-3.5 pt-2.5 pb-2 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/80 backdrop-blur-xs font-mono text-[7.5px] uppercase tracking-wider text-[var(--text-secondary)]">
+                  <span className="text-[var(--text-primary)] font-bold">SPEC: 01 // ID</span>
+                  <span className="text-[var(--accent)] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+                    CALIBRATED
+                  </span>
+                  <span>19°N · 72°E</span>
+                </div>
+
+                {/* Left Measurement Ticks */}
+                <div className="absolute left-2.5 top-12 bottom-14 flex flex-col justify-between items-start z-10 pointer-events-none font-mono text-[6px] text-[var(--text-muted)]">
+                  <span>+100</span>
+                  <span>+050</span>
+                  <span className="text-[var(--accent)]">DATUM</span>
+                  <span>-050</span>
+                </div>
+
+                {/* Right Reticle */}
+                <div className="absolute right-3 top-14 w-6 h-6 rounded-full border border-dashed border-[var(--border-primary)] flex items-center justify-center z-10 pointer-events-none">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+                </div>
+
+                {/* Centered Transparent Cutout Portrait */}
+                <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
+                  <img
+                    src="/img/dev_pic.png"
+                    alt="Dev Mistry"
+                    className="h-[84%] w-auto max-w-[84%] object-contain object-bottom"
+                    style={{
+                      filter: 'drop-shadow(0 12px 20px rgba(0,0,0,0.22))',
+                    }}
+                  />
+                </div>
+
+                {/* Bottom Blueprint Spec Banner */}
+                <div className="relative z-30 p-3 pt-5 flex items-end justify-between bg-gradient-to-t from-[var(--bg-surface)] via-[var(--bg-surface)]/90 to-transparent">
+                  <div className="font-mono text-[7px] text-[var(--text-secondary)] uppercase">
+                    <div className="text-[var(--text-primary)] font-bold text-[8.5px]">DEV MISTRY</div>
+                    <div>FIG 01 · CORE ARCHITECTURE</div>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onOpenSection) onOpenSection('about');
+                    }}
+                    data-cursor="button"
+                    className="px-2 py-0.5 rounded-[1px] border border-[var(--border-primary)] hover:border-[var(--accent)] text-[var(--accent)] font-mono text-[7px] uppercase cursor-pointer"
+                  >
+                    SPECS →
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* -------------------- ITERATION 3: CONTEMPORARY ID PASS / STUDIO BADGE -------------------- */}
+            {iteration === 'pass' && (
+              <motion.div
+                key="iter-pass"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="relative w-full h-full flex flex-col justify-between"
+              >
+                {/* Top Lanyard Slot Graphic */}
+                <div className="absolute top-2 inset-x-0 flex justify-center z-20 pointer-events-none">
+                  <div className="w-12 h-2 rounded-full bg-[var(--border-primary)] border border-white/20 shadow-inner flex items-center justify-center">
+                    <div className="w-8 h-0.5 rounded-full bg-black/40" />
+                  </div>
+                </div>
+
+                {/* Top Header with Pass Chip & Status */}
+                <div className="relative z-10 px-3.5 pt-5 pb-2 flex items-center justify-between border-b border-[var(--border-subtle)] font-mono text-[7px] uppercase tracking-wider text-[var(--text-secondary)]">
+                  <div className="flex items-center gap-1.5">
+                    {/* Gold Sim Microchip Emblem */}
+                    <div className="w-4 h-3 rounded-[1px] bg-amber-400/80 border border-amber-600/60 shadow-2xs grid grid-cols-2 gap-0.5 p-0.5">
+                      <div className="border-r border-amber-700/50" />
+                      <div className="border-l border-amber-700/50" />
                     </div>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onOpenSection) onOpenSection('about');
-                      }}
-                      data-cursor="button"
-                      className="px-2.5 py-1 rounded-[2px] bg-[var(--accent)] text-[#F7F6F2] font-mono text-[7.5px] font-bold tracking-wider uppercase shadow-xs cursor-pointer"
-                    >
-                      INSPECT ↗
-                    </button>
+                    <span className="font-bold text-[var(--text-primary)] text-[8px]">DM LABS PASS</span>
                   </div>
-                </motion.div>
-              )}
+                  <span className="px-1.5 py-0.5 rounded-[1px] bg-emerald-500/15 text-emerald-600 font-bold border border-emerald-500/30">
+                    ACCESS: GRANTED
+                  </span>
+                </div>
 
-              {/* -------------------- ITERATION 4: SWISS STUDIO MINIMALIST -------------------- */}
-              {iteration === 'curated' && (
-                <motion.div
-                  key="iter-curated"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative w-full h-full flex flex-col justify-between"
-                >
-                  {/* Swiss Top Monolithic Block */}
-                  <div className="relative z-10 p-3.5 border-b border-[var(--border-primary)] flex items-start justify-between">
-                    <div>
-                      <div className="text-[20px] font-display font-black leading-none text-[var(--text-primary)] uppercase tracking-tight">
-                        DEV.
-                      </div>
-                      <div className="text-[7.5px] font-mono text-[var(--accent)] font-bold tracking-widest uppercase mt-0.5">
-                        MISTRY // 2026
-                      </div>
-                    </div>
-                    <div className="text-right font-mono text-[7px] text-[var(--text-secondary)] uppercase">
-                      <div>DISCIPLINE</div>
-                      <div className="text-[var(--text-primary)] font-bold">SYSTEM ARCH</div>
-                    </div>
-                  </div>
+                {/* Centered Transparent Cutout Portrait */}
+                <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
+                  <img
+                    src="/img/dev_pic.png"
+                    alt="Dev Mistry"
+                    className="h-[82%] w-auto max-w-[82%] object-contain object-bottom"
+                    style={{
+                      filter: 'drop-shadow(0 14px 22px rgba(0,0,0,0.24))',
+                    }}
+                  />
+                </div>
 
-                  {/* Centered Transparent Cutout Portrait */}
-                  <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
-                    <img
-                      src="/img/dev_pic.png"
-                      alt="Dev Mistry"
-                      className="h-[84%] w-auto max-w-[84%] object-contain object-bottom"
-                      style={{
-                        filter: 'drop-shadow(0 14px 24px rgba(0,0,0,0.22))',
-                      }}
-                    />
-                  </div>
-
-                  {/* Swiss Bottom Horizontal Band */}
-                  <div className="relative z-30 p-3 pt-5 flex items-center justify-between border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/95">
-                    <span className="font-mono text-[7px] text-[var(--text-secondary)] uppercase tracking-wider">
-                      MUMBAI · EXP 04 YRS
+                {/* Bottom Pass Barcode & Identity */}
+                <div className="relative z-30 p-3 pt-5 flex items-end justify-between bg-gradient-to-t from-[var(--bg-surface)] via-[var(--bg-surface)]/90 to-transparent">
+                  <div className="flex flex-col">
+                    <span className="font-display font-black text-xs text-[var(--text-primary)] uppercase">
+                      DEV MISTRY
                     </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onOpenSection) onOpenSection('about');
-                      }}
-                      data-cursor="button"
-                      className="px-2 py-1 rounded-[1px] bg-[var(--text-primary)] text-[var(--bg-primary)] font-mono text-[7px] font-bold tracking-wider uppercase hover:bg-[var(--accent)] hover:text-[#F7F6F2] transition-colors cursor-pointer"
-                    >
-                      VIEW ARCHIVE →
-                    </button>
+                    {/* Barcode Strip */}
+                    <div className="flex items-center gap-0.5 mt-1 h-3 opacity-70">
+                      {[2, 1, 3, 1, 2, 4, 1, 3, 2, 1, 4, 2, 1, 3, 2].map((w, idx) => (
+                        <div key={idx} className="bg-[var(--text-primary)] h-full" style={{ width: `${w}px` }} />
+                      ))}
+                    </div>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onOpenSection) onOpenSection('about');
+                    }}
+                    data-cursor="button"
+                    className="px-2.5 py-1 rounded-[2px] bg-[var(--accent)] text-[#F7F6F2] font-mono text-[7.5px] font-bold tracking-wider uppercase shadow-xs cursor-pointer"
+                  >
+                    INSPECT ↗
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* -------------------- ITERATION 4: SWISS STUDIO MINIMALIST -------------------- */}
+            {iteration === 'curated' && (
+              <motion.div
+                key="iter-curated"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="relative w-full h-full flex flex-col justify-between"
+              >
+                {/* Swiss Top Monolithic Block */}
+                <div className="relative z-10 p-3.5 border-b border-[var(--border-primary)] flex items-start justify-between">
+                  <div>
+                    <div className="text-[20px] font-display font-black leading-none text-[var(--text-primary)] uppercase tracking-tight">
+                      DEV.
+                    </div>
+                    <div className="text-[7.5px] font-mono text-[var(--accent)] font-bold tracking-widest uppercase mt-0.5">
+                      MISTRY // 2026
+                    </div>
+                  </div>
+                  <div className="text-right font-mono text-[7px] text-[var(--text-secondary)] uppercase">
+                    <div>DISCIPLINE</div>
+                    <div className="text-[var(--text-primary)] font-bold">SYSTEM ARCH</div>
+                  </div>
+                </div>
+
+                {/* Centered Transparent Cutout Portrait */}
+                <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
+                  <img
+                    src="/img/dev_pic.png"
+                    alt="Dev Mistry"
+                    className="h-[84%] w-auto max-w-[84%] object-contain object-bottom"
+                    style={{
+                      filter: 'drop-shadow(0 14px 24px rgba(0,0,0,0.22))',
+                    }}
+                  />
+                </div>
+
+                {/* Swiss Bottom Horizontal Band */}
+                <div className="relative z-30 p-3 pt-5 flex items-center justify-between border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/95">
+                  <span className="font-mono text-[7px] text-[var(--text-secondary)] uppercase tracking-wider">
+                    MUMBAI · EXP 04 YRS
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onOpenSection) onOpenSection('about');
+                    }}
+                    data-cursor="button"
+                    className="px-2 py-1 rounded-[1px] bg-[var(--text-primary)] text-[var(--bg-primary)] font-mono text-[7px] font-bold tracking-wider uppercase hover:bg-[var(--accent)] hover:text-[#F7F6F2] transition-colors cursor-pointer"
+                  >
+                    VIEW ARCHIVE →
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
@@ -512,12 +513,15 @@ export default function DMIdentityCard({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-3 flex items-center gap-1 p-1 rounded-full bg-[var(--bg-surface)]/90 backdrop-blur-md border border-[var(--border-primary)] shadow-xs z-30"
+          className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-1 p-1 rounded-full bg-[var(--bg-surface)]/90 backdrop-blur-md border border-[var(--border-primary)] shadow-xs z-30 whitespace-nowrap"
         >
           {CARD_ITERATIONS.map((iter) => (
             <button
               key={iter.id}
-              onClick={() => setIteration(iter.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIteration(iter.id);
+              }}
               data-cursor="button"
               className={`px-2 py-0.5 rounded-full font-mono text-[8px] tracking-wider uppercase transition-all cursor-pointer ${
                 iteration === iter.id

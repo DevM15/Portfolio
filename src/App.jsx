@@ -257,10 +257,26 @@ export default function App() {
 
   const navigateToView = useCallback((viewId) => {
     if (viewId === currentViewId) return;
+    window.scrollTo(0, 0);
     setPrevViewId(currentViewId);
     setCurrentViewId(viewId);
     setContactOpen(false);
   }, [currentViewId]);
+
+  // Lock scroll restoration and start at 0, 0
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Ensure scroll is at 0, 0 when transition completes
+  useEffect(() => {
+    if (isCompleted) {
+      window.scrollTo(0, 0);
+    }
+  }, [isCompleted]);
 
   // 3D Tilt for Contact Modal Card
   const [contactTilt, setContactTilt] = useState({ rx: 0, ry: 0 });
@@ -327,8 +343,8 @@ export default function App() {
   };
 
   return (
-    <div className={`relative w-full min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans transition-colors duration-400 select-none ${
-      currentViewId === 'home' && isCompleted ? 'overflow-y-auto overflow-x-hidden' : 'h-screen overflow-hidden'
+    <div className={`relative w-full min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans transition-colors duration-400 select-none overflow-x-hidden ${
+      !isCompleted || currentViewId !== 'home' ? 'h-screen overflow-hidden' : ''
     }`}>
       {/* ==================== 1. VANTA.JS TOPOLOGY ANIMATED BACKGROUND ==================== */}
       <VantaTopologyBackground
@@ -441,8 +457,8 @@ export default function App() {
                     }}
                     transition={{ duration: 0.5, delay: 0.3 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
                     className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${isActive && !contactOpen
-                        ? 'bg-[var(--accent)] text-[#F7F6F2] shadow-xs'
-                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)]'
+                      ? 'bg-[var(--accent)] text-[#F7F6F2] shadow-xs'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)]'
                       }`}
                   >
                     {sec.label}
@@ -467,8 +483,8 @@ export default function App() {
 
       {/* ==================== HORIZONTAL EXHIBITION STAGE ==================== */}
       <main className={`relative w-full z-10 ${currentViewId === 'home'
-          ? 'mt-[72px] mb-[56px] min-h-[calc(100vh-128px)]'
-          : 'h-[calc(100vh-128px)] mt-[72px] mb-[56px] overflow-hidden flex items-center justify-center'
+        ? 'mt-[72px] mb-[56px] min-h-[calc(100vh-128px)]'
+        : 'h-[calc(100vh-128px)] mt-[72px] mb-[56px] overflow-hidden flex items-center justify-center'
         }`}>
         <AnimatePresence mode="wait" custom={direction}>
           {currentViewId === 'home' && (

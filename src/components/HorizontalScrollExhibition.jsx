@@ -44,6 +44,18 @@ export default function HorizontalScrollExhibition({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Enforce top scroll on mount and when completed
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    if (isCompleted) {
+      window.scrollTo(0, 0);
+      setActiveRoomIndex(0);
+    }
+  }, [isCompleted]);
+
   // Framer Motion useScroll hook tracking scrollContainerRef progress
   const { scrollYProgress } = useScroll({
     target: scrollContainerRef,
@@ -68,7 +80,7 @@ export default function HorizontalScrollExhibition({
 
   // Update active room index for HUD indicator
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', (latest) => {
+    const updateRoom = (latest) => {
       if (latest < 0.22) {
         setActiveRoomIndex(0);
       } else if (latest < 0.52) {
@@ -78,7 +90,9 @@ export default function HorizontalScrollExhibition({
       } else {
         setActiveRoomIndex(3);
       }
-    });
+    };
+    updateRoom(scrollYProgress.get());
+    const unsubscribe = scrollYProgress.on('change', updateRoom);
     return () => unsubscribe();
   }, [scrollYProgress]);
 
