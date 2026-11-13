@@ -107,14 +107,14 @@ export default function HomeSection({
               y: isGreetingPhase ? 0 : -16,
             }}
             exit={{ opacity: 0, y: -20, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            className="absolute top-[calc(50%+85px)] sm:top-[calc(50%+95px)] md:top-[calc(50%+110px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
+            className="absolute top-[calc(50%+65px)] sm:top-[calc(50%+72px)] md:top-[calc(50%+80px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
           >
             {/* Luxury Editorial Main Heading Animated via StrokeText with delay after DM logo */}
-            <div className="w-full max-w-xl mx-auto flex items-center justify-center px-2">
+            <div className="flex items-center justify-center w-full max-w-xl px-2 mx-auto">
               <StrokeText
                 text="HELLO, I'M DEV."
                 fontFamily='"Cormorant Garamond", "Bodoni Moda", Georgia, serif'
-                fontSize={58}
+                fontSize={56}
                 fontWeight={600}
                 strokeColor="var(--accent)"
                 fillColor="var(--text-primary)"
@@ -128,7 +128,7 @@ export default function HomeSection({
                 fillMode="wipe"
                 wipeFrom="left"
                 letterSpacing={2}
-                hoverRedraw={true}
+                hoverRedraw={false}
                 shadow={false}
               />
             </div>
@@ -142,7 +142,7 @@ export default function HomeSection({
                 delay: 2.2,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="mt-2.5 sm:mt-3.5 text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.36em] uppercase select-none"
+              className="mt-2 sm:mt-3 text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.36em] uppercase select-none"
             >
               DESIGNING & BUILDING DIGITAL EXPERIENCES.
             </motion.p>
@@ -154,7 +154,7 @@ export default function HomeSection({
       <div className="relative w-full max-w-[1420px] h-full flex flex-col justify-center items-center py-4">
 
         {/* --- MAIN HERO ROW: 3-ZONE BALANCED EDITORIAL COMPOSITION --- */}
-        <div className="relative z-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
+        <div className="relative z-20 grid items-center w-full grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-14">
 
           {/* ==================== ZONE 1: TYPOGRAPHIC IDENTITY & INTRO (COL 1-4) ==================== */}
           <motion.div
@@ -182,31 +182,32 @@ export default function HomeSection({
                 FULL STACK DEVELOPER
               </span>
               <div
-                className="w-full h-[60px] sm:h-[72px] xl:h-[84px] relative -ml-1"
+                className="w-full h-[64px] sm:h-[76px] xl:h-[86px] relative -ml-1 flex items-center"
                 data-cursor="explore"
               >
                 <TechText
                   text="DEV MISTRY"
-                  fontWeight={800}
-                  fontSize={72}
-                  letterSpacing={-0.03}
+                  fontFamily='"Cormorant Garamond", "Bodoni Moda", Georgia, serif'
+                  fontWeight={700}
+                  fontSize={68}
+                  letterSpacing={-0.02}
                   align="left"
                   color="var(--text-primary)"
                   accentColor="var(--accent)"
-                  reveal="letter"
+                  reveal="none"
                   dashLength={4}
                   dashGap={2}
-                  specks={14}
-                  selection={true}
-                  labels={true}
-                  draggable={true}
-                  clickKick={true}
-                  bounce={0.4}
-                  sweep={true}
-                  speed={0.8}
-                  guides={true}
-                  intro="metrics"
-                  introDuration={1.8}
+                  specks={0}
+                  selection={false}
+                  labels={false}
+                  draggable={false}
+                  clickKick={false}
+                  bounce={0}
+                  sweep={false}
+                  speed={0}
+                  guides={false}
+                  intro="none"
+                  introDuration={0}
                 />
               </div>
             </div>
@@ -237,7 +238,7 @@ export default function HomeSection({
                 className="group px-5 py-2.5 bg-[var(--text-primary)] text-[var(--bg-primary)] hover:bg-[var(--accent)] hover:text-[#F7F6F2] font-sans text-xs font-semibold tracking-wider uppercase transition-all duration-300 rounded-[2px] shadow-sm hover:shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <span>ABOUT SPECIFICATION</span>
-                <span className="transition-transform group-hover:translate-x-1 duration-200">→</span>
+                <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
               </button>
 
               <button
@@ -251,7 +252,7 @@ export default function HomeSection({
           </motion.div>
 
           {/* ==================== ZONE 2: CENTRAL PROFILE IDENTITY (COL 5-8) ==================== */}
-          <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2">
+          <div className="flex flex-col items-center justify-center order-1 lg:col-span-4 lg:order-2">
             <div className="relative w-[260px] sm:w-[285px] md:w-[310px] lg:w-[330px] h-[385px] sm:h-[420px] md:h-[455px] lg:h-[485px] flex items-center justify-center">
 
               {/* Background ambient framing glow */}
@@ -271,7 +272,7 @@ export default function HomeSection({
                   duration: 0.9,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="relative w-full h-full cursor-pointer z-30"
+                className="relative z-30 w-full h-full cursor-pointer"
                 onClick={() => {
                   if (isFullySettled && onOpenSection) onOpenSection('about');
                 }}
@@ -301,7 +302,7 @@ export default function HomeSection({
           </div>
 
           {/* ==================== ZONE 3: SURROUNDING CURATED PROJECT EXHIBITION (COL 9-12) ==================== */}
-          <div className="lg:col-span-4 flex flex-col justify-center space-y-4 order-3">
+          <div className="flex flex-col justify-center order-3 space-y-4 lg:col-span-4">
 
             {/* Section Header for the Exhibition */}
             <motion.div

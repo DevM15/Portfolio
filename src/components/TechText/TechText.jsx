@@ -63,10 +63,11 @@ const TechText = ({
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const settingsRef = useRef(null);
+  const prevSettingsRef = useRef('');
   const wakeRef = useRef(() => {});
 
   useEffect(() => {
-    settingsRef.current = {
+    const next = {
       text,
       fontFamily,
       fontWeight,
@@ -94,7 +95,12 @@ const TechText = ({
       introDuration,
       guides
     };
-    wakeRef.current();
+    const key = JSON.stringify(next);
+    settingsRef.current = next;
+    if (key !== prevSettingsRef.current) {
+      prevSettingsRef.current = key;
+      wakeRef.current();
+    }
   });
 
   useEffect(() => {
@@ -222,17 +228,19 @@ const TechText = ({
       const probe = scratchCtx;
       setFont(probe, s, s.fontSize);
       let m = probe.measureText(s.text);
+      const measuredWidth = Math.max(m.actualBoundingBoxLeft + m.actualBoundingBoxRight, m.width || 1);
+      const measuredHeight = Math.max(m.actualBoundingBoxAscent + m.actualBoundingBoxDescent, 1);
       const fit = Math.min(
         1,
-        (width * 0.9) / Math.max(m.actualBoundingBoxLeft + m.actualBoundingBoxRight, 1),
-        (height * 0.66) / Math.max(m.actualBoundingBoxAscent + m.actualBoundingBoxDescent, 1)
+        (width * 0.98) / measuredWidth,
+        (height * 0.88) / measuredHeight
       );
       const size = s.fontSize * fit;
       setFont(probe, s, size);
       m = probe.measureText(s.text);
-      const inkWidth = m.actualBoundingBoxLeft + m.actualBoundingBoxRight;
-      const inkHeight = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
-      const margin = width * 0.05;
+      const inkWidth = Math.max(m.actualBoundingBoxLeft + m.actualBoundingBoxRight, m.width || 1);
+      const inkHeight = Math.max(m.actualBoundingBoxAscent + m.actualBoundingBoxDescent, 1);
+      const margin = s.align === 'left' ? 0 : width * 0.05;
       const start =
         s.align === 'left' ? margin : s.align === 'right' ? width - margin - inkWidth : (width - inkWidth) / 2;
       const x = start + m.actualBoundingBoxLeft;
@@ -508,6 +516,7 @@ const TechText = ({
     };
 
     const drawLines = (s, view, accent, alpha, growth) => {
+      if (!s.guides) return;
       const pad = Math.max(12, view.size * 0.12);
       const x1 = Math.round(view.left - pad);
       const x2 = Math.round(view.right + pad);

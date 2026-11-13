@@ -59,16 +59,6 @@ export default function HorizontalScrollExhibition({
       num: '01',
       title: 'HERO WORKSPACE',
       category: 'IDENTITY & RUNTIME',
-      component: (
-        <HomeSection
-          onOpenSection={onOpenSection}
-          onNavigateToProjects={onNavigateToProjects}
-          onNavigateToContact={onNavigateToContact}
-          transitionPhase={transitionPhase}
-          phaseIndex={phaseIndex}
-          timelineStart={timelineStart}
-        />
-      ),
     },
     {
       id: 'about',
@@ -91,7 +81,7 @@ export default function HorizontalScrollExhibition({
       category: 'CAREER MILESTONES 2022–2026',
       component: <JourneySection onBack={() => goToCard(0)} />,
     },
-  ], [onOpenSection, onNavigateToProjects, onNavigateToContact, transitionPhase, phaseIndex, timelineStart, goToCard]);
+  ], [goToCard]);
 
   // Synchronize active card index with spring output
   useEffect(() => {
@@ -102,10 +92,12 @@ export default function HorizontalScrollExhibition({
     return () => unsub();
   }, [smoothProgress, totalCards]);
 
+  const isInteractive = isCompleted || phaseIndex >= 8;
+
   // Handle Mouse Wheel scrolling (converts vertical wheel delta into horizontal card progress)
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container || !isInteractive) return;
 
     const handleWheel = (e) => {
       // If user is scrolling inside an internal list or textarea, don't hijack unless boundary is reached
@@ -133,10 +125,11 @@ export default function HorizontalScrollExhibition({
       container.removeEventListener('wheel', handleWheel);
       clearTimeout(snapTimerRef.current);
     };
-  }, [totalCards, smoothProgress, goToCard]);
+  }, [totalCards, smoothProgress, goToCard, isInteractive]);
 
   // Keyboard navigation (Arrow keys)
   useEffect(() => {
+    if (!isInteractive) return;
     const handleKeyDown = (e) => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         goToCard(activeCardIndex + 1);
@@ -146,10 +139,11 @@ export default function HorizontalScrollExhibition({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeCardIndex, goToCard]);
+  }, [activeCardIndex, goToCard, isInteractive]);
 
   // Pointer drag interactions
   const handlePointerDown = (e) => {
+    if (!isInteractive) return;
     // Only left click drags
     if (e.button !== 0) return;
     // Don't drag if clicking buttons, links, or inputs
@@ -183,22 +177,6 @@ export default function HorizontalScrollExhibition({
     goToCard(nearest);
   };
 
-  // If initial entrance greeting timeline is still progressing, show HomeSection entrance
-  if (!isCompleted) {
-    return (
-      <div className="w-full h-full flex items-center justify-center overflow-hidden">
-        <HomeSection
-          onOpenSection={onOpenSection}
-          onNavigateToProjects={onNavigateToProjects}
-          onNavigateToContact={onNavigateToContact}
-          transitionPhase={transitionPhase}
-          phaseIndex={phaseIndex}
-          timelineStart={timelineStart}
-        />
-      </div>
-    );
-  }
-
   const activeRoom = WORKSPACE_ROOMS[activeCardIndex] || WORKSPACE_ROOMS[0];
 
   return (
@@ -209,12 +187,19 @@ export default function HorizontalScrollExhibition({
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       className={`relative w-full h-[calc(100vh-128px)] overflow-hidden flex flex-col justify-between select-none touch-none ${
-        isDragging ? 'cursor-grabbing' : 'cursor-grab'
+        isInteractive && isDragging ? 'cursor-grabbing' : isInteractive ? 'cursor-grab' : 'cursor-default'
       }`}
       style={{ perspective: 1200 }}
     >
       {/* ==================== 1. TOP GALLERY HEADER ==================== */}
-      <div className="px-6 md:px-12 pt-3 pb-2 z-30 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/85 backdrop-blur-xs font-mono text-[10px] uppercase tracking-wider text-[var(--text-secondary)]">
+      <motion.div
+        animate={{
+          opacity: phaseIndex >= 5 ? 1 : 0,
+          y: phaseIndex >= 5 ? 0 : -10,
+        }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="px-6 md:px-12 pt-3 pb-2 z-30 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/85 backdrop-blur-xs font-mono text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
+      >
         <div className="flex items-center gap-3">
           <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
           <span className="font-semibold text-[var(--text-primary)]">
@@ -255,7 +240,7 @@ export default function HorizontalScrollExhibition({
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ==================== 2. MAIN 3D CURVED CARDS STAGE ==================== */}
       <div className="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center pointer-events-auto">
@@ -272,6 +257,12 @@ export default function HorizontalScrollExhibition({
                 smoothProgress={smoothProgress}
                 isActive={idx === activeCardIndex}
                 onSelect={() => goToCard(idx)}
+                phaseIndex={phaseIndex}
+                onOpenSection={onOpenSection}
+                onNavigateToProjects={onNavigateToProjects}
+                onNavigateToContact={onNavigateToContact}
+                transitionPhase={transitionPhase}
+                timelineStart={timelineStart}
               />
             );
           })}
@@ -279,7 +270,14 @@ export default function HorizontalScrollExhibition({
       </div>
 
       {/* ==================== 3. BOTTOM GALLERY HUD & JUMP PILLS ==================== */}
-      <div className="px-6 md:px-12 py-3 z-30 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-subtle)] bg-[var(--bg-primary)]/85 backdrop-blur-xs font-mono text-[10px] text-[var(--text-secondary)]">
+      <motion.div
+        animate={{
+          opacity: phaseIndex >= 8 ? 1 : 0,
+          y: phaseIndex >= 8 ? 0 : 10,
+        }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="px-6 md:px-12 py-3 z-30 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-subtle)] bg-[var(--bg-primary)]/85 backdrop-blur-xs font-mono text-[10px] text-[var(--text-secondary)]"
+      >
         {/* Active Stage Indicator */}
         <div className="flex items-center gap-3">
           <span className="text-[var(--accent)] font-bold">ROOM {activeRoom.num} OF 0{totalCards}</span>
@@ -332,7 +330,7 @@ export default function HorizontalScrollExhibition({
             GET IN TOUCH ↗
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -342,7 +340,19 @@ export default function HorizontalScrollExhibition({
  * 3D Curved Architectural Container holding each live section component.
  * Sized to fit gracefully inside the gallery card frame with subtle circular perspective.
  */
-function WorkspaceCard({ room, index, smoothProgress, isActive, onSelect }) {
+function WorkspaceCard({
+  room,
+  index,
+  smoothProgress,
+  isActive,
+  onSelect,
+  phaseIndex = 10,
+  onOpenSection,
+  onNavigateToProjects,
+  onNavigateToContact,
+  transitionPhase,
+  timelineStart,
+}) {
   // Transform progress relative to this card's index (offset = 0 when centered)
   const offset = useTransform(smoothProgress, (p) => index - p);
 
@@ -361,8 +371,9 @@ function WorkspaceCard({ room, index, smoothProgress, isActive, onSelect }) {
     return Math.max(0.86, 1 - abs * 0.12);
   });
 
-  // Opacity fade for cards that slide further off-screen
+  // Opacity fade for cards that slide further off-screen (and keep neighbor cards hidden during intro)
   const opacity = useTransform(offset, (o) => {
+    if (index > 0 && phaseIndex < 8) return 0;
     const abs = Math.abs(o);
     if (abs < 0.6) return 1;
     if (abs < 1.4) return 0.5 + (1.4 - abs) * 0.5;
@@ -388,7 +399,9 @@ function WorkspaceCard({ room, index, smoothProgress, isActive, onSelect }) {
       }`}
     >
       {/* Top Architectural Spec Trim on Card */}
-      <div className="h-7 px-4 bg-[var(--bg-surface-elevated)] border-b border-[var(--border-primary)] flex items-center justify-between font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)] select-none">
+      <div className={`h-7 px-4 bg-[var(--bg-surface-elevated)] border-b border-[var(--border-primary)] flex items-center justify-between font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)] select-none transition-opacity duration-700 ${
+        phaseIndex >= 5 ? 'opacity-100' : 'opacity-0'
+      }`}>
         <div className="flex items-center gap-2">
           <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[var(--accent)] animate-pulse' : 'bg-[var(--text-muted)]'}`} />
           <span className="font-bold text-[var(--text-primary)]">ROOM {room.num} {'//'} {room.title}</span>
@@ -403,7 +416,18 @@ function WorkspaceCard({ room, index, smoothProgress, isActive, onSelect }) {
 
       {/* Internal Room Content Viewport */}
       <div className="relative w-full h-[calc(100%-28px)] overflow-y-auto no-scrollbar">
-        {room.component}
+        {room.id === 'hero' ? (
+          <HomeSection
+            onOpenSection={onOpenSection}
+            onNavigateToProjects={onNavigateToProjects}
+            onNavigateToContact={onNavigateToContact}
+            transitionPhase={transitionPhase}
+            phaseIndex={phaseIndex}
+            timelineStart={timelineStart}
+          />
+        ) : (
+          room.component
+        )}
       </div>
     </motion.div>
   );

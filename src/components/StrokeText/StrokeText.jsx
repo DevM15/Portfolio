@@ -12,10 +12,11 @@ const DEFAULT_TEXT = 'Draw Attention';
 const SHADOW_OPACITY = 0.5;
 
 const getWipeFrames = (box, wipeFrom) => {
-  const end = { x: box.x, y: box.y, width: box.width, height: box.height };
-  if (wipeFrom === 'right') return { start: { ...end, x: box.x + box.width, width: 0 }, end };
+  const pad = 12;
+  const end = { x: box.x - pad, y: box.y - pad, width: box.width + pad * 2, height: box.height + pad * 2 };
+  if (wipeFrom === 'right') return { start: { ...end, x: box.x + box.width + pad, width: 0 }, end };
   if (wipeFrom === 'top') return { start: { ...end, height: 0 }, end };
-  if (wipeFrom === 'bottom') return { start: { ...end, y: box.y + box.height, height: 0 }, end };
+  if (wipeFrom === 'bottom') return { start: { ...end, y: box.y + box.height + pad, height: 0 }, end };
   return { start: { ...end, width: 0 }, end };
 };
 
@@ -65,6 +66,8 @@ const StrokeText = ({
   const strokeTextRef = useRef(null);
   const wipeRectRef = useRef(null);
   const shadowRef = useRef(null);
+  const hasCompletedRef = useRef(false);
+  const timelineRef = useRef(null);
 
   const [box, setBox] = useState(null);
 
@@ -172,14 +175,20 @@ const StrokeText = ({
 
     const setEnd = () => {
       gsap.killTweensOf(targets);
-      gsap.set(strokes, { strokeDasharray: dash, strokeDashoffset: 0, strokeOpacity: 1 });
+      gsap.set(strokes, { strokeDasharray: dash, strokeDashoffset: 0, strokeOpacity: fillEnabled ? 0 : 1 });
       gsap.set(fills, { opacity: fillEnabled ? 1 : 0 });
       if (wipe) gsap.set(wipe, { attr: fillEnabled ? frames.end : frames.start });
       if (drop) gsap.set(drop, { attr: fillEnabled ? lifted : grounded });
+      hasCompletedRef.current = true;
     };
 
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
+      setEnd();
+      return () => gsap.killTweensOf(targets);
+    }
+
+    if (hasCompletedRef.current && trigger !== 'hover' && trigger !== 'loop') {
       setEnd();
       return () => gsap.killTweensOf(targets);
     }
@@ -192,19 +201,27 @@ const StrokeText = ({
         repeat: looping ? -1 : 0,
         repeatDelay: looping ? 0.9 : 0,
         yoyo: looping,
-        defaults: { overwrite: 'auto' }
+        defaults: { overwrite: 'auto' },
+        onComplete: () => {
+          if (!looping) {
+            hasCompletedRef.current = true;
+          }
+        }
       });
 
       tl.to(strokes, { strokeDashoffset: 0, duration: drawDuration, ease, stagger: staggerConfig }, startDelay);
 
       if (useWipe && wipe) {
         tl.to(wipe, { attr: frames.end, duration: fillDuration, ease: 'power2.inOut' }, startDelay + drawDuration + fillDelay);
+        // Seamlessly fade out stroke outline as wipe fill reveals so there is NO duplicated solid and outlined text
+        tl.to(strokes, { strokeOpacity: 0, duration: fillDuration * 0.7, ease: 'power1.out' }, startDelay + drawDuration + fillDelay + fillDuration * 0.3);
       } else if (fillEnabled) {
         tl.to(
           fills,
           { opacity: 1, duration: fillDuration, ease: 'power2.out', stagger: staggerConfig },
           startDelay + drawDuration + fillDelay
         );
+        tl.to(strokes, { strokeOpacity: 0, duration: fillDuration * 0.7, ease: 'power1.out' }, startDelay + drawDuration + fillDelay + fillDuration * 0.3);
       }
 
       if (drop && fillEnabled) {
@@ -218,7 +235,7 @@ const StrokeText = ({
       return tl;
     };
 
-    let timeline = null;
+    let timeline = timelineRef.current;
     let scrollTrigger = null;
     let redraw = null;
     const listeners = [];
@@ -233,19 +250,28 @@ const StrokeText = ({
       listen(() => {
         timeline?.kill();
         timeline = build();
+        timelineRef.current = timeline;
         timeline.play(0);
       });
     } else {
-      timeline = build();
-      if (trigger === 'scroll') {
-        scrollTrigger = ScrollTrigger.create({
-          trigger: root,
-          start: 'top 82%',
-          once: true,
-          onEnter: () => timeline?.play(0)
-        });
-      } else {
-        timeline.play(0);
+      if (!timeline || (!timeline.isActive() && !hasCompletedRef.current)) {
+        timeline = build();
+        timelineRef.current = timeline;
+        if (trigger === 'scroll') {
+          scrollTrigger = ScrollTrigger.create({
+            trigger: root,
+            start: 'top 82%',
+            once: true,
+            onEnter: () => timeline?.play(0)
+          });
+        } else {
+          timeline.play(0);
+        }
+      } else if (timeline.isActive()) {
+        // If already actively playing, update wipe target without restarting from 0
+        if (wipe && frames) {
+          gsap.set(wipe, { attr: frames.end });
+        }
       }
 
       if (hoverRedraw && trigger !== 'loop') {

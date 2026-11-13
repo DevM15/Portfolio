@@ -2,6 +2,11 @@ import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DecayCard from '../DecayCard/DecayCard';
 
+if (typeof window !== 'undefined') {
+  const preloadImg = new Image();
+  preloadImg.src = '/img/dev_pic.png';
+}
+
 /**
  * DMIdentityCard:
  * Multi-Iteration Identity Card System.
@@ -38,6 +43,7 @@ export default function DMIdentityCard({
   const [iteration, setIteration] = useState('editorial');
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const cardContainerRef = useRef(null);
   const isFlipped = flipDeg >= 90;
 
@@ -105,7 +111,6 @@ export default function DMIdentityCard({
             backgroundColor: isFramed ? 'var(--bg-primary)' : 'transparent',
             borderRadius: isFramed ? `${borderRadius}px` : '0px',
             border: isFramed ? '1px solid var(--border-primary)' : '1px solid transparent',
-            display: isFlipped ? 'none' : 'flex',
             pointerEvents: isFlipped ? 'none' : 'auto',
           }}
         >
@@ -210,7 +215,6 @@ export default function DMIdentityCard({
             WebkitBackfaceVisibility: 'hidden',
             borderRadius: `${borderRadius}px`,
             border: isHovered ? '1px solid var(--accent)' : '1px solid var(--border-primary)',
-            display: isFlipped ? 'block' : 'none',
             pointerEvents: isFlipped ? 'auto' : 'none',
           }}
         >
@@ -219,7 +223,7 @@ export default function DMIdentityCard({
             {iteration === 'editorial' && (
               <motion.div
                 key="iter-editorial"
-                initial={{ opacity: 0 }}
+                initial={false}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
@@ -246,11 +250,21 @@ export default function DMIdentityCard({
                   <span className="text-[var(--accent)] font-semibold">MUMBAI · 2026</span>
                 </div>
 
-                {/* Centered Transparent Cutout Portrait */}
+                {/* Centered Transparent Cutout Portrait with Skeleton Fallback */}
                 <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
+                  {!imageLoaded && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                      <span className="font-serif font-bold text-7xl text-[var(--text-muted)] animate-pulse">
+                        DM
+                      </span>
+                    </div>
+                  )}
                   <img
                     src="/img/dev_pic.png"
                     alt="Dev Mistry"
+                    loading="eager"
+                    decoding="sync"
+                    onLoad={() => setImageLoaded(true)}
                     className="h-[84%] w-auto max-w-[84%] object-contain object-bottom transition-all duration-500 ease-out"
                     style={{
                       filter: isHovered
