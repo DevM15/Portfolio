@@ -1,18 +1,25 @@
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import CircularGallery from './CircularGallery/CircularGallery';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { motion, useSpring, useTransform } from 'framer-motion';
 import HomeSection from '../sections/HomeSection';
-import { useTheme } from '../utils/ThemeContext';
+import AboutSection from '../sections/AboutSection';
+import SkillsSection from '../sections/SkillsSection';
+import JourneySection from '../sections/JourneySection';
 
 /**
  * HorizontalScrollExhibition:
- * Powered by React Bits <CircularGallery /> WebGL 3D Arc Engine.
+ * 3D Curved Horizontal Scroll Gallery with Interactive Workspace Cards.
  *
- * Replaces the buggy 400vh window scroll with a true 3D circular exhibition gallery:
- * - Mouse wheel scrolling & horizontal dragging directly rotate the 3D circular arc.
- * - Zero vertical document scroll — viewport is firmly locked at 100vh.
- * - Clicking or opening any room card enters that architectural section.
- * - Bottom HUD indicator displays active coordinate, room metadata, and one-click entry.
+ * Each card is a fully interactive, sized architectural room:
+ * - Card 01: HERO WORKSPACE (Dev Mistry identity, TechText headline, DM Monogram flip card, WebGL works)
+ * - Card 02: ABOUT WORKSPACE (Monolithic profile spec, WebGL DecayCard portrait showcase)
+ * - Card 03: SKILLS WORKSPACE (Interactive 3D InfiniteSpiral language helix, domain matrix)
+ * - Card 04: JOURNEY WORKSPACE (Evolution milestones & architectural trajectory)
+ *
+ * Physics & Controls:
+ * - Mouse wheel scrolling directly glides the gallery horizontally with spring inertia (0 vertical scroll).
+ * - Touch & pointer dragging with velocity toss and automatic card snapping.
+ * - 3D circular perspective: inactive cards curve subtly in 3D (bend, scale, opacity, rotateY).
+ * - Clicking any neighboring card smoothly glides it into the centered focus.
  */
 export default function HorizontalScrollExhibition({
   onOpenSection,
@@ -23,77 +30,157 @@ export default function HorizontalScrollExhibition({
   timelineStart,
   isCompleted = true,
 }) {
-  const { isDark } = useTheme();
-  const [activeRoomIndex, setActiveRoomIndex] = useState(0);
-  const [viewMode, setViewMode] = useState('gallery'); // 'gallery' | 'direct'
+  const containerRef = useRef(null);
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef(0);
+  const progressTargetRef = useRef(0);
+  const snapTimerRef = useRef(null);
 
-  const textColor = isDark ? '#F7F6F2' : '#252A27';
+  // Smooth damped spring for the horizontal track progress
+  const smoothProgress = useSpring(0, {
+    stiffness: 140,
+    damping: 24,
+    mass: 0.8,
+  });
 
-  // Portfolio Exhibition Sections mapped into 3D circular cards
-  const EXHIBITION_SECTIONS = useMemo(() => [
+  const totalCards = 4;
+
+  const goToCard = useCallback((index) => {
+    const clamped = Math.max(0, Math.min(index, totalCards - 1));
+    progressTargetRef.current = clamped;
+    smoothProgress.set(clamped);
+    setActiveCardIndex(clamped);
+  }, [totalCards, smoothProgress]);
+
+  const WORKSPACE_ROOMS = useMemo(() => [
     {
       id: 'hero',
-      image: '/img/dev_portrait.jpg',
-      text: '01 · EXHIBITION HERO',
-      description: 'Dev Mistry — Full Stack Architect, WebGL FlexCarousel, and system specification.',
-      category: 'IDENTITY',
-      room: 'ROOM 01',
+      num: '01',
+      title: 'HERO WORKSPACE',
+      category: 'IDENTITY & RUNTIME',
+      component: (
+        <HomeSection
+          onOpenSection={onOpenSection}
+          onNavigateToProjects={onNavigateToProjects}
+          onNavigateToContact={onNavigateToContact}
+          transitionPhase={transitionPhase}
+          phaseIndex={phaseIndex}
+          timelineStart={timelineStart}
+        />
+      ),
     },
     {
       id: 'about',
-      image: '/img/dev_pic.png',
-      text: '02 · PROFILE SPEC & DECAY',
-      description: 'Profile specification, distributed systems, active research, and WebGL DecayCard showcase.',
-      category: 'SPECIFICATION',
-      room: 'ROOM 02',
+      num: '02',
+      title: 'PROFILE SPECIFICATION',
+      category: 'IDENTITY & DECAY SHADER',
+      component: <AboutSection onBack={() => goToCard(0)} />,
     },
     {
       id: 'skills',
-      image: '/img/bg.png',
-      text: '03 · 3D LANGUAGE SPIRAL',
-      description: 'Interactive 3D compiler & runtime helix, 12 production languages, and 4-domain architecture.',
-      category: 'CAPABILITIES',
-      room: 'ROOM 03',
-    },
-    {
-      id: 'projects',
-      image: '/img/project1.png',
-      text: '04 · DIGITAL CD DISCOGRAPHY',
-      description: 'Tactile digital CD player, optical releases, and full live website inspection deck.',
-      category: 'DISCOGRAPHY',
-      room: 'ROOM 04',
+      num: '03',
+      title: 'DIGITAL TECHNICAL MAP',
+      category: '3D COMPILER HELIX & STACK',
+      component: <SkillsSection onBack={() => goToCard(0)} />,
     },
     {
       id: 'journey',
-      image: '/img/project2.png',
-      text: '05 · EVOLUTION TIMELINE',
-      description: 'Career progression, engineering contracts, and architectural milestones from 2023 to 2026.',
-      category: 'TRAJECTORY',
-      room: 'ROOM 05',
+      num: '04',
+      title: 'EVOLUTION TRAJECTORY',
+      category: 'CAREER MILESTONES 2022–2026',
+      component: <JourneySection onBack={() => goToCard(0)} />,
     },
-    {
-      id: 'contact',
-      image: '/img/project3.png',
-      text: '06 · AGENT LAB & TRANSMISSION',
-      description: 'ParticleText interactive typography, agentic reasoning protocols, and direct inquiry terminal.',
-      category: 'TRANSMISSION',
-      room: 'ROOM 06',
-    },
-  ], []);
+  ], [onOpenSection, onNavigateToProjects, onNavigateToContact, transitionPhase, phaseIndex, timelineStart, goToCard]);
 
-  const activeSection = EXHIBITION_SECTIONS[activeRoomIndex % EXHIBITION_SECTIONS.length] || EXHIBITION_SECTIONS[0];
+  // Synchronize active card index with spring output
+  useEffect(() => {
+    const unsub = smoothProgress.on('change', (latest) => {
+      const nearest = Math.round(latest);
+      setActiveCardIndex(Math.max(0, Math.min(nearest, totalCards - 1)));
+    });
+    return () => unsub();
+  }, [smoothProgress, totalCards]);
 
-  const handleCardClick = (item) => {
-    if (!item) return;
-    if (item.id === 'hero') {
-      setViewMode('direct');
-    } else if (item.id === 'projects') {
-      onNavigateToProjects();
-    } else if (item.id === 'contact') {
-      onNavigateToContact();
-    } else {
-      onOpenSection(item.id);
+  // Handle Mouse Wheel scrolling (converts vertical wheel delta into horizontal card progress)
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e) => {
+      // If user is scrolling inside an internal list or textarea, don't hijack unless boundary is reached
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (!delta) return;
+
+      e.preventDefault();
+
+      // Sensitivity factor
+      const step = (delta / 420);
+      const nextTarget = Math.max(0, Math.min(totalCards - 1, progressTargetRef.current + step));
+      progressTargetRef.current = nextTarget;
+      smoothProgress.set(nextTarget);
+
+      // Snap to nearest card after wheel motion settles
+      clearTimeout(snapTimerRef.current);
+      snapTimerRef.current = setTimeout(() => {
+        const nearest = Math.round(progressTargetRef.current);
+        goToCard(nearest);
+      }, 160);
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+      clearTimeout(snapTimerRef.current);
+    };
+  }, [totalCards, smoothProgress, goToCard]);
+
+  // Keyboard navigation (Arrow keys)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        goToCard(activeCardIndex + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        goToCard(activeCardIndex - 1);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeCardIndex, goToCard]);
+
+  // Pointer drag interactions
+  const handlePointerDown = (e) => {
+    // Only left click drags
+    if (e.button !== 0) return;
+    // Don't drag if clicking buttons, links, or inputs
+    if (e.target.closest('button, a, input, select, textarea, [data-cursor="button"]')) return;
+
+    setIsDragging(true);
+    dragStartRef.current = e.clientX;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging) return;
+    const deltaX = e.clientX - dragStartRef.current;
+    dragStartRef.current = e.clientX;
+
+    // Convert pixel delta to card index progress (card width ~1100px)
+    const progressDelta = -deltaX / 900;
+    const nextTarget = Math.max(0, Math.min(totalCards - 1, progressTargetRef.current + progressDelta));
+    progressTargetRef.current = nextTarget;
+    smoothProgress.set(nextTarget);
+  };
+
+  const handlePointerUp = (e) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
     }
+    // Snap to nearest card
+    const nearest = Math.round(progressTargetRef.current);
+    goToCard(nearest);
   };
 
   // If initial entrance greeting timeline is still progressing, show HomeSection entrance
@@ -112,152 +199,212 @@ export default function HorizontalScrollExhibition({
     );
   }
 
+  const activeRoom = WORKSPACE_ROOMS[activeCardIndex] || WORKSPACE_ROOMS[0];
+
   return (
-    <div className="relative w-full h-[calc(100vh-128px)] overflow-hidden flex flex-col justify-between select-none">
-      {/* ==================== 1. TOP CONTROL BAR ==================== */}
-      <div className="px-6 md:px-12 pt-3 pb-2 z-30 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/80 backdrop-blur-xs font-mono text-[10px] uppercase tracking-wider text-[var(--text-secondary)]">
-        <div className="flex items-center gap-2.5">
+    <div
+      ref={containerRef}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      className={`relative w-full h-[calc(100vh-128px)] overflow-hidden flex flex-col justify-between select-none touch-none ${
+        isDragging ? 'cursor-grabbing' : 'cursor-grab'
+      }`}
+      style={{ perspective: 1200 }}
+    >
+      {/* ==================== 1. TOP GALLERY HEADER ==================== */}
+      <div className="px-6 md:px-12 pt-3 pb-2 z-30 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/85 backdrop-blur-xs font-mono text-[10px] uppercase tracking-wider text-[var(--text-secondary)]">
+        <div className="flex items-center gap-3">
           <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
           <span className="font-semibold text-[var(--text-primary)]">
-            {viewMode === 'gallery' ? '01 // CIRCULAR EXHIBITION GALLERY' : '01 // DIRECT HERO STAGE'}
+            {activeRoom.num} {'//'} {activeRoom.title}
           </span>
-          <span className="hidden sm:inline opacity-40">•</span>
-          <span className="hidden sm:inline">
-            {viewMode === 'gallery'
-              ? 'SCROLL MOUSE WHEEL OR DRAG TO ROTATE SECTIONS'
-              : 'DIRECT COMPONENT INSPECTION'}
-          </span>
-        </div>
-
-        {/* View Switcher Toggle */}
-        <div className="flex items-center gap-1.5 p-0.5 rounded-[2px] bg-[var(--bg-surface)] border border-[var(--border-primary)]">
-          <button
-            onClick={() => setViewMode('gallery')}
-            data-cursor="button"
-            className={`px-2.5 py-1 rounded-[1px] font-mono text-[9px] font-semibold transition-all cursor-pointer ${
-              viewMode === 'gallery'
-                ? 'bg-[var(--accent)] text-[#F7F6F2] shadow-xs'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            3D CIRCULAR ARC
-          </button>
-          <button
-            onClick={() => setViewMode('direct')}
-            data-cursor="button"
-            className={`px-2.5 py-1 rounded-[1px] font-mono text-[9px] font-semibold transition-all cursor-pointer ${
-              viewMode === 'direct'
-                ? 'bg-[var(--accent)] text-[#F7F6F2] shadow-xs'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            HERO WORKSPACE
-          </button>
-        </div>
-      </div>
-
-      {/* ==================== 2. MAIN 3D CIRCULAR GALLERY STAGE ==================== */}
-      <div className="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center">
-        <AnimatePresence mode="wait">
-          {viewMode === 'gallery' ? (
-            <motion.div
-              key="circular-gallery-stage"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.4 }}
-              className="relative w-full h-full"
-            >
-              <CircularGallery
-                items={EXHIBITION_SECTIONS}
-                bend={2.8}
-                textColor={textColor}
-                borderRadius={0.04}
-                scrollSpeed={2.2}
-                scrollEase={0.05}
-                itemSize={0.92}
-                itemAspect={0.76}
-                gap={0.24}
-                wave={0.75}
-                fadeEdges={0.14}
-                shadow={0.3}
-                grayscale={false}
-                showTitles={true}
-                snap={true}
-                openOnClick={false}
-                onItemClick={handleCardClick}
-                onActiveChange={(index) => setActiveRoomIndex(index)}
-              />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="direct-hero-stage"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 15 }}
-              transition={{ duration: 0.4 }}
-              className="w-full h-full"
-            >
-              <HomeSection
-                onOpenSection={onOpenSection}
-                onNavigateToProjects={onNavigateToProjects}
-                onNavigateToContact={onNavigateToContact}
-                transitionPhase={transitionPhase}
-                phaseIndex={phaseIndex}
-                timelineStart={timelineStart}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* ==================== 3. BOTTOM EXHIBITION HUD & NAVIGATION ==================== */}
-      <div className="px-6 md:px-12 py-3 z-30 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-subtle)] bg-[var(--bg-primary)]/80 backdrop-blur-xs font-mono text-[10px] text-[var(--text-secondary)]">
-        {/* Active Room Title & Spec */}
-        <div className="flex items-center gap-3">
-          <span className="text-[var(--accent)] font-bold">{activeSection.room}</span>
           <span className="opacity-40">•</span>
-          <span className="font-semibold text-[var(--text-primary)] uppercase">{activeSection.text}</span>
-          <span className="hidden sm:inline opacity-40">•</span>
-          <span className="hidden sm:inline text-[9px] text-[var(--text-muted)] uppercase">
-            {activeSection.category}
+          <span className="hidden sm:inline text-[9px] text-[var(--text-muted)]">
+            {activeRoom.category}
           </span>
         </div>
 
-        {/* Room Navigation Indicators */}
-        <div className="flex items-center gap-1.5">
-          {EXHIBITION_SECTIONS.map((sec, idx) => (
+        <div className="flex items-center gap-4 text-[9px]">
+          <span className="hidden md:inline text-[var(--text-muted)]">
+            SCROLL WHEEL OR DRAG TO ROTATE CARDS
+          </span>
+          <div className="flex items-center gap-1">
             <button
-              key={sec.id}
-              onClick={() => {
-                setActiveRoomIndex(idx);
-                if (viewMode === 'direct' && sec.id !== 'hero') {
-                  handleCardClick(sec);
-                }
+              onClick={(e) => {
+                e.stopPropagation();
+                goToCard(activeCardIndex - 1);
+              }}
+              disabled={activeCardIndex === 0}
+              data-cursor="button"
+              className="px-2 py-0.5 rounded-[1px] bg-[var(--bg-surface)] border border-[var(--border-primary)] hover:border-[var(--accent)] disabled:opacity-30 disabled:pointer-events-none cursor-pointer transition-colors"
+            >
+              ← PREV
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToCard(activeCardIndex + 1);
+              }}
+              disabled={activeCardIndex === totalCards - 1}
+              data-cursor="button"
+              className="px-2 py-0.5 rounded-[1px] bg-[var(--bg-surface)] border border-[var(--border-primary)] hover:border-[var(--accent)] disabled:opacity-30 disabled:pointer-events-none cursor-pointer transition-colors"
+            >
+              NEXT →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ==================== 2. MAIN 3D CURVED CARDS STAGE ==================== */}
+      <div className="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center pointer-events-auto">
+        <div
+          className="relative w-full h-full flex items-center justify-center"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+          {WORKSPACE_ROOMS.map((room, idx) => {
+            return (
+              <WorkspaceCard
+                key={room.id}
+                room={room}
+                index={idx}
+                smoothProgress={smoothProgress}
+                isActive={idx === activeCardIndex}
+                onSelect={() => goToCard(idx)}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ==================== 3. BOTTOM GALLERY HUD & JUMP PILLS ==================== */}
+      <div className="px-6 md:px-12 py-3 z-30 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-subtle)] bg-[var(--bg-primary)]/85 backdrop-blur-xs font-mono text-[10px] text-[var(--text-secondary)]">
+        {/* Active Stage Indicator */}
+        <div className="flex items-center gap-3">
+          <span className="text-[var(--accent)] font-bold">ROOM {activeRoom.num} OF 0{totalCards}</span>
+          <span className="opacity-40">•</span>
+          <span className="font-semibold text-[var(--text-primary)] uppercase">{activeRoom.title}</span>
+        </div>
+
+        {/* Clickable Room Jump Dots */}
+        <div className="flex items-center gap-2">
+          {WORKSPACE_ROOMS.map((room, idx) => (
+            <button
+              key={room.id}
+              onClick={(e) => {
+                e.stopPropagation();
+                goToCard(idx);
               }}
               data-cursor="button"
-              className={`w-6 h-1.5 rounded-full transition-all cursor-pointer ${
-                (activeRoomIndex % EXHIBITION_SECTIONS.length) === idx
-                  ? 'bg-[var(--accent)] w-10'
-                  : 'bg-[var(--border-primary)] hover:bg-[var(--text-secondary)]'
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-[2px] transition-all cursor-pointer font-mono text-[9px] ${
+                idx === activeCardIndex
+                  ? 'bg-[var(--accent)] text-[#F7F6F2] font-bold shadow-xs'
+                  : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)]'
               }`}
-              title={sec.text}
-            />
+            >
+              <span>{room.num}</span>
+              <span className="hidden sm:inline">{room.id.toUpperCase()}</span>
+            </button>
           ))}
         </div>
 
-        {/* Open Section Action Button */}
-        <div className="flex items-center gap-3">
+        {/* Quick Launch / Projects Action */}
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => handleCardClick(activeSection)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onNavigateToProjects && onNavigateToProjects();
+            }}
             data-cursor="button"
-            className="px-3.5 py-1.5 rounded-[2px] bg-[var(--accent)] text-[#F7F6F2] font-mono text-[9px] font-bold tracking-wider uppercase hover:opacity-90 transition-opacity cursor-pointer shadow-xs flex items-center gap-1.5"
+            className="px-3 py-1 rounded-[2px] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent)] hover:text-[var(--accent)] border border-[var(--border-primary)] font-mono text-[9px] font-semibold tracking-wider uppercase transition-colors cursor-pointer"
           >
-            <span>ENTER {activeSection.category}</span>
-            <span>↗</span>
+            DISCOGRAPHY DECK ↗
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onNavigateToContact && onNavigateToContact();
+            }}
+            data-cursor="button"
+            className="px-3 py-1 rounded-[2px] bg-[var(--accent)] text-[#F7F6F2] font-mono text-[9px] font-bold tracking-wider uppercase hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+          >
+            GET IN TOUCH ↗
           </button>
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * WorkspaceCard:
+ * 3D Curved Architectural Container holding each live section component.
+ * Sized to fit gracefully inside the gallery card frame with subtle circular perspective.
+ */
+function WorkspaceCard({ room, index, smoothProgress, isActive, onSelect }) {
+  // Transform progress relative to this card's index (offset = 0 when centered)
+  const offset = useTransform(smoothProgress, (p) => index - p);
+
+  // 3D curved horizontal position: Card width is ~1140px, spacing ~1200px
+  const x = useTransform(offset, (o) => `${o * 105}%`);
+
+  // Circular arc bend: rotate cards around Y axis as they move off-center
+  const rotateY = useTransform(offset, (o) => Math.max(-24, Math.min(24, o * 14)));
+
+  // Subtle circular depth translation
+  const translateZ = useTransform(offset, (o) => -Math.abs(o) * 120);
+
+  // Card scale: active card is 1.0, neighbor cards shrink slightly for depth
+  const scale = useTransform(offset, (o) => {
+    const abs = Math.abs(o);
+    return Math.max(0.86, 1 - abs * 0.12);
+  });
+
+  // Opacity fade for cards that slide further off-screen
+  const opacity = useTransform(offset, (o) => {
+    const abs = Math.abs(o);
+    if (abs < 0.6) return 1;
+    if (abs < 1.4) return 0.5 + (1.4 - abs) * 0.5;
+    return Math.max(0.1, 0.4 - (abs - 1.4) * 0.3);
+  });
+
+  return (
+    <motion.div
+      onClick={!isActive ? onSelect : undefined}
+      style={{
+        x,
+        rotateY,
+        translateZ,
+        scale,
+        opacity,
+        zIndex: isActive ? 20 : Math.round(10 - Math.abs(index)),
+        transformStyle: 'preserve-3d',
+      }}
+      className={`absolute w-[min(94vw,1260px)] h-[min(calc(100vh-165px),640px)] rounded-[4px] border transition-colors duration-300 shadow-xl overflow-hidden will-change-transform ${
+        isActive
+          ? 'border-[var(--border-primary)] bg-[var(--bg-surface)]/95 shadow-2xl pointer-events-auto'
+          : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]/75 cursor-pointer pointer-events-auto'
+      }`}
+    >
+      {/* Top Architectural Spec Trim on Card */}
+      <div className="h-7 px-4 bg-[var(--bg-surface-elevated)] border-b border-[var(--border-primary)] flex items-center justify-between font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)] select-none">
+        <div className="flex items-center gap-2">
+          <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[var(--accent)] animate-pulse' : 'bg-[var(--text-muted)]'}`} />
+          <span className="font-bold text-[var(--text-primary)]">ROOM {room.num} {'//'} {room.title}</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span>{room.category}</span>
+          {!isActive && (
+            <span className="text-[var(--accent)] font-semibold hidden sm:inline">CLICK TO FOCUS ↗</span>
+          )}
+        </div>
+      </div>
+
+      {/* Internal Room Content Viewport */}
+      <div className="relative w-full h-[calc(100%-28px)] overflow-y-auto no-scrollbar">
+        {room.component}
+      </div>
+    </motion.div>
   );
 }

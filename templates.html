@@ -1,1394 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digital CD Player — Interactive Architectural Templates</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-primary: #F7F6F2;
-      --bg-surface: #FFFFFF;
-      --bg-surface-elevated: #EDECE8;
-      --text-primary: #252A27;
-      --text-secondary: #747B76;
-      --text-muted: #A3A8A4;
-      --border-primary: rgba(37, 42, 39, 0.12);
-      --border-subtle: rgba(37, 42, 39, 0.06);
-      --accent: #B96F52;
-      --accent-glow: rgba(185, 111, 82, 0.25);
-      --led-amber: #FF9900;
-      --led-cyan: #00E5FF;
-      --led-green: #10B981;
-    }
-
-    [data-theme="dark"] {
-      --bg-primary: #151816;
-      --bg-surface: #1E2320;
-      --bg-surface-elevated: #282E2A;
-      --text-primary: #F7F6F2;
-      --text-secondary: #9DA39E;
-      --text-muted: #5E6460;
-      --border-primary: rgba(247, 246, 242, 0.14);
-      --border-subtle: rgba(247, 246, 242, 0.08);
-      --accent: #D88365;
-      --accent-glow: rgba(216, 131, 101, 0.3);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      font-family: 'Inter', system-ui, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    /* Top Navigation HUD */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-primary);
-      backdrop-filter: blur(12px);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .brand-tag {
-      color: var(--accent);
-      font-weight: 700;
-    }
-    .brand-title {
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-
-    /* Template Tabs */
-    .tabs-wrap {
-      display: flex;
-      background: var(--bg-primary);
-      padding: 3px;
-      border-radius: 6px;
-      border: 1px solid var(--border-primary);
-      gap: 4px;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .tab-btn:hover {
-      color: var(--text-primary);
-    }
-
-    .tab-btn.active {
-      background: var(--accent);
-      color: #FFFFFF;
-      box-shadow: 0 2px 8px var(--accent-glow);
-    }
-
-    .theme-toggle-btn {
-      background: transparent;
-      border: 1px solid var(--border-primary);
-      color: var(--text-primary);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-    .theme-toggle-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    /* Design Rationale Bar */
-    .rationale-bar {
-      background: var(--bg-surface-elevated);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 10px 24px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--text-secondary);
-    }
-    .rationale-pill {
-      background: var(--accent);
-      color: #fff;
-      padding: 2px 6px;
-      border-radius: 2px;
-      font-weight: 700;
-      margin-right: 8px;
-    }
-
-    /* Main Viewport Container */
-    main {
-      flex: 1;
-      padding: 24px;
-      max-width: 1720px;
-      width: 100%;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .template-container {
-      display: none;
-      animation: fadeIn 0.35s ease;
-      height: 100%;
-    }
-    .template-container.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* =========================================================================
-       COMMON CD COMPONENT STYLES (PHYSICALLY ACCURATE)
-       ========================================================================= */
-    .cd-disc {
-      position: relative;
-      border-radius: 50%;
-      background: #111;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-      overflow: hidden;
-      cursor: grab;
-      user-select: none;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
-    }
-    .cd-disc:active {
-      cursor: grabbing;
-    }
-
-    /* Anisotropic rainbow reflection */
-    .cd-disc::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: conic-gradient(
-        from 45deg,
-        rgba(255, 0, 128, 0.25) 0deg,
-        rgba(0, 255, 255, 0.25) 60deg,
-        rgba(255, 255, 0, 0.25) 120deg,
-        rgba(0, 255, 128, 0.25) 180deg,
-        rgba(255, 0, 128, 0.25) 240deg,
-        rgba(0, 255, 255, 0.25) 300deg,
-        rgba(255, 255, 0, 0.25) 360deg
-      );
-      mix-blend-mode: color-dodge;
-      pointer-events: none;
-      opacity: 0.65;
-    }
-
-    /* CD Center Hub Rings */
-    .cd-center-clear {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 44%;
-      height: 44%;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .cd-spindle-hole {
-      width: 34%;
-      height: 34%;
-      border-radius: 50%;
-      background: var(--bg-surface);
-      border: 1px solid rgba(0, 0, 0, 0.5);
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
-    }
-
-    .cd-silkscreen {
-      position: absolute;
-      inset: 6%;
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12% 8%;
-      pointer-events: none;
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .cd-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 11px;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-      color: #FFFFFF;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    }
-    .cd-meta {
-      font-size: 7px;
-      color: rgba(255,255,255,0.7);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .cd-spinning {
-      animation: cdSpin 2.4s linear infinite;
-    }
-    @keyframes cdSpin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* =========================================================================
-       TEMPLATE 01: TEENAGE ENGINEERING / INDUSTRIAL HI-FI
-       ========================================================================= */
-    .t1-layout {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 28px;
-      min-height: 560px;
-      align-items: stretch;
-    }
-
-    /* Crate Column */
-    .t1-crate-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-primary);
-      border-radius: 6px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-    }
-
-    .crate-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 12px;
-      color: var(--text-secondary);
-    }
-
-    .jewel-cases-row {
-      display: flex;
-      gap: 16px;
-      overflow-x: auto;
-      padding: 30px 6px;
-      scroll-snap-type: x mandatory;
-    }
-    .jewel-cases-row::-webkit-scrollbar {
-      height: 4px;
-    }
-    .jewel-cases-row::-webkit-scrollbar-thumb {
-      background: var(--border-primary);
-      border-radius: 2px;
-    }
-
-    .jewel-case {
-      flex: 0 0 135px;
-      height: 175px;
-      position: relative;
-      background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.03) 100%), var(--bg-surface-elevated);
-      border: 1px solid var(--border-primary);
-      border-radius: 4px;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.3);
-    }
-    .jewel-case:hover {
-      transform: translateY(-16px) scale(1.03);
-      border-color: var(--accent);
-      box-shadow: 0 20px 35px var(--accent-glow);
-    }
-    .jewel-case.active {
-      border-color: var(--accent);
-      background: var(--bg-surface);
-      box-shadow: 0 0 0 2px var(--accent);
-    }
-
-    .jewel-spine {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 6px;
-      background: var(--accent);
-      border-top-left-radius: 3px;
-      border-bottom-left-radius: 3px;
-    }
-
-    .jewel-disc-preview {
-      width: 90px;
-      height: 90px;
-      margin: 4px auto;
-      position: relative;
-    }
-
-    .jewel-info {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8px;
-      text-transform: uppercase;
-      text-align: center;
-    }
-    .jewel-name {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 11px;
-      color: var(--text-primary);
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* TE-Style Hardware Player Deck */
-    .t1-hardware-deck {
-      background: var(--bg-surface);
-      border: 2px solid var(--border-primary);
-      border-radius: 8px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
-    }
-
-    .deck-top-screws {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      display: flex;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-    .screw {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--border-primary);
-      box-shadow: inset 0 1px 1px rgba(0,0,0,0.4);
-    }
-
-    /* Amber Dot Matrix Screen */
-    .vfd-screen {
-      background: #121413;
-      border: 1px solid #2A302C;
-      border-radius: 4px;
-      padding: 14px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: 'JetBrains Mono', monospace;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
-      margin-bottom: 20px;
-    }
-    .vfd-text {
-      color: var(--led-amber);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-shadow: 0 0 6px rgba(255, 153, 0, 0.6);
-    }
-    .vfd-visualizer {
-      display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      height: 20px;
-    }
-    .vfd-bar {
-      width: 3px;
-      background: var(--led-amber);
-      border-radius: 1px;
-      animation: vfdBounce 0.8s ease infinite alternate;
-      box-shadow: 0 0 4px rgba(255, 153, 0, 0.5);
-    }
-    .vfd-bar:nth-child(2) { animation-delay: 0.2s; height: 16px; }
-    .vfd-bar:nth-child(3) { animation-delay: 0.4s; height: 12px; }
-    .vfd-bar:nth-child(4) { animation-delay: 0.1s; height: 18px; }
-    .vfd-bar:nth-child(5) { animation-delay: 0.3s; height: 8px; }
-    @keyframes vfdBounce {
-      from { height: 4px; }
-      to { height: 18px; }
-    }
-
-    /* Circular Glass Turntable Bay */
-    .turntable-bay {
-      width: 250px;
-      height: 250px;
-      margin: 0 auto;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--bg-surface-elevated) 40%, #151816 100%);
-      border: 3px solid var(--border-primary);
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: inset 0 10px 30px rgba(0,0,0,0.4), 0 10px 24px rgba(0,0,0,0.1);
-    }
-
-    .glass-lid-reflection {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 50%, rgba(255,255,255,0.08) 100%);
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    .optical-laser-arm {
-      position: absolute;
-      top: 25px;
-      right: 35px;
-      width: 80px;
-      height: 12px;
-      background: linear-gradient(to right, #444, #777);
-      border-radius: 6px;
-      transform-origin: right center;
-      transform: rotate(-35deg);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      z-index: 4;
-      display: flex;
-      align-items: center;
-      padding-left: 6px;
-    }
-    .optical-laser-lens {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #00E5FF;
-      box-shadow: 0 0 8px #00E5FF;
-      animation: laserPulse 1.2s infinite;
-    }
-    @keyframes laserPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-
-    /* Hardware Push Buttons */
-    .transport-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .hw-btn {
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-primary);
-      color: var(--text-primary);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 10px 16px;
-      border-radius: 3px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 0 var(--border-primary);
-      transition: all 0.1s ease;
-    }
-    .hw-btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 var(--border-primary);
-    }
-    .hw-btn.primary {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-      box-shadow: 0 4px 0 rgba(0,0,0,0.2);
-    }
-
-    /* Live Website Drawer Preview (Modal / Bottom Expansion) */
-    .live-preview-panel {
-      margin-top: 24px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-primary);
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.08);
-    }
-    .browser-toolbar {
-      background: var(--bg-surface-elevated);
-      border-bottom: 1px solid var(--border-primary);
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-    }
-    .traffic-lights {
-      display: flex;
-      gap: 5px;
-    }
-    .traffic-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-    .traffic-dot.red { background: #FF5F56; }
-    .traffic-dot.yellow { background: #FFBD2E; }
-    .traffic-dot.green { background: #27C93F; }
-
-    .browser-url {
-      background: var(--bg-surface);
-      padding: 4px 16px;
-      border-radius: 4px;
-      border: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-      width: 50%;
-      text-align: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .preview-viewport {
-      height: 280px;
-      background: var(--bg-surface);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .preview-viewport img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* =========================================================================
-       TEMPLATE 02: BANG & OLUFSEN BEOSOUND 9000 (LINEAR ARCHITECTURAL)
-       ========================================================================= */
-    .t2-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .beosound-deck {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-primary);
-      border-radius: 6px;
-      padding: 24px 32px;
-      position: relative;
-      box-shadow: 0 12px 36px rgba(0,0,0,0.06);
-    }
-
-    .beosound-rail {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      padding: 30px 0;
-      border-bottom: 2px solid var(--border-primary);
-    }
-
-    .beosound-glass-bar {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 6px;
-      background: linear-gradient(to right, transparent, var(--border-primary) 10%, var(--border-primary) 90%, transparent);
-      transform: translateY(-50%);
-      z-index: 1;
-    }
-
-    /* Motorized Optical Laser Clamper Carriage */
-    .laser-clamper-carriage {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      border: 2px solid var(--accent);
-      background: rgba(185, 111, 82, 0.08);
-      backdrop-filter: blur(4px);
-      box-shadow: 0 0 24px var(--accent-glow);
-      z-index: 10;
-      pointer-events: none;
-      transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .carriage-lens {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--accent) 30%, transparent 80%);
-      box-shadow: 0 0 14px var(--accent);
-      animation: pulse 1s infinite alternate;
-    }
-
-    .beosound-slot {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-    .beosound-slot:hover {
-      transform: scale(1.06);
-    }
-    .beosound-slot-meta {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      text-transform: uppercase;
-      margin-top: 14px;
-      text-align: center;
-      color: var(--text-secondary);
-    }
-
-    /* Expansive Preview underneath B&O */
-    .t2-preview-stage {
-      display: grid;
-      grid-template-columns: 2.2fr 1fr;
-      gap: 24px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-primary);
-      border-radius: 6px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    }
-
-    /* =========================================================================
-       TEMPLATE 03: SONY CYBER-DISCMAN 90s
-       ========================================================================= */
-    .t3-layout {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 28px;
-      align-items: center;
-    }
-
-    .discman-chassis {
-      width: 340px;
-      height: 340px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #E2E2E0 0%, #A6A6A4 60%, #767674 100%);
-      border: 4px solid #B0B0AE;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255,255,255,0.8);
-      position: relative;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    [data-theme="dark"] .discman-chassis {
-      background: radial-gradient(circle at 35% 35%, #383E3B 0%, #202422 60%, #101211 100%);
-      border-color: #444B47;
-    }
-
-    .discman-lid {
-      width: 290px;
-      height: 290px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.15) 30%, rgba(0,0,0,0.5) 100%);
-      border: 2px solid rgba(255,255,255,0.3);
-      backdrop-filter: blur(3px);
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      cursor: pointer;
-    }
-
-    .discman-remote {
-      background: #181C1A;
-      border: 2px solid #333C37;
-      border-radius: 6px;
-      padding: 18px;
-      color: #00E5FF;
-      font-family: 'JetBrains Mono', monospace;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .remote-screen {
-      background: #091210;
-      border: 1px solid #14332B;
-      padding: 10px 14px;
-      border-radius: 3px;
-      margin-bottom: 14px;
-      color: #00FFCC;
-      font-size: 11px;
-      text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
-    }
-
-    /* =========================================================================
-       TEMPLATE 04: SWISS MINIMALIST ARCHIVAL SPECIMEN
-       ========================================================================= */
-    .t4-table-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-primary);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .swiss-row {
-      display: grid;
-      grid-template-columns: 80px 1.5fr 1fr 1fr 160px;
-      padding: 16px 24px;
-      align-items: center;
-      border-bottom: 1px solid var(--border-subtle);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    .swiss-row:hover {
-      background: var(--bg-surface-elevated);
-    }
-    .swiss-row.active {
-      background: rgba(185, 111, 82, 0.08);
-      border-left: 3px solid var(--accent);
-    }
-
-    .slideout-disc-thumb {
-      width: 44px;
-      height: 44px;
-      position: relative;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .swiss-row:hover .slideout-disc-thumb {
-      transform: translateX(18px) rotate(45deg);
-    }
-
-    /* Comparison Footer */
-    footer {
-      margin-top: 40px;
-      background: var(--bg-surface);
-      border-top: 1px solid var(--border-primary);
-      padding: 24px;
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--text-secondary);
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Top Navigation HUD -->
-  <header>
-    <div class="brand">
-      <span class="brand-tag">02 // CONCEPTS</span>
-      <span class="brand-title">DIGITAL CD PLAYER ARCHITECTURAL TEMPLATES</span>
-    </div>
-
-    <!-- Template Switcher Tabs -->
-    <div class="tabs-wrap">
-      <button class="tab-btn active" onclick="switchTemplate(1)">
-        <span>01</span> TEENAGE ENG. HI-FI
-      </button>
-      <button class="tab-btn" onclick="switchTemplate(2)">
-        <span>02</span> B&O LINEAR 9000
-      </button>
-      <button class="tab-btn" onclick="switchTemplate(3)">
-        <span>03</span> SONY DISCMAN
-      </button>
-      <button class="tab-btn" onclick="switchTemplate(4)">
-        <span>04</span> SWISS ARCHIVAL
-      </button>
-    </div>
-
-    <!-- Light/Dark Toggle -->
-    <button class="theme-toggle-btn" onclick="toggleTheme()">
-      <span id="theme-icon">◐</span>
-      <span id="theme-label">DARK MODE</span>
-    </button>
-  </header>
-
-  <!-- Rationale Bar -->
-  <div class="rationale-bar">
-    <div id="rationale-text">
-      <span class="rationale-pill">TEMPLATE 01</span>
-      <b>Teenage Engineering / Dieter Rams Industrial Hi-Fi:</b> Jewel case crate with realistic thickness + smoked-glass top-loader player with optical laser tracking.
-    </div>
-    <div>12 EDITIONS // 44.1kHz 24-BIT</div>
-  </div>
-
-  <!-- Main Viewport -->
-  <main>
-
-    <!-- =========================================================================
-         TEMPLATE 01: TEENAGE ENGINEERING / INDUSTRIAL HI-FI
-         ========================================================================= -->
-    <div id="t1-view" class="template-container active">
-      <div class="t1-layout">
-
-        <!-- Left: Jewel Case Crate -->
-        <div class="t1-crate-card">
-          <div class="crate-header">
-            <span>OPTICAL JEWEL CASE CRATE // 12 RELEASES</span>
-            <span>SCROLL / CLICK CASE TO EXTRACT DISC ↗</span>
-          </div>
-
-          <div class="jewel-cases-row" id="t1-cases-container">
-            <!-- Populated via JS -->
-          </div>
-
-          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-muted); display: flex; justify-content: space-between; border-top: 1px solid var(--border-subtle); padding-top: 10px;">
-            <span>STATUS: READY</span>
-            <span>SLOT-LOAD CHASSIS: ACTIVE</span>
-          </div>
-        </div>
-
-        <!-- Right: TE Industrial Deck -->
-        <div class="t1-hardware-deck">
-          <div class="deck-top-screws">
-            <div class="screw"></div>
-            <div class="screw"></div>
-          </div>
-
-          <!-- VFD Dot Matrix Screen -->
-          <div class="vfd-screen">
-            <div>
-              <div class="vfd-text" id="t1-vfd-title">TRACK 01 // KART EDITOR</div>
-              <div style="font-size: 8px; color: #888; margin-top: 2px;">24-BIT AUDIO STREAM • 02:45 / 04:12</div>
-            </div>
-            <div class="vfd-visualizer">
-              <div class="vfd-bar"></div>
-              <div class="vfd-bar"></div>
-              <div class="vfd-bar"></div>
-              <div class="vfd-bar"></div>
-              <div class="vfd-bar"></div>
-            </div>
-          </div>
-
-          <!-- Turntable Glass Bay -->
-          <div class="turntable-bay" onclick="togglePlayState()">
-            <div class="glass-lid-reflection"></div>
-            <div class="optical-laser-arm">
-              <div class="optical-laser-lens"></div>
-            </div>
-
-            <!-- Active Spinning Disc in Bay -->
-            <div class="cd-disc cd-spinning" id="t1-active-cd" style="width: 200px; height: 200px;">
-              <div class="cd-center-clear">
-                <div class="cd-spindle-hole"></div>
-              </div>
-              <div class="cd-silkscreen">
-                <div class="cd-meta" id="t1-cd-num">CD 01</div>
-                <div class="cd-title" id="t1-cd-title">KART EDITOR</div>
-                <div class="cd-meta">44.1 kHz</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Hardware Transport Bar -->
-          <div class="transport-bar">
-            <button class="hw-btn" onclick="prevTrack()">⏮ PREV</button>
-            <button class="hw-btn primary" id="t1-play-btn" onclick="togglePlayState()">⏸ PAUSE</button>
-            <button class="hw-btn" onclick="nextTrack()">NEXT ⏭</button>
-            <button class="hw-btn" onclick="ejectTrack()">⏏ EJECT</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Live Web Inspection Deck -->
-      <div class="live-preview-panel">
-        <div class="browser-toolbar">
-          <div class="traffic-lights">
-            <div class="traffic-dot red"></div>
-            <div class="traffic-dot yellow"></div>
-            <div class="traffic-dot green"></div>
-          </div>
-          <div class="browser-url" id="t1-browser-url">https://karteditor.vercel.app</div>
-          <a href="#" id="t1-visit-link" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 700;">VISIT LIVE ↗</a>
-        </div>
-        <div class="preview-viewport">
-          <img id="t1-preview-img" src="https://raw.githubusercontent.com/devm15/Kart/main/public/image.png" alt="Preview">
-        </div>
-      </div>
-    </div>
-
-    <!-- =========================================================================
-         TEMPLATE 02: BANG & OLUFSEN BEOSOUND 9000
-         ========================================================================= -->
-    <div id="t2-view" class="template-container">
-      <div class="t2-layout">
-
-        <!-- Linear 6-Disc Glass Rail Deck -->
-        <div class="beosound-deck">
-          <div class="crate-header" style="margin-bottom: 12px;">
-            <span>BANG & OLUFSEN BEOSOUND 9000 ARCHITECTURAL RAIL</span>
-            <span>MOTORIZED CARRIAGE DOCKS ONTO SELECTED COMPACT DISC</span>
-          </div>
-
-          <div class="beosound-rail" id="t2-rail-container">
-            <div class="beosound-glass-bar"></div>
-            <!-- Motorized Carriage -->
-            <div class="laser-clamper-carriage" id="t2-carriage" style="left: 0px;">
-              <div class="carriage-lens"></div>
-            </div>
-            <!-- Discs injected via JS -->
-          </div>
-        </div>
-
-        <!-- Expansive Lower Preview Stage -->
-        <div class="t2-preview-stage">
-          <div>
-            <div class="browser-toolbar" style="border-radius: 4px; margin-bottom: 12px;">
-              <div class="traffic-lights">
-                <div class="traffic-dot red"></div>
-                <div class="traffic-dot yellow"></div>
-                <div class="traffic-dot green"></div>
-              </div>
-              <div class="browser-url" id="t2-browser-url">https://karteditor.vercel.app</div>
-              <span style="color: var(--accent); font-weight: 700;">EXPANDED RUNTIME</span>
-            </div>
-            <div style="height: 340px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-primary);">
-              <img id="t2-preview-img" src="https://raw.githubusercontent.com/devm15/Kart/main/public/image.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Preview">
-            </div>
-          </div>
-
-          <div style="display: flex; flex-direction: column; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
-            <div style="padding: 16px; background: var(--bg-surface-elevated); border: 1px solid var(--border-primary); border-radius: 4px;">
-              <div style="color: var(--accent); font-weight: 700; font-size: 9px; margin-bottom: 4px;">NOW MOUNTED</div>
-              <div style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; color: var(--text-primary);" id="t2-info-title">KART EDITOR</div>
-              <p style="font-family: 'Inter', sans-serif; font-size: 12px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5;" id="t2-info-desc">
-                Blazing-fast AI-integrated web IDE built in the browser using Next.js App Router, WebContainers, Monaco Editor, and local LLMs via Ollama.
-              </p>
-            </div>
-
-            <div style="padding: 16px; background: var(--bg-surface-elevated); border: 1px solid var(--border-primary); border-radius: 4px; margin-top: 12px;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                <span style="color: var(--text-muted);">CATEGORY:</span>
-                <span id="t2-info-cat" style="color: var(--text-primary); font-weight: 600;">AGENTIC AI</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                <span style="color: var(--text-muted);">DEPLOYED:</span>
-                <span style="color: var(--accent); font-weight: 600;">VERCEL RUNTIME</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span style="color: var(--text-muted);">SPEED:</span>
-                <span>33 ⅓ RPM OPTICAL</span>
-              </div>
-            </div>
-
-            <div style="display: flex; gap: 8px; margin-top: 16px;">
-              <button class="hw-btn primary" style="flex: 1;" onclick="window.open(PROJECTS[currentTrack].liveUrl, '_blank')">VISIT DEPLOYMENT ↗</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- =========================================================================
-         TEMPLATE 03: SONY CYBER-DISCMAN 90s
-         ========================================================================= -->
-    <div id="t3-view" class="template-container">
-      <div class="t3-layout">
-
-        <!-- 3D Jewel Case Carousel / Coverflow -->
-        <div class="t1-crate-card">
-          <div class="crate-header">
-            <span>SONY 90s DISCMAN CAROUSEL</span>
-            <span>CLICK TO INSERT INTO DISCMAN ⏏</span>
-          </div>
-
-          <div style="display: flex; justify-content: center; align-items: center; gap: 20px; padding: 40px 0; perspective: 800px;" id="t3-coverflow-container">
-            <!-- Populated via JS -->
-          </div>
-
-          <div style="text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-secondary);">
-            ELECTRONIC SHOCK PROTECTION (ESP) • 45 SEC BUFFER ACTIVE
-          </div>
-        </div>
-
-        <!-- Discman Clamshell Player + Wire Remote -->
-        <div style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
-          <div class="discman-chassis">
-            <div class="discman-lid" onclick="togglePlayState()">
-              <div class="cd-disc cd-spinning" id="t3-active-cd" style="width: 220px; height: 220px;">
-                <div class="cd-center-clear">
-                  <div class="cd-spindle-hole"></div>
-                </div>
-                <div class="cd-silkscreen">
-                  <div class="cd-meta" id="t3-cd-num">CD 01</div>
-                  <div class="cd-title" id="t3-cd-title">KART EDITOR</div>
-                  <div class="cd-meta">ESP 45 SEC</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- In-Line Remote Controller HUD -->
-          <div class="discman-remote" style="width: 320px;">
-            <div class="remote-screen">
-              <div style="display: flex; justify-content: space-between;">
-                <span id="t3-remote-title">01 KART EDITOR</span>
-                <span>VOL 24</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 9px; color: #88E5D0;">
-                <span>02:35 / 04:12</span>
-                <span>1BIT DAC</span>
-              </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; gap: 8px;">
-              <button class="hw-btn" style="flex: 1; padding: 6px;" onclick="prevTrack()">◀◀</button>
-              <button class="hw-btn primary" style="flex: 1; padding: 6px;" onclick="togglePlayState()">▶❚❚</button>
-              <button class="hw-btn" style="flex: 1; padding: 6px;" onclick="nextTrack()">▶▶</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- =========================================================================
-         TEMPLATE 04: SWISS ARCHIVAL SPECIMEN TABLE
-         ========================================================================= -->
-    <div id="t4-view" class="template-container">
-      <div class="t4-table-card">
-        <div style="padding: 16px 24px; background: var(--bg-surface-elevated); border-bottom: 1px solid var(--border-primary); display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;">
-          <span>SWISS ARCHIVAL RELEASES (2025–2026)</span>
-          <span>MOTORIZED TRAY DRIVE // DOCKABLE</span>
-        </div>
-
-        <div id="t4-table-body">
-          <!-- Populated via JS -->
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    DEV MISTRY // PORTFOLIO ARCHITECTURE • 4 INTERACTIVE DIGITAL CD PLAYER TEMPLATES • 2026
-  </footer>
-
-  <script>
-    // Project Dataset
-    const PROJECTS = [
-      {
-        id: '01',
-        num: '01',
-        title: 'KART EDITOR',
-        category: 'AGENTIC AI',
-        desc: 'Blazing-fast AI-integrated web IDE built in the browser using Next.js App Router, WebContainers, Monaco Editor, and local LLMs via Ollama.',
-        liveUrl: 'https://karteditor.vercel.app',
-        image: 'https://raw.githubusercontent.com/devm15/Kart/main/public/image.png',
-        color: '#8B5CF6'
-      },
-      {
-        id: '02',
-        num: '02',
-        title: 'COINPULSE',
-        category: 'FINTECH',
-        desc: 'Real-time crypto intelligence engine tracking 10,000+ assets with live WebSocket ticker feeds, orderbook visualizers, and interactive TradingView charts.',
-        liveUrl: 'https://coinpulse-crypto.vercel.app',
-        image: 'https://raw.githubusercontent.com/DevM15/CoinPulse/main/public/image.png',
-        color: '#F59E0B'
-      },
-      {
-        id: '03',
-        num: '03',
-        title: 'TRAVEL PLANNER',
-        category: 'AI & CLOUD',
-        desc: 'Full-stack AI itinerary orchestration engine utilizing interactive map coordinates, weather telemetry, and intelligent budget calculation.',
-        liveUrl: 'https://devm15.github.io/Travel-Planner/',
-        image: 'https://raw.githubusercontent.com/DevM15/Travel-Planner/main/preview.png',
-        color: '#10B981'
-      },
-      {
-        id: '04',
-        num: '04',
-        title: 'NEWSMAN AI',
-        category: 'AGENTIC AI',
-        desc: 'Multi-agent autonomous intelligence pipeline digesting RSS feeds across global outlets with fact-checking deduplication agents and LangGraph.',
-        liveUrl: 'https://newsman-ai.vercel.app',
-        image: 'https://raw.githubusercontent.com/DevM15/NewsMan/main/public/image.png',
-        color: '#EC4899'
-      },
-      {
-        id: '05',
-        num: '05',
-        title: 'SEW PDF SHARING',
-        category: 'SYSTEM TOOLS',
-        desc: 'Zero-knowledge encrypted PDF sharing infrastructure with ephemeral expiring download tokens and distributed edge delivery.',
-        liveUrl: 'https://sew-cloud.vercel.app',
-        image: 'https://raw.githubusercontent.com/DevM15/sew/main/public/image.png',
-        color: '#3B82F6'
-      },
-      {
-        id: '06',
-        num: '06',
-        title: 'DAILY DIGEST',
-        category: 'AUTOMATION',
-        desc: 'Deterministic scheduled briefing pipeline orchestrating headless scrapers, LLM synthesis, and automated transactional delivery.',
-        liveUrl: 'https://daily-digest.vercel.app',
-        image: 'https://raw.githubusercontent.com/DevM15/Daily-Digest/main/public/image.png',
-        color: '#6366F1'
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DM Typography Explorations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono&family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
       }
-    ];
 
-    let currentTrack = 0;
-    let isPlaying = true;
-    let isDark = false;
-
-    // Switch between the 4 templates
-    function switchTemplate(index) {
-      document.querySelectorAll('.tab-btn').forEach((b, i) => {
-        b.classList.toggle('active', i === index - 1);
-      });
-      document.querySelectorAll('.template-container').forEach((c, i) => {
-        c.classList.toggle('active', i === index - 1);
-      });
-
-      const rationales = [
-        '<span class="rationale-pill">TEMPLATE 01</span> <b>Teenage Engineering Hi-Fi:</b> Jewel case crate with realistic thickness + smoked-glass top-loader player with optical laser tracking.',
-        '<span class="rationale-pill">TEMPLATE 02</span> <b>Bang & Olufsen BeoSound 9000:</b> Linear glass rail with motorized optical clamper carriage that travels across 6 discs.',
-        '<span class="rationale-pill">TEMPLATE 03</span> <b>Sony Cyber-Discman 90s:</b> Magnesium clamshell disc deck with 3D coverflow jewel cases & backlit wire remote HUD.',
-        '<span class="rationale-pill">TEMPLATE 04</span> <b>Swiss Archival Specimen:</b> Precision editorial catalog table where hovering glides out compact discs into a motorized drive.'
-      ];
-      document.getElementById('rationale-text').innerHTML = rationales[index - 1];
-
-      if (index === 2) updateBeoSoundCarriage(currentTrack);
-    }
-
-    // Toggle Light / Dark Theme
-    function toggleTheme() {
-      isDark = !isDark;
-      document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
-      document.getElementById('theme-icon').textContent = isDark ? '☼' : '◐';
-      document.getElementById('theme-label').textContent = isDark ? 'LIGHT MODE' : 'DARK MODE';
-    }
-
-    // Load Track into Players
-    function loadTrack(index) {
-      currentTrack = index;
-      const p = PROJECTS[index];
-
-      // Update Template 1
-      document.getElementById('t1-vfd-title').textContent = `TRACK ${p.num} // ${p.title}`;
-      document.getElementById('t1-cd-num').textContent = `CD ${p.num}`;
-      document.getElementById('t1-cd-title').textContent = p.title;
-      document.getElementById('t1-browser-url').textContent = p.liveUrl;
-      document.getElementById('t1-visit-link').href = p.liveUrl;
-      document.getElementById('t1-preview-img').src = p.image;
-
-      document.querySelectorAll('.jewel-case').forEach((jc, i) => {
-        jc.classList.toggle('active', i === index);
-      });
-
-      // Update Template 2 (B&O)
-      document.getElementById('t2-browser-url').textContent = p.liveUrl;
-      document.getElementById('t2-preview-img').src = p.image;
-      document.getElementById('t2-info-title').textContent = p.title;
-      document.getElementById('t2-info-desc').textContent = p.desc;
-      document.getElementById('t2-info-cat').textContent = p.category;
-      updateBeoSoundCarriage(index);
-
-      // Update Template 3 (Discman)
-      document.getElementById('t3-cd-num').textContent = `CD ${p.num}`;
-      document.getElementById('t3-cd-title').textContent = p.title;
-      document.getElementById('t3-remote-title').textContent = `${p.num} ${p.title}`;
-
-      // Update Template 4 (Swiss)
-      document.querySelectorAll('.swiss-row').forEach((sr, i) => {
-        sr.classList.toggle('active', i === index);
-      });
-    }
-
-    function updateBeoSoundCarriage(index) {
-      const carriage = document.getElementById('t2-carriage');
-      const slots = document.querySelectorAll('.beosound-slot');
-      if (slots[index]) {
-        const slotRect = slots[index].getBoundingClientRect();
-        const railRect = document.getElementById('t2-rail-container').getBoundingClientRect();
-        const targetLeft = slotRect.left - railRect.left + (slotRect.width / 2) - 80;
-        carriage.style.left = `${Math.max(0, targetLeft)}px`;
+      body {
+        margin: 0;
+        padding: 30px;
+        background: #e8e6df;
+        color: #252a27;
       }
-    }
 
-    function togglePlayState() {
-      isPlaying = !isPlaying;
-      document.querySelectorAll('.cd-disc').forEach(cd => {
-        cd.classList.toggle('cd-spinning', isPlaying);
-      });
-      const playBtn = document.getElementById('t1-play-btn');
-      if (playBtn) playBtn.textContent = isPlaying ? '⏸ PAUSE' : '▶ PLAY';
-    }
+      .variations {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
 
-    function nextTrack() {
-      loadTrack((currentTrack + 1) % PROJECTS.length);
-    }
-    function prevTrack() {
-      loadTrack((currentTrack - 1 + PROJECTS.length) % PROJECTS.length);
-    }
-    function ejectTrack() {
-      alert(`[⏏ EJECT] CD ${PROJECTS[currentTrack].num} (${PROJECTS[currentTrack].title}) returned to optical case.`);
-    }
+      .card {
+        min-height: 330px;
+        background: #f8f7f2;
+        border: 1px solid #dedbd2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 35px 20px;
+        position: relative;
+        overflow: hidden;
+      }
 
-    // Populate Template 1 Jewel Cases
-    function renderT1Cases() {
-      const container = document.getElementById('t1-cases-container');
-      container.innerHTML = PROJECTS.map((p, idx) => `
-        <div class="jewel-case ${idx === 0 ? 'active' : ''}" onclick="loadTrack(${idx})">
-          <div class="jewel-spine" style="background: ${p.color};"></div>
-          <div class="jewel-info">
-            <span style="color: var(--accent); font-weight: 700;">VOL. ${p.num}</span>
-            <div class="jewel-name">${p.title}</div>
-          </div>
-          <div class="jewel-disc-preview">
-            <div class="cd-disc" style="width: 100%; height: 100%;">
-              <div class="cd-center-clear"><div class="cd-spindle-hole"></div></div>
-            </div>
-          </div>
-          <div class="jewel-info" style="color: var(--text-muted); font-size: 7px;">
-            ${p.category}
-          </div>
-        </div>
-      `).join('');
-    }
+      .number {
+        position: absolute;
+        top: 18px;
+        left: 20px;
+        font:
+          11px "DM Mono",
+          monospace;
+        color: #899187;
+      }
 
-    // Populate Template 2 BeoSound Slots
-    function renderT2Slots() {
-      const container = document.getElementById('t2-rail-container');
-      const existingCarriage = document.getElementById('t2-carriage');
-      const slotsHtml = PROJECTS.map((p, idx) => `
-        <div class="beosound-slot" onclick="loadTrack(${idx})">
-          <div class="cd-disc" style="width: 110px; height: 110px;">
-            <div class="cd-center-clear"><div class="cd-spindle-hole"></div></div>
-            <div class="cd-silkscreen" style="padding: 8%;">
-              <span style="font-size: 7px; color: #fff;">${p.num}</span>
-              <span style="font-size: 9px; font-weight: 700; color: #fff;">${p.title}</span>
-            </div>
-          </div>
-          <div class="beosound-slot-meta">
-            <b style="color: var(--text-primary);">${p.title}</b><br>
-            <span style="color: var(--text-muted); font-size: 7.5px;">${p.category}</span>
-          </div>
-        </div>
-      `).join('');
+      .logo {
+        font:
+          800 65px "Space Grotesk",
+          sans-serif;
+        letter-spacing: -7px;
+        margin-bottom: 28px;
+        background: linear-gradient(130deg, #222a26, #87918a, #222a26);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
 
-      container.innerHTML = `<div class="beosound-glass-bar"></div>` + existingCarriage.outerHTML + slotsHtml;
-    }
+      h1 {
+        font-size: clamp(30px, 4vw, 62px);
+        line-height: 0.98;
+        text-align: center;
+        margin: 0;
+        white-space: nowrap;
+      }
 
-    // Populate Template 3 Coverflow
-    function renderT3Coverflow() {
-      const container = document.getElementById('t3-coverflow-container');
-      container.innerHTML = PROJECTS.slice(0, 3).map((p, idx) => `
-        <div class="jewel-case ${idx === 0 ? 'active' : ''}" style="flex: 0 0 150px; height: 190px; transform: rotateY(${idx === 0 ? 0 : idx === 1 ? -25 : 25}deg);" onclick="loadTrack(${idx})">
-          <div class="jewel-spine" style="background: ${p.color};"></div>
-          <div class="jewel-info">
-            <span style="color: var(--accent); font-weight: 700;">VOL. ${p.num}</span>
-            <div class="jewel-name">${p.title}</div>
-          </div>
-          <div class="jewel-disc-preview">
-            <div class="cd-disc" style="width: 100%; height: 100%;">
-              <div class="cd-center-clear"><div class="cd-spindle-hole"></div></div>
-            </div>
-          </div>
-          <div class="jewel-info" style="color: var(--text-muted); font-size: 7px;">${p.category}</div>
-        </div>
-      `).join('');
-    }
+      h1 span {
+        color: #c47758;
+      }
 
-    // Populate Template 4 Swiss Table
-    function renderT4Table() {
-      const body = document.getElementById('t4-table-body');
-      body.innerHTML = PROJECTS.map((p, idx) => `
-        <div class="swiss-row ${idx === 0 ? 'active' : ''}" onclick="loadTrack(${idx})">
-          <span style="color: var(--accent); font-weight: 700;">0${p.num} //</span>
-          <span style="font-weight: 700; color: var(--text-primary);">${p.title}</span>
-          <span style="color: var(--text-secondary);">${p.category}</span>
-          <span style="color: var(--text-muted);">2026 RELEASE</span>
-          <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
-            <div class="slideout-disc-thumb">
-              <div class="cd-disc" style="width: 44px; height: 44px;">
-                <div class="cd-center-clear"><div class="cd-spindle-hole"></div></div>
-              </div>
-            </div>
-            <button class="hw-btn" style="padding: 4px 8px; font-size: 8px;">LOAD ↗</button>
-          </div>
-        </div>
-      `).join('');
-    }
+      .subtitle {
+        margin-top: 20px;
+        font:
+          12px "DM Mono",
+          monospace;
+        letter-spacing: 3px;
+        color: #7c877b;
+        text-align: center;
+      }
 
-    // Initialize all templates
-    window.addEventListener('DOMContentLoaded', () => {
-      renderT1Cases();
-      renderT2Slots();
-      renderT3Coverflow();
-      renderT4Table();
-      loadTrack(0);
-    });
-  </script>
-</body>
+      .v1 h1 {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 800;
+        letter-spacing: -4px;
+      }
+
+      .v2 h1 {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+        letter-spacing: -3px;
+      }
+
+      .v3 h1 {
+        font-family: "Playfair Display", serif;
+        font-weight: 500;
+        letter-spacing: -2px;
+      }
+
+      .v4 h1 {
+        font-family: "DM Mono", monospace;
+        font-weight: 400;
+        font-size: clamp(23px, 3vw, 43px);
+        letter-spacing: -3px;
+      }
+
+      .v5 h1 {
+        font-family: "Oswald", sans-serif;
+        font-weight: 600;
+        letter-spacing: -2px;
+        text-transform: uppercase;
+      }
+
+      .v6 h1 {
+        font-family: "Manrope", sans-serif;
+        font-weight: 500;
+        letter-spacing: -5px;
+      }
+
+      .v6 .subtitle {
+        letter-spacing: 6px;
+      }
+
+      @media (max-width: 750px) {
+        .variations {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="variations">
+      <section class="card v1">
+        <div class="number">01 / EDITORIAL BOLD</div>
+        <div class="logo">DM</div>
+        <h1>HELLO, I'M DEV<span>.</span></h1>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <section class="card v2">
+        <div class="number">02 / SWISS MINIMAL</div>
+        <div class="logo">DM</div>
+        <h1>Hello, I'm Dev<span>.</span></h1>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <section class="card v3">
+        <div class="number">03 / LUXURY SERIF</div>
+        <div class="logo">DM</div>
+        <h1>Hello, I'm Dev<span>.</span></h1>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <section class="card v4">
+        <div class="number">04 / TECH MONO</div>
+        <div class="logo">DM</div>
+        <h1>HELLO, I'M DEV<span>.</span></h1>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <section class="card v5">
+        <div class="number">05 / MODERN CONDENSED</div>
+        <div class="logo">DM</div>
+        <h1>HELLO, I'M DEV<span>.</span></h1>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <section class="card v6">
+        <div class="number">06 / MINIMAL SPACED</div>
+        <div class="logo">DM</div>
+        <h1>Hello, I'm Dev<span>.</span></h1>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+    </div>
+  </body>
 </html>

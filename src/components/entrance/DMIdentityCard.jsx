@@ -114,9 +114,8 @@ export default function DMIdentityCard({
           )}
 
           <div
-            className={`absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-subtle)] pb-2 transition-opacity duration-500 ${
-              isFramed ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-subtle)] pb-2 transition-opacity duration-500 ${isFramed ? 'opacity-100' : 'opacity-0'
+              }`}
           >
             <span className="flex items-center gap-1.5 font-semibold text-[var(--text-primary)]">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
@@ -194,9 +193,8 @@ export default function DMIdentityCard({
           </motion.div>
 
           <div
-            className={`absolute bottom-3 left-4 right-4 flex items-center justify-between text-[7px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-subtle)] pt-2 transition-opacity duration-500 ${
-              isFramed ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`absolute bottom-3 left-4 right-4 flex items-center justify-between text-[7px] font-mono tracking-wider text-[var(--text-secondary)] uppercase border-t border-[var(--border-subtle)] pt-2 transition-opacity duration-500 ${isFramed ? 'opacity-100' : 'opacity-0'
+              }`}
           >
             <span>IDENTITY FOLIO</span>
             <span className="text-[var(--accent)] font-semibold">01 / PROFILE</span>
@@ -583,11 +581,10 @@ export default function DMIdentityCard({
                 setIteration(iter.id);
               }}
               data-cursor="button"
-              className={`px-2 py-0.5 rounded-full font-mono text-[8px] tracking-wider uppercase transition-all cursor-pointer ${
-                iteration === iter.id
+              className={`px-2 py-0.5 rounded-full font-mono text-[8px] tracking-wider uppercase transition-all cursor-pointer ${iteration === iter.id
                   ? 'bg-[var(--accent)] text-[#F7F6F2] font-bold shadow-xs'
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-              }`}
+                }`}
             >
               {iter.label}
             </button>
