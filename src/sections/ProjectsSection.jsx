@@ -63,7 +63,7 @@ export default function ProjectsSection({ onOpenProject, projects, activeFilter,
 
               <div className="flex items-baseline justify-between mb-2">
                 <span className="font-mono text-[9px] tracking-wider text-[var(--accent)] uppercase font-semibold">
-                  {p.num} // {p.badge}
+                  {`${p.num} // ${p.badge}`}
                 </span>
                 <span className="font-mono text-[8px] tracking-wider text-[var(--text-secondary)] uppercase">
                   {p.category}

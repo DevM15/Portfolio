@@ -9,7 +9,7 @@ import { useTheme } from '../utils/ThemeContext';
  * - Features subtle hover scaling and smooth icon rotation.
  */
 export default function ThemeToggle() {
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
 
   return (
     <button

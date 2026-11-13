@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomCursor from './components/CustomCursor';
 import SpatialCanvasBackground from './components/SpatialCanvasBackground';
+import VantaTopologyBackground from './components/VantaTopologyBackground';
 import ThemeToggle from './components/ThemeToggle';
 import { useTransitionTimeline, TRANSITION_PHASES } from './utils/useTransitionTimeline';
 import HomeSection from './sections/HomeSection';
@@ -194,10 +195,16 @@ export default function App() {
 
   return (
     <div className="relative w-screen h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-hidden select-none font-sans transition-colors duration-400">
-      {/* ==================== PROCEDURAL SPATIAL CANVAS BACKGROUND ==================== */}
+      {/* ==================== 1. VANTA.JS TOPOLOGY ANIMATED BACKGROUND ==================== */}
+      <VantaTopologyBackground
+        isRevealed={isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM)}
+      />
+
+      {/* ==================== 2 & 3. AMBIENT PROFILE ILLUMINATION & ARCHITECTURAL GUIDES ==================== */}
       <SpatialCanvasBackground
         sectionIndex={currentIndex}
         isRevealed={isAtLeast(TRANSITION_PHASES.BACKGROUND_TRANSFORM)}
+        hasVantaBg={true}
       />
 
       {/* Subtle Warm Vignette Layer */}

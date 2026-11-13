@@ -5,12 +5,17 @@ import { useTheme } from '../utils/ThemeContext';
  * SpatialCanvasBackground - Premium Architectural Editorial Background
  * Adapts dynamically between Light mode (#F7F6F2) and Dark mode (#151916).
  */
-export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed = true }) {
+export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed = true, hasVantaBg = true }) {
   const { isDark } = useTheme();
   const isDarkRef = useRef(isDark);
   useEffect(() => {
     isDarkRef.current = isDark;
   }, [isDark]);
+
+  const hasVantaBgRef = useRef(hasVantaBg);
+  useEffect(() => {
+    hasVantaBgRef.current = hasVantaBg;
+  }, [hasVantaBg]);
 
   const canvasRef = useRef(null);
   const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
@@ -72,9 +77,16 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
 
       // Theme-specific colors
       const bgBase = dark ? '#151916' : '#F7F6F2';
-      const illumCenter = dark ? 'rgba(29, 35, 31, 0.95)' : 'rgba(252, 251, 248, 0.95)';
-      const illumMid = dark ? 'rgba(21, 25, 22, 0.7)' : 'rgba(247, 246, 242, 0.7)';
-      const illumOuter = dark ? 'rgba(15, 18, 16, 0.35)' : 'rgba(233, 229, 220, 0.35)';
+      const hasVanta = hasVantaBgRef.current;
+      const illumCenter = hasVanta
+        ? (dark ? 'rgba(29, 35, 31, 0.72)' : 'rgba(252, 251, 248, 0.72)')
+        : (dark ? 'rgba(29, 35, 31, 0.95)' : 'rgba(252, 251, 248, 0.95)');
+      const illumMid = hasVanta
+        ? (dark ? 'rgba(21, 25, 22, 0.32)' : 'rgba(247, 246, 242, 0.32)')
+        : (dark ? 'rgba(21, 25, 22, 0.7)' : 'rgba(247, 246, 242, 0.7)');
+      const illumOuter = hasVanta
+        ? (dark ? 'rgba(15, 18, 16, 0)' : 'rgba(233, 229, 220, 0)')
+        : (dark ? 'rgba(15, 18, 16, 0.35)' : 'rgba(233, 229, 220, 0.35)');
       const guideColor = dark ? 'rgba(57, 66, 57, 0.65)' : 'rgba(222, 217, 206, 0.55)';
       const sageColor = dark ? 'rgba(162, 173, 160, 0.35)' : 'rgba(120, 132, 119, 0.32)';
       const waveColor = dark ? 'rgba(162, 173, 160, 0.08)' : 'rgba(120, 132, 119, 0.08)';
@@ -95,8 +107,10 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       ctx.clearRect(0, 0, width, height);
 
       // ==================== 1. BASE BACKGROUND ====================
-      ctx.fillStyle = bgBase;
-      ctx.fillRect(0, 0, width, height);
+      if (!hasVanta) {
+        ctx.fillStyle = bgBase;
+        ctx.fillRect(0, 0, width, height);
+      }
 
       // ==================== 2. AMBIENT ILLUMINATION (CENTRAL PROFILE GLOW) ====================
       const centerIllum = ctx.createRadialGradient(
