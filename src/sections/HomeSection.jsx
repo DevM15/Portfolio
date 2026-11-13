@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DMIdentityCard from '../components/entrance/DMIdentityCard';
 import TechText from '../components/TechText/TechText';
+import StrokeText from '../components/StrokeText/StrokeText';
 
 /**
  * Curated Exhibition Projects:
@@ -108,38 +109,39 @@ export default function HomeSection({
             exit={{ opacity: 0, y: -20, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
             className="absolute top-[calc(50%+85px)] sm:top-[calc(50%+95px)] md:top-[calc(50%+110px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
           >
-            {/* Luxury Editorial Main Heading */}
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 1.0,
-                delay: 0.95,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-[var(--text-primary)] leading-[1.1] select-none tracking-tight flex items-center justify-center flex-wrap"
-            >
-              <span className="font-light tracking-[0.16em] sm:tracking-[0.20em] uppercase text-[0.82em] sm:text-[0.86em] text-[var(--text-primary)] opacity-95">
-                HELLO, I'M
-              </span>
-              <span className="font-serif italic font-normal tracking-normal text-[1.12em] ml-2.5 sm:ml-4 text-[var(--text-primary)]">
-                DEV
-              </span>
-              <span className="text-[var(--accent)] font-sans not-italic font-bold text-[0.9em] ml-0.5">
-                .
-              </span>
-            </motion.h1>
+            {/* Luxury Editorial Main Heading Animated via StrokeText */}
+            <div className="w-full max-w-xl mx-auto flex items-center justify-center px-2">
+              <StrokeText
+                text="HELLO, I'M DEV."
+                fontFamily='"Cormorant Garamond", "Bodoni Moda", Georgia, serif'
+                fontSize={58}
+                fontWeight={600}
+                strokeColor="var(--accent)"
+                fillColor="var(--text-primary)"
+                strokeWidth={1.2}
+                drawDuration={1.3}
+                fillDelay={0.15}
+                stagger={0.045}
+                ease="power2.out"
+                trigger="mount"
+                fillMode="wipe"
+                wipeFrom="left"
+                letterSpacing={2}
+                hoverRedraw={true}
+                shadow={false}
+              />
+            </div>
 
             {/* Refined Architectural Subtitle */}
             <motion.p
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 0.9, y: 0 }}
               transition={{
-                duration: 0.9,
-                delay: 1.25,
+                duration: 0.8,
+                delay: 1.1,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="mt-3 sm:mt-5 text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.36em] uppercase select-none"
+              className="mt-2.5 sm:mt-3.5 text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.36em] uppercase select-none"
             >
               DESIGNING & BUILDING DIGITAL EXPERIENCES.
             </motion.p>
