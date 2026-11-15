@@ -67,15 +67,9 @@ export function useTransitionTimeline() {
 
     timelineStartRef.current = performance.now();
 
+    // Loop or pause at the 1st loading animation (DM + greeting) as requested
+    // Set to only stay on TRANSITION_PHASES.INTRO without advancing to subsequent flip/gallery phases
     const activeTimers = [];
-
-    // Schedule discrete state transitions (ONLY 10 total state changes throughout the intro)
-    TIMINGS.forEach(({ phase: p, time }) => {
-      const timer = setTimeout(() => {
-        setPhase(p);
-      }, time);
-      activeTimers.push(timer);
-    });
 
     return () => {
       activeTimers.forEach((t) => clearTimeout(t));
