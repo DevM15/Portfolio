@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DMIdentityCard from '../components/entrance/DMIdentityCard';
 import TechText from '../components/TechText/TechText';
-import StrokeText from '../components/StrokeText/StrokeText';
 
 /**
  * Curated Exhibition Projects:
@@ -101,51 +100,96 @@ export default function HomeSection({
       <AnimatePresence>
         {!isGreetingExit && (
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0 }}
             animate={{
               opacity: isGreetingPhase ? 1 : 0,
-              y: isGreetingPhase ? 0 : -16,
             }}
-            exit={{ opacity: 0, y: -20, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            className="absolute top-[calc(50%+65px)] sm:top-[calc(50%+72px)] md:top-[calc(50%+80px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40"
+            exit={{
+              opacity: 0,
+              y: -24,
+              filter: 'blur(6px)',
+              transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+            }}
+            className="absolute top-[calc(50%+65px)] sm:top-[calc(50%+72px)] md:top-[calc(50%+80px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40 select-none"
           >
-            {/* Luxury Editorial Main Heading Animated via StrokeText with delay after DM logo */}
-            <div className="flex items-center justify-center w-full max-w-xl px-2 mx-auto">
-              <StrokeText
-                text="HELLO, I'M DEV."
-                fontFamily='"Cormorant Garamond", "Bodoni Moda", Georgia, serif'
-                fontSize={56}
-                fontWeight={600}
-                strokeColor="var(--accent)"
-                fillColor="var(--text-primary)"
-                strokeWidth={1.2}
-                startDelay={0.9}
-                drawDuration={1.3}
-                fillDelay={0.15}
-                stagger={0.045}
-                ease="power2.out"
-                trigger="mount"
-                fillMode="wipe"
-                wipeFrom="left"
-                letterSpacing={2}
-                hoverRedraw={false}
-                shadow={false}
-              />
+            {/* Luxury Editorial Main Heading with Cinematic Masked Reveals */}
+            <div className="flex items-center justify-center flex-wrap overflow-hidden py-1">
+              {/* "HELLO, I'M" - Roman Serif Letter-Spaced Glide */}
+              <div className="overflow-hidden inline-flex">
+                <motion.span
+                  initial={{ y: '115%', opacity: 0 }}
+                  animate={{ y: '0%', opacity: 0.95 }}
+                  transition={{
+                    duration: 1.05,
+                    delay: 1.1,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="font-serif font-light tracking-[0.18em] sm:tracking-[0.22em] uppercase text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-[var(--text-primary)]"
+                >
+                  HELLO, I'M
+                </motion.span>
+              </div>
+
+              {/* "DEV" - Editorial Cursive Italic Flourish */}
+              <div className="overflow-hidden inline-flex ml-2.5 sm:ml-4">
+                <motion.span
+                  initial={{ y: '115%', opacity: 0, scale: 0.92 }}
+                  animate={{ y: '0%', opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 1.1,
+                    delay: 1.25,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="font-serif italic font-normal tracking-normal text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[var(--text-primary)]"
+                >
+                  DEV
+                </motion.span>
+              </div>
+
+              {/* Period - Terracotta Pop */}
+              <div className="overflow-hidden inline-flex">
+                <motion.span
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [0, 1.4, 1], opacity: 1 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 1.55,
+                    ease: [0.34, 1.56, 0.64, 1],
+                  }}
+                  className="text-[var(--accent)] font-sans not-italic font-bold text-2xl sm:text-4xl md:text-5xl lg:text-6xl ml-0.5"
+                >
+                  .
+                </motion.span>
+              </div>
             </div>
 
-            {/* Refined Architectural Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 0.9, y: 0 }}
+            {/* Architectural Accent Hairline */}
+            <motion.div
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 0.5 }}
               transition={{
-                duration: 0.8,
-                delay: 2.2,
+                duration: 0.85,
+                delay: 1.65,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="mt-2 sm:mt-3 text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.36em] uppercase select-none"
-            >
-              DESIGNING & BUILDING DIGITAL EXPERIENCES.
-            </motion.p>
+              className="w-16 sm:w-24 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent my-2 sm:my-3 origin-center"
+            />
+
+            {/* Refined Architectural Subtitle with Tracking Expansion */}
+            <div className="overflow-hidden">
+              <motion.p
+                initial={{ y: '115%', opacity: 0 }}
+                animate={{ y: '0%', opacity: 0.85 }}
+                transition={{
+                  duration: 0.95,
+                  delay: 1.8,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.38em] uppercase select-none"
+              >
+                DESIGNING & BUILDING DIGITAL EXPERIENCES.
+              </motion.p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
