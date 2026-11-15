@@ -380,6 +380,9 @@ function WorkspaceCard({
     return Math.max(0.1, 0.4 - (abs - 1.4) * 0.3);
   });
 
+  // Determine card frame presentation during intro
+  const isIntroCard = index === 0 && phaseIndex < 5;
+
   return (
     <motion.div
       onClick={!isActive ? onSelect : undefined}
@@ -392,30 +395,34 @@ function WorkspaceCard({
         zIndex: isActive ? 20 : Math.round(10 - Math.abs(index)),
         transformStyle: 'preserve-3d',
       }}
-      className={`absolute w-[min(94vw,1260px)] h-[min(calc(100vh-165px),640px)] rounded-[4px] border transition-colors duration-300 shadow-xl overflow-hidden will-change-transform ${
-        isActive
+      className={`absolute w-[min(94vw,1260px)] h-[min(calc(100vh-165px),640px)] rounded-[4px] transition-all duration-700 overflow-hidden will-change-transform ${
+        isIntroCard
+          ? 'border-transparent bg-transparent shadow-none pointer-events-auto'
+          : isActive
           ? 'border-[var(--border-primary)] bg-[var(--bg-surface)]/95 shadow-2xl pointer-events-auto'
-          : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]/75 cursor-pointer pointer-events-auto'
+          : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]/75 shadow-xl cursor-pointer pointer-events-auto'
       }`}
     >
-      {/* Top Architectural Spec Trim on Card */}
-      <div className={`h-7 px-4 bg-[var(--bg-surface-elevated)] border-b border-[var(--border-primary)] flex items-center justify-between font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)] select-none transition-opacity duration-700 ${
-        phaseIndex >= 5 ? 'opacity-100' : 'opacity-0'
-      }`}>
-        <div className="flex items-center gap-2">
-          <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[var(--accent)] animate-pulse' : 'bg-[var(--text-muted)]'}`} />
-          <span className="font-bold text-[var(--text-primary)]">ROOM {room.num} {'//'} {room.title}</span>
+      {/* Top Architectural Spec Trim on Card (hidden during entrance intro) */}
+      {phaseIndex >= 5 && (
+        <div className={`h-7 px-4 bg-[var(--bg-surface-elevated)] border-b border-[var(--border-primary)] flex items-center justify-between font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)] select-none transition-opacity duration-700 ${
+          phaseIndex >= 6 ? 'opacity-100' : 'opacity-0'
+        }`}>
+          <div className="flex items-center gap-2">
+            <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[var(--accent)] animate-pulse' : 'bg-[var(--text-muted)]'}`} />
+            <span className="font-bold text-[var(--text-primary)]">ROOM {room.num} {'//'} {room.title}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span>{room.category}</span>
+            {!isActive && (
+              <span className="text-[var(--accent)] font-semibold hidden sm:inline">CLICK TO FOCUS ↗</span>
+            )}
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span>{room.category}</span>
-          {!isActive && (
-            <span className="text-[var(--accent)] font-semibold hidden sm:inline">CLICK TO FOCUS ↗</span>
-          )}
-        </div>
-      </div>
+      )}
 
       {/* Internal Room Content Viewport */}
-      <div className="relative w-full h-[calc(100%-28px)] overflow-y-auto no-scrollbar">
+      <div className={`relative w-full overflow-y-auto no-scrollbar ${phaseIndex >= 5 ? 'h-[calc(100%-28px)]' : 'h-full'}`}>
         {room.id === 'hero' ? (
           <HomeSection
             onOpenSection={onOpenSection}

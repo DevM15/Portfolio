@@ -37,7 +37,7 @@ import DMIdentityCard from './DMIdentityCard';
  * - STAGE 7: COMPLETED (6150ms+)
  *   Full handoff to the live, fully interactive portfolio.
  */
-export default function PortfolioEntrance({ onComplete = () => {} }) {
+export default function PortfolioEntrance({ onComplete = () => { } }) {
   const [stage, setStage] = useState(0);
   const [flipDeg, setFlipDeg] = useState(0);
   const isTriggeredRef = useRef(false);
@@ -132,7 +132,7 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
     >
       {/* Subtle Warm Paper Texture Grain Overlay */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-25 mix-blend-multiply"
+        className="absolute inset-0 opacity-25 pointer-events-none mix-blend-multiply"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
         }}
@@ -173,7 +173,7 @@ export default function PortfolioEntrance({ onComplete = () => {} }) {
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold text-[#252A27] tracking-tight whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold text-[#252A27]  whitespace-normal sm:whitespace-nowrap leading-[1.05] select-none">
                 HELLO, I'M DEV<span className="text-[#B96F52]">.</span>
               </h1>
 
