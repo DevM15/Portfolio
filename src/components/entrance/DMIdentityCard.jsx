@@ -146,13 +146,13 @@ export default function DMIdentityCard({
 
             {/* Swiss Minimal DM Monogram (Space Grotesk -7px tracking) */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.92, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-              transition={{ duration: 1.8, delay: 0.25, ease: [0.19, 1, 0.22, 1] }}
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.6, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
               className="relative inline-flex items-center justify-center"
             >
               <span
-                className="absolute inset-0 font-space font-extrabold text-[65px] sm:text-[75px] md:text-[85px] leading-none tracking-[-7px] text-[var(--border-subtle)] select-none blur-[2px]"
+                className="absolute inset-0 font-space font-extrabold text-[65px] sm:text-[75px] md:text-[85px] leading-none tracking-[-7px] text-[var(--border-subtle)] select-none opacity-40"
                 style={{ transform: 'translate3d(3px, 5px, -8px)' }}
                 aria-hidden="true"
               >
