@@ -130,25 +130,25 @@ export default function DMIdentityCard({
           </div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            initial={{ opacity: 0, scale: 0.94, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 2.2, ease: [0.19, 1, 0.22, 1] }}
             className="relative flex items-center justify-center px-4 py-2 my-auto select-none"
             style={{ transformStyle: 'preserve-3d' }}
           >
             {/* Subtle Metallic Ambient Halo behind Monogram */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{ opacity: [0, 0.35, 0.2], scale: [0.7, 1.2, 1] }}
-              transition={{ duration: 1.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: [0, 0.35, 0.2], scale: [0.6, 1.25, 1] }}
+              transition={{ duration: 2.8, delay: 0.4, ease: [0.19, 1, 0.22, 1] }}
               className="absolute inset-0 rounded-full bg-[var(--accent)]/15 blur-2xl pointer-events-none"
             />
 
-            {/* Letter 'D' with Individual Staggered Cinematic Slide */}
+            {/* Letter 'D' with Slow Luxury Architectural Slide */}
             <motion.div
-              initial={{ opacity: 0, x: -32, rotateY: -14, filter: 'blur(8px)' }}
+              initial={{ opacity: 0, x: -44, rotateY: -16, filter: 'blur(10px)' }}
               animate={{ opacity: 1, x: 0, rotateY: 0, filter: 'blur(0px)' }}
-              transition={{ duration: 1.0, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 2.2, delay: 0.3, ease: [0.19, 1, 0.22, 1] }}
               className="relative inline-block"
             >
               <span
@@ -174,11 +174,11 @@ export default function DMIdentityCard({
               </span>
             </motion.div>
 
-            {/* Letter 'M' with Interlocking Convergence Slide from Right */}
+            {/* Letter 'M' with Smooth Interlocking Convergence Slide */}
             <motion.div
-              initial={{ opacity: 0, x: 32, rotateY: 14, filter: 'blur(8px)' }}
+              initial={{ opacity: 0, x: 44, rotateY: 16, filter: 'blur(10px)' }}
               animate={{ opacity: 1, x: 0, rotateY: 0, filter: 'blur(0px)' }}
-              transition={{ duration: 1.0, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 2.2, delay: 0.55, ease: [0.19, 1, 0.22, 1] }}
               className="relative inline-block -ml-2.5 sm:-ml-3.5"
             >
               <span
@@ -204,11 +204,11 @@ export default function DMIdentityCard({
               </span>
             </motion.div>
 
-            {/* Radiant Specular Light Sheen sweep across the docked Monogram */}
+            {/* Radiant Specular Light Sheen sweep after letters gracefully dock */}
             <motion.div
-              initial={{ x: '-140%', opacity: 0 }}
-              animate={{ x: '220%', opacity: [0, 0.85, 0.85, 0] }}
-              transition={{ duration: 1.3, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ x: '-150%', opacity: 0 }}
+              animate={{ x: '240%', opacity: [0, 0.85, 0.85, 0] }}
+              transition={{ duration: 2.0, delay: 1.8, ease: [0.19, 1, 0.22, 1] }}
               className="absolute inset-0 pointer-events-none mix-blend-screen"
               style={{
                 background:

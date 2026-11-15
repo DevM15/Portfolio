@@ -120,9 +120,9 @@ export default function HomeSection({
                   initial={{ y: '115%', opacity: 0 }}
                   animate={{ y: '0%', opacity: 0.95 }}
                   transition={{
-                    duration: 1.05,
-                    delay: 1.1,
-                    ease: [0.16, 1, 0.3, 1],
+                    duration: 1.5,
+                    delay: 2.2,
+                    ease: [0.19, 1, 0.22, 1],
                   }}
                   className="font-serif font-light tracking-[0.18em] sm:tracking-[0.22em] uppercase text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-[var(--text-primary)]"
                 >
@@ -136,9 +136,9 @@ export default function HomeSection({
                   initial={{ y: '115%', opacity: 0, scale: 0.92 }}
                   animate={{ y: '0%', opacity: 1, scale: 1 }}
                   transition={{
-                    duration: 1.1,
-                    delay: 1.25,
-                    ease: [0.16, 1, 0.3, 1],
+                    duration: 1.6,
+                    delay: 2.45,
+                    ease: [0.19, 1, 0.22, 1],
                   }}
                   className="font-serif italic font-normal tracking-normal text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[var(--text-primary)]"
                 >
@@ -150,10 +150,10 @@ export default function HomeSection({
               <div className="overflow-hidden inline-flex">
                 <motion.span
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.4, 1], opacity: 1 }}
+                  animate={{ scale: [0, 1.35, 1], opacity: 1 }}
                   transition={{
-                    duration: 0.5,
-                    delay: 1.55,
+                    duration: 0.7,
+                    delay: 2.85,
                     ease: [0.34, 1.56, 0.64, 1],
                   }}
                   className="text-[var(--accent)] font-sans not-italic font-bold text-2xl sm:text-4xl md:text-5xl lg:text-6xl ml-0.5"
@@ -168,9 +168,9 @@ export default function HomeSection({
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 0.5 }}
               transition={{
-                duration: 0.85,
-                delay: 1.65,
-                ease: [0.16, 1, 0.3, 1],
+                duration: 1.2,
+                delay: 2.95,
+                ease: [0.19, 1, 0.22, 1],
               }}
               className="w-16 sm:w-24 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent my-2 sm:my-3 origin-center"
             />
@@ -181,9 +181,9 @@ export default function HomeSection({
                 initial={{ y: '115%', opacity: 0 }}
                 animate={{ y: '0%', opacity: 0.85 }}
                 transition={{
-                  duration: 0.95,
-                  delay: 1.8,
-                  ease: [0.16, 1, 0.3, 1],
+                  duration: 1.4,
+                  delay: 3.15,
+                  ease: [0.19, 1, 0.22, 1],
                 }}
                 className="text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.38em] uppercase select-none"
               >
