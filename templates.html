@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DM Typography Explorations</title>
+    <title>DM Monogram Animation Explorations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Mono&family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;600;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=Oswald:wght@500;600;700&family=Manrope:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -16,169 +16,569 @@
 
       body {
         margin: 0;
-        padding: 30px;
+        padding: 40px 24px;
         background: #e8e6df;
+        color: #252a27;
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      header {
+        max-width: 1400px;
+        margin: 0 auto 32px auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        border-bottom: 1px solid #d4d0c5;
+        padding-bottom: 20px;
+      }
+
+      .header-title h1 {
+        margin: 0 0 6px 0;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -1px;
         color: #252a27;
       }
 
-      .variations {
+      .header-title p {
+        margin: 0;
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        color: #7c877b;
+        text-transform: uppercase;
+      }
+
+      .replay-btn {
+        background: #252a27;
+        color: #f8f7f2;
+        border: none;
+        padding: 10px 20px;
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 2px;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .replay-btn:hover {
+        background: #c47758;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(196, 119, 88, 0.3);
+      }
+
+      .grid {
+        max-width: 1400px;
+        margin: 0 auto;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+        gap: 24px;
       }
 
       .card {
-        min-height: 330px;
+        min-height: 380px;
         background: #f8f7f2;
         border: 1px solid #dedbd2;
+        border-radius: 4px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 35px 20px;
+        padding: 44px 24px 34px 24px;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 10px 28px -10px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+
+      .card:hover {
+        border-color: #c47758;
+        box-shadow: 0 14px 36px -10px rgba(0, 0, 0, 0.1);
       }
 
       .number {
         position: absolute;
         top: 18px;
-        left: 20px;
-        font:
-          11px "DM Mono",
-          monospace;
+        left: 22px;
+        font: 11px "DM Mono", monospace;
         color: #899187;
+        letter-spacing: 1.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
-      .logo {
-        font:
-          800 65px "Space Grotesk",
-          sans-serif;
-        letter-spacing: -7px;
-        margin-bottom: 28px;
-        background: linear-gradient(130deg, #222a26, #87918a, #222a26);
-        background-clip: text;
-        -webkit-background-clip: text;
-        color: transparent;
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #c47758;
       }
 
-      h1 {
-        font-size: clamp(30px, 4vw, 62px);
+      .tag {
+        position: absolute;
+        top: 18px;
+        right: 22px;
+        font: 9px "DM Mono", monospace;
+        color: #7c877b;
+        background: #ece8df;
+        padding: 3px 8px;
+        border-radius: 2px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .heading {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+        font-size: clamp(24px, 3.2vw, 42px);
         line-height: 0.98;
-        text-align: center;
+        letter-spacing: -2px;
         margin: 0;
+        text-align: center;
         white-space: nowrap;
+        color: #252a27;
       }
 
-      h1 span {
+      .heading span {
         color: #c47758;
       }
 
       .subtitle {
-        margin-top: 20px;
-        font:
-          12px "DM Mono",
-          monospace;
+        margin-top: 16px;
+        font: 11px "DM Mono", monospace;
         letter-spacing: 3px;
         color: #7c877b;
         text-align: center;
       }
 
-      .v1 h1 {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
-        letter-spacing: -4px;
+      .stage {
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-bottom: 12px;
       }
 
-      .v2 h1 {
+      /* Base DM Monogram Font Styles */
+      .dm-base {
         font-family: "Space Grotesk", sans-serif;
-        font-weight: 600;
-        letter-spacing: -3px;
+        font-weight: 800;
+        font-size: 76px;
+        line-height: 1;
+        letter-spacing: -7px;
+        background: linear-gradient(130deg, #222a26, #87918a, #222a26);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: inline-flex;
+        position: relative;
+        user-select: none;
       }
 
-      .v3 h1 {
-        font-family: "Playfair Display", serif;
-        font-weight: 500;
-        letter-spacing: -2px;
+      /* ==============================================================
+         ANIMATION 01: PURE LUXURY DEEP OPACITY (ZERO BLUR)
+         Ultra-clean exponential alpha rise from 0 to 1 with micro-lift
+         ============================================================== */
+      .anim-1 .dm-base {
+        animation: pureAlpha 2.4s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+      }
+      @keyframes pureAlpha {
+        0% {
+          opacity: 0;
+          transform: translateY(12px) scale(0.96);
+        }
+        35%, 80% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        95%, 100% {
+          opacity: 0;
+          transform: translateY(-8px) scale(0.98);
+        }
       }
 
-      .v4 h1 {
+      /* ==============================================================
+         ANIMATION 02: HORIZONTAL KERNING EXPANSION (-14px -> -7px)
+         Starts compressed and breathes smoothly into the iconic Swiss lockup
+         ============================================================== */
+      .anim-2 .dm-base {
+        animation: kerningExpand 2.8s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+      }
+      @keyframes kerningExpand {
+        0% {
+          opacity: 0;
+          letter-spacing: -18px;
+          transform: scale(0.92);
+        }
+        30%, 82% {
+          opacity: 1;
+          letter-spacing: -7px;
+          transform: scale(1);
+        }
+        95%, 100% {
+          opacity: 0;
+          letter-spacing: -4px;
+          transform: scale(0.96);
+        }
+      }
+
+      /* ==============================================================
+         ANIMATION 03: CONVERGING LETTERS (D FROM LEFT, M FROM RIGHT)
+         Sharp architectural docking without blur
+         ============================================================== */
+      .anim-3 .letter-d {
+        display: inline-block;
+        animation: dockLeft 2.8s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+      }
+      .anim-3 .letter-m {
+        display: inline-block;
+        animation: dockRight 2.8s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+      }
+      @keyframes dockLeft {
+        0% {
+          opacity: 0;
+          transform: translateX(-36px);
+        }
+        35%, 82% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        95%, 100% {
+          opacity: 0;
+          transform: translateX(-16px);
+        }
+      }
+      @keyframes dockRight {
+        0% {
+          opacity: 0;
+          transform: translateX(36px);
+        }
+        35%, 82% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        95%, 100% {
+          opacity: 0;
+          transform: translateX(16px);
+        }
+      }
+
+      /* ==============================================================
+         ANIMATION 04: METALLIC HORIZON GRADIENT SWEEP
+         High-end liquid metallic light shift moving through the letters
+         ============================================================== */
+      .anim-4 .dm-base {
+        background: linear-gradient(
+          115deg,
+          #222a26 0%,
+          #222a26 35%,
+          #ffffff 50%,
+          #87918a 60%,
+          #222a26 75%,
+          #222a26 100%
+        );
+        background-size: 300% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: metalSweep 3s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+      }
+      @keyframes metalSweep {
+        0% {
+          opacity: 0;
+          background-position: 100% 50%;
+          transform: translateY(8px);
+        }
+        30% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        50%, 82% {
+          opacity: 1;
+          background-position: 0% 50%;
+          transform: translateY(0);
+        }
+        95%, 100% {
+          opacity: 0;
+          background-position: 0% 50%;
+          transform: translateY(-8px);
+        }
+      }
+
+      /* ==============================================================
+         ANIMATION 05: VERTICAL MASK SLIDE-UP (ARCHITECTURAL CURTAIN)
+         Rises cleanly from behind a razor-sharp bottom overflow mask
+         ============================================================== */
+      .anim-5 .mask-box {
+        overflow: hidden;
+        display: inline-flex;
+        padding-bottom: 4px;
+      }
+      .anim-5 .dm-base {
+        animation: maskRise 2.6s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+      }
+      @keyframes maskRise {
+        0% {
+          transform: translateY(115%);
+          opacity: 0;
+        }
+        30%, 82% {
+          transform: translateY(0%);
+          opacity: 1;
+        }
+        95%, 100% {
+          transform: translateY(-115%);
+          opacity: 0;
+        }
+      }
+
+      /* ==============================================================
+         ANIMATION 06: LINE-CLIP REVEAL (SWISS SPLIT APERTURE)
+         A delicate hairline expands and the monogram parts open like an aperture
+         ============================================================== */
+      .anim-6 .aperture-wrap {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .anim-6 .dm-base {
+        clip-path: inset(0 0 0 0);
+        animation: clipReveal 3.2s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+      }
+      .anim-6 .line-accent {
+        position: absolute;
+        bottom: -6px;
+        width: 48px;
+        height: 1px;
+        background: #c47758;
+        transform-origin: center;
+        animation: lineExpand 3.2s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+      }
+      @keyframes clipReveal {
+        0% {
+          clip-path: inset(0 50% 0 50%);
+          opacity: 0;
+          transform: scale(0.94);
+        }
+        35%, 82% {
+          clip-path: inset(0 0% 0 0%);
+          opacity: 1;
+          transform: scale(1);
+        }
+        95%, 100% {
+          clip-path: inset(0 50% 0 50%);
+          opacity: 0;
+          transform: scale(0.96);
+        }
+      }
+      @keyframes lineExpand {
+        0% {
+          transform: scaleX(0);
+          opacity: 0;
+        }
+        25% {
+          opacity: 0.8;
+        }
+        40%, 82% {
+          transform: scaleX(1);
+          opacity: 0.8;
+        }
+        95%, 100% {
+          transform: scaleX(0);
+          opacity: 0;
+        }
+      }
+
+      /* ==============================================================
+         ANIMATION 07: 3D EMBOSS DEPTH ELEVATION
+         Letters lift off the surface with shadow growth in pure 3D
+         ============================================================== */
+      .anim-7 .dm-base {
+        animation: depthLift 3s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+      }
+      @keyframes depthLift {
+        0% {
+          opacity: 0;
+          transform: perspective(600px) translateZ(-40px) translateY(8px);
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+        }
+        35%, 82% {
+          opacity: 1;
+          transform: perspective(600px) translateZ(0px) translateY(0);
+          filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.22));
+        }
+        95%, 100% {
+          opacity: 0;
+          transform: perspective(600px) translateZ(-20px) translateY(-6px);
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+        }
+      }
+
+      /* ==============================================================
+         ANIMATION 08: MONOLITH BREATH (SUBTLE GEOMETRIC PULSE)
+         Ultra-minimalist, continuous resting architectural breath
+         ============================================================== */
+      .anim-8 .dm-base {
+        animation: monolithBreath 3.6s ease-in-out infinite;
+      }
+      @keyframes monolithBreath {
+        0% {
+          opacity: 0.3;
+          transform: scale(0.95);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.02);
+        }
+        100% {
+          opacity: 0.3;
+          transform: scale(0.95);
+        }
+      }
+
+      /* Tooltip footer */
+      .instruction {
+        max-width: 1400px;
+        margin: 32px auto 0 auto;
+        text-align: center;
         font-family: "DM Mono", monospace;
-        font-weight: 400;
-        font-size: clamp(23px, 3vw, 43px);
-        letter-spacing: -3px;
-      }
-
-      .v5 h1 {
-        font-family: "Oswald", sans-serif;
-        font-weight: 600;
-        letter-spacing: -2px;
+        font-size: 11px;
+        color: #7c877b;
+        letter-spacing: 1.5px;
         text-transform: uppercase;
-      }
-
-      .v6 h1 {
-        font-family: "Manrope", sans-serif;
-        font-weight: 500;
-        letter-spacing: -5px;
-      }
-
-      .v6 .subtitle {
-        letter-spacing: 6px;
-      }
-
-      @media (max-width: 750px) {
-        .variations {
-          grid-template-columns: 1fr;
-        }
-        h1 {
-          white-space: normal;
-        }
       }
     </style>
   </head>
   <body>
-    <div class="variations">
-      <section class="card v1">
-        <div class="number">01 / EDITORIAL BOLD</div>
-        <div class="logo">DM</div>
-        <h1>HELLO, I'M DEV<span>.</span></h1>
+    <header>
+      <div class="header-title">
+        <h1>DM Monogram Animation Explorations</h1>
+        <p>Swiss Minimal Design System · Zero Blur · Pure Geometric Precision</p>
+      </div>
+      <button class="replay-btn" onclick="restartAnimations()">
+        <span>↻</span> Restart All Timelines
+      </button>
+    </header>
+
+    <div class="grid" id="grid">
+      <!-- 01: PURE LUXURY ALPHA -->
+      <section class="card anim-1">
+        <div class="number"><span class="dot"></span>01 / PURE ALPHA RISE</div>
+        <div class="tag">Zero Blur · Clean Opacity</div>
+        <div class="stage">
+          <div class="dm-base">DM</div>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
         <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
       </section>
 
-      <section class="card v2">
-        <div class="number">02 / SWISS MINIMAL</div>
-        <div class="logo">DM</div>
-        <h1>Hello, I'm Dev<span>.</span></h1>
+      <!-- 02: KERNING EXPANSION -->
+      <section class="card anim-2">
+        <div class="number"><span class="dot"></span>02 / KERNING EXPAND</div>
+        <div class="tag">-18px to -7px Tracking</div>
+        <div class="stage">
+          <div class="dm-base">DM</div>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
         <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
       </section>
 
-      <section class="card v3">
-        <div class="number">03 / LUXURY SERIF</div>
-        <div class="logo">DM</div>
-        <h1>Hello, I'm Dev<span>.</span></h1>
+      <!-- 03: CONVERGING LETTERS -->
+      <section class="card anim-3">
+        <div class="number"><span class="dot"></span>03 / CONVERGING DOCK</div>
+        <div class="tag">D (Left) + M (Right) Interlock</div>
+        <div class="stage">
+          <div class="dm-base">
+            <span class="letter-d">D</span><span class="letter-m">M</span>
+          </div>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
         <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
       </section>
 
-      <section class="card v4">
-        <div class="number">04 / TECH MONO</div>
-        <div class="logo">DM</div>
-        <h1>HELLO, I'M DEV<span>.</span></h1>
+      <!-- 04: METALLIC GRADIENT SWEEP -->
+      <section class="card anim-4">
+        <div class="number"><span class="dot"></span>04 / METALLIC SHEEN</div>
+        <div class="tag">Liquid Specular Chrome Shift</div>
+        <div class="stage">
+          <div class="dm-base">DM</div>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
         <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
       </section>
 
-      <section class="card v5">
-        <div class="number">05 / MODERN CONDENSED</div>
-        <div class="logo">DM</div>
-        <h1>HELLO, I'M DEV<span>.</span></h1>
+      <!-- 05: VERTICAL MASK SLIDE-UP -->
+      <section class="card anim-5">
+        <div class="number"><span class="dot"></span>05 / MASKED CURTAIN</div>
+        <div class="tag">Architectural Clip Rise</div>
+        <div class="stage">
+          <div class="mask-box">
+            <div class="dm-base">DM</div>
+          </div>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
         <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
       </section>
 
-      <section class="card v6">
-        <div class="number">06 / MINIMAL SPACED</div>
-        <div class="logo">DM</div>
-        <h1>Hello, I'm Dev<span>.</span></h1>
+      <!-- 06: LINE-CLIP APERTURE -->
+      <section class="card anim-6">
+        <div class="number"><span class="dot"></span>06 / APERTURE REVEAL</div>
+        <div class="tag">Terracotta Hairline + Center Split</div>
+        <div class="stage">
+          <div class="aperture-wrap">
+            <div class="dm-base">DM</div>
+            <div class="line-accent"></div>
+          </div>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <!-- 07: 3D DEPTH LIFT -->
+      <section class="card anim-7">
+        <div class="number"><span class="dot"></span>07 / EMBOSS DEPTH</div>
+        <div class="tag">Z-Axis Elevation & Drop Shadow</div>
+        <div class="stage">
+          <div class="dm-base">DM</div>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <!-- 08: MONOLITH BREATH -->
+      <section class="card anim-8">
+        <div class="number"><span class="dot"></span>08 / MONOLITH BREATH</div>
+        <div class="tag">Subtle Continuous Living Pulse</div>
+        <div class="stage">
+          <div class="dm-base">DM</div>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
         <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
       </section>
     </div>
+
+    <div class="instruction">
+      Pick your favorite animation number to apply it to the main portfolio website
+    </div>
+
+    <script>
+      function restartAnimations() {
+        const grid = document.getElementById("grid");
+        const clone = grid.cloneNode(true);
+        grid.parentNode.replaceChild(clone, grid);
+      }
+    </script>
   </body>
 </html>
