@@ -333,10 +333,10 @@ export default function HomeSection({
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{
-                  opacity: isHeroRevealed ? 1 : 0,
-                  y: isHeroRevealed ? 0 : 10,
+                  opacity: isFullySettled ? 1 : 0,
+                  y: isFullySettled ? 0 : 10,
                 }}
-                transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute -bottom-7 flex items-center justify-between w-full px-1 font-mono text-[8px] tracking-wider text-[var(--text-secondary)] uppercase pointer-events-none"
               >
                 <span>DEV MISTRY // IDENTITY SPEC</span>

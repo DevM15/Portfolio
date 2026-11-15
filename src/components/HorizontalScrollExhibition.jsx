@@ -194,8 +194,8 @@ export default function HorizontalScrollExhibition({
       {/* ==================== 1. TOP GALLERY HEADER ==================== */}
       <motion.div
         animate={{
-          opacity: phaseIndex >= 5 ? 1 : 0,
-          y: phaseIndex >= 5 ? 0 : -10,
+          opacity: phaseIndex >= 8 ? 1 : 0,
+          y: phaseIndex >= 8 ? 0 : -10,
         }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="px-6 md:px-12 pt-3 pb-2 z-30 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/85 backdrop-blur-xs font-mono text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
@@ -381,7 +381,7 @@ function WorkspaceCard({
   });
 
   // Determine card frame presentation during intro
-  const isIntroCard = index === 0 && phaseIndex < 5;
+  const isIntroCard = index === 0 && phaseIndex < 8;
 
   return (
     <motion.div
@@ -404,9 +404,9 @@ function WorkspaceCard({
       }`}
     >
       {/* Top Architectural Spec Trim on Card (hidden during entrance intro) */}
-      {phaseIndex >= 5 && (
+      {phaseIndex >= 8 && (
         <div className={`h-7 px-4 bg-[var(--bg-surface-elevated)] border-b border-[var(--border-primary)] flex items-center justify-between font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)] select-none transition-opacity duration-700 ${
-          phaseIndex >= 6 ? 'opacity-100' : 'opacity-0'
+          phaseIndex >= 9 ? 'opacity-100' : 'opacity-0'
         }`}>
           <div className="flex items-center gap-2">
             <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[var(--accent)] animate-pulse' : 'bg-[var(--text-muted)]'}`} />
@@ -422,7 +422,7 @@ function WorkspaceCard({
       )}
 
       {/* Internal Room Content Viewport */}
-      <div className={`relative w-full overflow-y-auto no-scrollbar ${phaseIndex >= 5 ? 'h-[calc(100%-28px)]' : 'h-full'}`}>
+      <div className={`relative w-full overflow-y-auto no-scrollbar ${phaseIndex >= 8 ? 'h-[calc(100%-28px)]' : 'h-full'}`}>
         {room.id === 'hero' ? (
           <HomeSection
             onOpenSection={onOpenSection}
