@@ -132,7 +132,7 @@ export default function DMIdentityCard({
           <motion.div
             initial={{ opacity: 0, scale: 0.94, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 2.2, ease: [0.19, 1, 0.22, 1] }}
+            transition={{ duration: 1.8, ease: [0.19, 1, 0.22, 1] }}
             className="relative flex items-center justify-center px-4 py-2 my-auto select-none"
             style={{ transformStyle: 'preserve-3d' }}
           >
@@ -140,75 +140,44 @@ export default function DMIdentityCard({
             <motion.div
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: [0, 0.35, 0.2], scale: [0.6, 1.25, 1] }}
-              transition={{ duration: 2.8, delay: 0.4, ease: [0.19, 1, 0.22, 1] }}
+              transition={{ duration: 2.4, delay: 0.3, ease: [0.19, 1, 0.22, 1] }}
               className="absolute inset-0 rounded-full bg-[var(--accent)]/15 blur-2xl pointer-events-none"
             />
 
-            {/* Letter 'D' with Slow Luxury Architectural Slide */}
+            {/* Swiss Minimal DM Monogram (Space Grotesk -7px tracking) */}
             <motion.div
-              initial={{ opacity: 0, x: -44, rotateY: -16, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, x: 0, rotateY: 0, filter: 'blur(0px)' }}
-              transition={{ duration: 2.2, delay: 0.3, ease: [0.19, 1, 0.22, 1] }}
-              className="relative inline-block"
+              initial={{ opacity: 0, scale: 0.92, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+              transition={{ duration: 1.8, delay: 0.25, ease: [0.19, 1, 0.22, 1] }}
+              className="relative inline-flex items-center justify-center"
             >
               <span
-                className="absolute inset-0 font-serif font-bold text-7xl sm:text-8xl leading-none text-[var(--border-subtle)] select-none blur-[2px]"
-                style={{ transform: 'translate3d(3px, 6px, -10px)' }}
+                className="absolute inset-0 font-space font-extrabold text-[65px] sm:text-[75px] md:text-[85px] leading-none tracking-[-7px] text-[var(--border-subtle)] select-none blur-[2px]"
+                style={{ transform: 'translate3d(3px, 5px, -8px)' }}
                 aria-hidden="true"
               >
-                D
+                DM
               </span>
               <span
-                className="relative block font-bold leading-none tracking-tight select-none font-serif text-7xl sm:text-8xl"
+                className="relative block font-space font-extrabold text-[65px] sm:text-[75px] md:text-[85px] leading-none tracking-[-7px] select-none"
                 style={{
-                  background:
-                    'linear-gradient(135deg, var(--text-primary) 0%, #353D38 35%, #788477 50%, var(--text-primary) 70%, #151916 100%)',
+                  background: 'linear-gradient(130deg, #222a26, #87918a, #222a26)',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   color: 'transparent',
-                  filter: 'drop-shadow(0 10px 18px rgba(0, 0, 0, 0.2))',
+                  filter: 'drop-shadow(0 10px 18px rgba(0, 0, 0, 0.18))',
                 }}
               >
-                D
+                DM
               </span>
             </motion.div>
 
-            {/* Letter 'M' with Smooth Interlocking Convergence Slide */}
-            <motion.div
-              initial={{ opacity: 0, x: 44, rotateY: 16, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, x: 0, rotateY: 0, filter: 'blur(0px)' }}
-              transition={{ duration: 2.2, delay: 0.55, ease: [0.19, 1, 0.22, 1] }}
-              className="relative inline-block -ml-2.5 sm:-ml-3.5"
-            >
-              <span
-                className="absolute inset-0 font-serif font-bold text-7xl sm:text-8xl leading-none text-[var(--border-subtle)] select-none blur-[2px]"
-                style={{ transform: 'translate3d(3px, 6px, -10px)' }}
-                aria-hidden="true"
-              >
-                M
-              </span>
-              <span
-                className="relative block font-bold leading-none tracking-tight select-none font-serif text-7xl sm:text-8xl"
-                style={{
-                  background:
-                    'linear-gradient(135deg, var(--text-primary) 0%, #4D5750 35%, #8FA48E 50%, var(--text-primary) 70%, #151916 100%)',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  color: 'transparent',
-                  filter: 'drop-shadow(0 10px 18px rgba(0, 0, 0, 0.2))',
-                }}
-              >
-                M
-              </span>
-            </motion.div>
-
-            {/* Radiant Specular Light Sheen sweep after letters gracefully dock */}
+            {/* Radiant Specular Light Sheen sweep across the Monogram */}
             <motion.div
               initial={{ x: '-150%', opacity: 0 }}
               animate={{ x: '240%', opacity: [0, 0.85, 0.85, 0] }}
-              transition={{ duration: 2.0, delay: 1.8, ease: [0.19, 1, 0.22, 1] }}
+              transition={{ duration: 1.8, delay: 1.2, ease: [0.19, 1, 0.22, 1] }}
               className="absolute inset-0 pointer-events-none mix-blend-screen"
               style={{
                 background:

@@ -36,7 +36,8 @@ module.exports = {
       fontFamily: {
         sans: ['"Inter"', 'system-ui', 'sans-serif'],
         display: ['"Manrope"', 'sans-serif'],
-        mono: ['"IBM Plex Mono"', 'monospace'],
+        mono: ['"DM Mono"', '"IBM Plex Mono"', 'monospace'],
+        space: ['"Space Grotesk"', 'sans-serif'],
         serif: ['"Cormorant Garamond"', '"Bodoni Moda"', 'Georgia', 'serif'],
         bodoni: ['"Bodoni Moda"', 'Didot', 'serif'],
         cormorant: ['"Cormorant Garamond"', 'Garamond', 'serif'],

@@ -112,80 +112,35 @@ export default function HomeSection({
             }}
             className="absolute top-[calc(50%+65px)] sm:top-[calc(50%+72px)] md:top-[calc(50%+80px)] left-0 right-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 z-40 select-none"
           >
-            {/* Luxury Editorial Main Heading with Cinematic Masked Reveals */}
+            {/* Swiss Minimal Main Heading with Masked Reveals */}
             <div className="flex items-center justify-center flex-wrap overflow-hidden py-1">
-              {/* "HELLO, I'M" - Roman Serif Letter-Spaced Glide */}
-              <div className="overflow-hidden inline-flex">
-                <motion.span
+              <div className="overflow-hidden inline-flex items-baseline">
+                <motion.h1
                   initial={{ y: '115%', opacity: 0 }}
-                  animate={{ y: '0%', opacity: 0.95 }}
+                  animate={{ y: '0%', opacity: 1 }}
                   transition={{
-                    duration: 1.5,
-                    delay: 2.2,
+                    duration: 1.4,
+                    delay: 0.6,
                     ease: [0.19, 1, 0.22, 1],
                   }}
-                  className="font-serif font-light tracking-[0.18em] sm:tracking-[0.22em] uppercase text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-[var(--text-primary)]"
+                  className="font-space font-semibold text-[clamp(28px,4.2vw,62px)] leading-[0.98] tracking-[-3px] text-[var(--text-primary)]"
                 >
-                  HELLO, I'M
-                </motion.span>
-              </div>
-
-              {/* "DEV" - Editorial Cursive Italic Flourish */}
-              <div className="overflow-hidden inline-flex ml-2.5 sm:ml-4">
-                <motion.span
-                  initial={{ y: '115%', opacity: 0, scale: 0.92 }}
-                  animate={{ y: '0%', opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 1.6,
-                    delay: 2.45,
-                    ease: [0.19, 1, 0.22, 1],
-                  }}
-                  className="font-serif italic font-normal tracking-normal text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[var(--text-primary)]"
-                >
-                  DEV
-                </motion.span>
-              </div>
-
-              {/* Period - Terracotta Pop */}
-              <div className="overflow-hidden inline-flex">
-                <motion.span
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.35, 1], opacity: 1 }}
-                  transition={{
-                    duration: 0.7,
-                    delay: 2.85,
-                    ease: [0.34, 1.56, 0.64, 1],
-                  }}
-                  className="text-[var(--accent)] font-sans not-italic font-bold text-2xl sm:text-4xl md:text-5xl lg:text-6xl ml-0.5"
-                >
-                  .
-                </motion.span>
+                  Hello, I'm Dev<span className="text-[#c47758]">.</span>
+                </motion.h1>
               </div>
             </div>
 
-            {/* Architectural Accent Hairline */}
-            <motion.div
-              initial={{ scaleX: 0, opacity: 0 }}
-              animate={{ scaleX: 1, opacity: 0.5 }}
-              transition={{
-                duration: 1.2,
-                delay: 2.95,
-                ease: [0.19, 1, 0.22, 1],
-              }}
-              className="w-16 sm:w-24 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent my-2 sm:my-3 origin-center"
-            />
-
-            {/* Refined Architectural Subtitle with Tracking Expansion */}
-            <div className="overflow-hidden">
+            {/* Swiss Minimal Architectural Subtitle */}
+            <div className="overflow-hidden mt-4 sm:mt-5">
               <motion.p
                 initial={{ y: '115%', opacity: 0 }}
                 animate={{ y: '0%', opacity: 0.85 }}
                 transition={{
-                  duration: 1.4,
-                  delay: 3.15,
+                  duration: 1.2,
+                  delay: 1.1,
                   ease: [0.19, 1, 0.22, 1],
                 }}
-                className="text-[10px] sm:text-xs md:text-sm font-sans font-normal text-[#788477] tracking-[0.28em] sm:tracking-[0.38em] uppercase select-none"
+                className="font-mono text-xs text-[#7c877b] tracking-[3px] uppercase select-none text-center"
               >
                 DESIGNING & BUILDING DIGITAL EXPERIENCES.
               </motion.p>
