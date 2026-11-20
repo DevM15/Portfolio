@@ -6,7 +6,7 @@
     <title>DM Monogram Animation Explorations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;600;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=Oswald:wght@500;600;700&family=Manrope:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;600;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=Oswald:wght@500;600;700&family=Manrope:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Pacifico&family=Caveat:wght@700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -49,6 +49,45 @@
         letter-spacing: 1.5px;
         color: #7c877b;
         text-transform: uppercase;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .font-switcher-btn {
+        background: #ece8df;
+        color: #252a27;
+        border: 1px solid #d4d0c5;
+        padding: 9px 16px;
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 2px;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .font-switcher-btn:hover {
+        background: #ffffff;
+        border-color: #c47758;
+        color: #c47758;
+      }
+
+      .font-badge {
+        background: #c47758;
+        color: #fff;
+        padding: 2px 6px;
+        border-radius: 2px;
+        font-size: 10px;
       }
 
       .replay-btn {
@@ -151,6 +190,71 @@
 
       .heading span {
         color: #c47758;
+      }
+
+      /* Heading with border outline loading first, then color filling inside */
+      .heading-stroke-fill {
+        width: 100%;
+        height: 48px;
+        overflow: visible;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .heading-stroke-fill text {
+        fill: transparent;
+        stroke: #252a27;
+        stroke-width: 1.6px;
+        stroke-dasharray: 450;
+        stroke-dashoffset: 450;
+        animation: textOutlineDraw 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards,
+                   textFillIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
+      }
+
+      .heading-stroke-fill text tspan {
+        fill: transparent;
+        stroke: #c47758;
+        stroke-width: 2px;
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+        animation: textOutlineDraw 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.0s forwards,
+                   textDotFillIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1.7s forwards;
+      }
+
+      @keyframes textOutlineDraw {
+        0% {
+          stroke-dashoffset: 450;
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        100% {
+          stroke-dashoffset: 0;
+          opacity: 1;
+        }
+      }
+
+      @keyframes textFillIn {
+        0% {
+          fill: transparent;
+          stroke: #252a27;
+        }
+        100% {
+          fill: #252a27;
+          stroke: transparent;
+        }
+      }
+
+      @keyframes textDotFillIn {
+        0% {
+          fill: transparent;
+          stroke: #c47758;
+        }
+        100% {
+          fill: #c47758;
+          stroke: transparent;
+        }
       }
 
       .subtitle {
@@ -448,6 +552,398 @@
         }
       }
 
+      /* ==============================================================
+         STRING & TUBE REVEAL ANIMATIONS (MATCHING SPYLT VIDEO)
+         ============================================================== */
+      
+      .string-svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      /* Style: Segmented caramel & cream strokes like video */
+      .tube-stroke-bg {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .tube-stroke-accent {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* Card String 1: Spylt Style Dual-Color Script Tube */
+      .anim-s1 .stage {
+        background: #361f18;
+        border-radius: 4px;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+      }
+      .anim-s1 .tube-base {
+        stroke: #f3e7db;
+        stroke-width: 14;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        stroke-dasharray: 600;
+        stroke-dashoffset: 600;
+        animation: drawTubeCream 3.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+      }
+      .anim-s1 .tube-lead {
+        stroke: #d98d43;
+        stroke-width: 14;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        stroke-dasharray: 60 540;
+        stroke-dashoffset: 600;
+        animation: drawTubeCaramel 3.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+      }
+      @keyframes drawTubeCream {
+        0%, 15% {
+          stroke-dashoffset: 600;
+          opacity: 0;
+        }
+        20% {
+          opacity: 1;
+        }
+        70%, 90% {
+          stroke-dashoffset: 0;
+          opacity: 1;
+        }
+        98%, 100% {
+          stroke-dashoffset: 0;
+          opacity: 0;
+        }
+      }
+      @keyframes drawTubeCaramel {
+        0%, 15% {
+          stroke-dashoffset: 600;
+          opacity: 0;
+        }
+        20% {
+          opacity: 1;
+        }
+        70% {
+          stroke-dashoffset: 0;
+          opacity: 1;
+        }
+        78%, 100% {
+          stroke-dashoffset: -60;
+          opacity: 0;
+        }
+      }
+
+      /* Card String 2: Swiss Minimal Geometric Tube (Dev Mistry Portfolio Palette) */
+      .anim-s2 .tube-charcoal {
+        stroke: #252a27;
+        stroke-width: 12;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        stroke-dasharray: 450;
+        stroke-dashoffset: 450;
+        animation: drawSwissTube 3.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      }
+      .anim-s2 .tube-terracotta {
+        stroke: #c47758;
+        stroke-width: 12;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        stroke-dasharray: 50 400;
+        stroke-dashoffset: 450;
+        animation: drawSwissTerracotta 3.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      }
+      @keyframes drawSwissTube {
+        0%, 12% {
+          stroke-dashoffset: 450;
+          opacity: 0;
+        }
+        18% {
+          opacity: 1;
+        }
+        65%, 90% {
+          stroke-dashoffset: 0;
+          opacity: 1;
+        }
+        98%, 100% {
+          stroke-dashoffset: 0;
+          opacity: 0;
+        }
+      }
+      @keyframes drawSwissTerracotta {
+        0%, 12% {
+          stroke-dashoffset: 450;
+          opacity: 0;
+        }
+        18% {
+          opacity: 1;
+        }
+        65% {
+          stroke-dashoffset: 0;
+          opacity: 1;
+        }
+        75%, 100% {
+          stroke-dashoffset: -50;
+          opacity: 0;
+        }
+      }
+
+      /* Card String 3: Floating Disconnected Segments Snapping & Merging */
+      .anim-s3 .seg {
+        fill: none;
+        stroke: #252a27;
+        stroke-width: 11;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: all 0.5s;
+      }
+      .anim-s3 .seg-tip {
+        fill: none;
+        stroke: #c47758;
+        stroke-width: 11;
+        stroke-linecap: round;
+      }
+      .anim-s3 .seg-d-stem {
+        animation: segSnapDStem 3.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+      }
+      .anim-s3 .seg-d-arc {
+        animation: segSnapDArc 3.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+      }
+      .anim-s3 .seg-m-left {
+        animation: segSnapMLeft 3.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+      }
+      .anim-s3 .seg-m-mid {
+        animation: segSnapMMid 3.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+      }
+      .anim-s3 .seg-m-right {
+        animation: segSnapMRight 3.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+      }
+
+      @keyframes segSnapDStem {
+        0%, 10% {
+          transform: translate(-30px, 40px) rotate(-25deg);
+          opacity: 0;
+        }
+        25% {
+          opacity: 1;
+        }
+        55%, 90% {
+          transform: translate(0, 0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      @keyframes segSnapDArc {
+        0%, 10% {
+          transform: translate(-15px, -35px) rotate(35deg);
+          opacity: 0;
+        }
+        25% {
+          opacity: 1;
+        }
+        55%, 90% {
+          transform: translate(0, 0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      @keyframes segSnapMLeft {
+        0%, 10% {
+          transform: translate(25px, -30px) rotate(-20deg);
+          opacity: 0;
+        }
+        25% {
+          opacity: 1;
+        }
+        55%, 90% {
+          transform: translate(0, 0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      @keyframes segSnapMMid {
+        0%, 10% {
+          transform: translate(10px, 45px) rotate(30deg);
+          opacity: 0;
+        }
+        25% {
+          opacity: 1;
+        }
+        55%, 90% {
+          transform: translate(0, 0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      @keyframes segSnapMRight {
+        0%, 10% {
+          transform: translate(45px, -15px) rotate(-15deg);
+          opacity: 0;
+        }
+        25% {
+          opacity: 1;
+        }
+        55%, 90% {
+          transform: translate(0, 0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* Card String 4: Elastic Continuous Thread (Single Filament Tracer) */
+      .anim-s4 .thread-bg {
+        stroke: #d4d0c5;
+        stroke-width: 2;
+        stroke-dasharray: 4 4;
+        fill: none;
+      }
+      .anim-s4 .thread-lead {
+        fill: none;
+        stroke: #c47758;
+        stroke-width: 7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 800;
+        stroke-dashoffset: 800;
+        animation: threadTrace 3.2s cubic-bezier(0.2, 0.9, 0.3, 1) infinite;
+      }
+      .anim-s4 .needle-head {
+        fill: #252a27;
+        animation: needleBlink 3.2s ease infinite;
+      }
+      @keyframes threadTrace {
+        0%, 10% {
+          stroke-dashoffset: 800;
+          opacity: 0;
+        }
+        20% {
+          opacity: 1;
+        }
+        70%, 90% {
+          stroke-dashoffset: 0;
+          opacity: 1;
+        }
+        100% {
+          stroke-dashoffset: 0;
+          opacity: 0;
+        }
+      }
+
+      /* Card String 5: Dual String Weave & Interlock */
+      .anim-s5 .strand-d {
+        fill: none;
+        stroke: #252a27;
+        stroke-width: 11;
+        stroke-linecap: round;
+        stroke-dasharray: 350;
+        stroke-dashoffset: 350;
+        animation: strandDrawD 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      }
+      .anim-s5 .strand-m {
+        fill: none;
+        stroke: #c47758;
+        stroke-width: 11;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 450;
+        stroke-dashoffset: 450;
+        animation: strandDrawM 3s cubic-bezier(0.16, 1, 0.3, 1) 0.3s infinite;
+      }
+      @keyframes strandDrawD {
+        0%, 10% { stroke-dashoffset: 350; opacity: 0; }
+        20% { opacity: 1; }
+        70%, 90% { stroke-dashoffset: 0; opacity: 1; }
+        100% { opacity: 0; }
+      }
+      @keyframes strandDrawM {
+        0%, 10% { stroke-dashoffset: 450; opacity: 0; }
+        20% { opacity: 1; }
+        70%, 90% { stroke-dashoffset: 0; opacity: 1; }
+        100% { opacity: 0; }
+      }
+
+      /* Card String 6: Exact Spylt Video Brand Recreation (Cream & Caramel on Chocolate) */
+      .anim-s6 .stage {
+        background: #48291d;
+        border-radius: 4px;
+        box-shadow: inset 0 3px 12px rgba(0,0,0,0.5);
+      }
+      .anim-s6 .tube-body {
+        fill: none;
+        stroke: #f5eae0;
+        stroke-width: 15;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 750;
+        stroke-dashoffset: 750;
+        animation: spyltBody 3.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      }
+      .anim-s6 .tube-caps {
+        fill: none;
+        stroke: #d98d43;
+        stroke-width: 15;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 70 680;
+        stroke-dashoffset: 750;
+        animation: spyltCaps 3.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      }
+      @keyframes spyltBody {
+        0%, 15% { stroke-dashoffset: 750; opacity: 0; }
+        22% { opacity: 1; }
+        68%, 88% { stroke-dashoffset: 0; opacity: 1; }
+        98%, 100% { opacity: 0; }
+      }
+      @keyframes spyltCaps {
+        0%, 15% { stroke-dashoffset: 750; opacity: 0; }
+        22% { opacity: 1; }
+        68% { stroke-dashoffset: 0; opacity: 1; }
+        76%, 100% { stroke-dashoffset: -70; opacity: 0; }
+      }
+
+      /* Section Divider */
+      .section-divider {
+        grid-column: 1 / -1;
+        margin: 40px 0 20px 0;
+        padding-top: 24px;
+        border-top: 2px dashed #c47758;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .section-divider h2 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        color: #252a27;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-divider p {
+        margin: 0;
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        color: #7c877b;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+
       /* Tooltip footer */
       .instruction {
         max-width: 1400px;
@@ -467,9 +963,15 @@
         <h1>DM Monogram Animation Explorations</h1>
         <p>Swiss Minimal Design System · Zero Blur · Pure Geometric Precision</p>
       </div>
-      <button class="replay-btn" onclick="restartAnimations()">
-        <span>↻</span> Restart All Timelines
-      </button>
+      <div class="header-actions">
+        <button class="font-switcher-btn" id="fontBtn" onclick="cycleHeadingFont()">
+          <span>🔤 Font:</span>
+          <span class="font-badge" id="currentFontName">Space Grotesk</span>
+        </button>
+        <button class="replay-btn" onclick="restartAnimations()">
+          <span>↻</span> Restart All Timelines
+        </button>
+      </div>
     </header>
 
     <div class="grid" id="grid">
@@ -567,6 +1069,137 @@
         <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
         <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
       </section>
+
+      <!-- ==============================================================
+           STRING / TUBE REVEAL ANIMATIONS (INSPIRED BY SPYLT VIDEO)
+           ============================================================== -->
+      <div class="section-divider">
+        <h2><span class="dot"></span> STRING / TUBE CONVERGENCE CONCEPTS (INSPIRED BY VIDEO)</h2>
+        <p>Two-tone flowing tubes · Disconnected segments snapping into place · Pure geometric & calligraphic vector paths</p>
+      </div>
+
+      <!-- S1: SCRIPT TUBE FLOW (SPYLT CARAMEL & CREAM TUBE) -->
+      <section class="card anim-s1">
+        <div class="number"><span class="dot"></span>S1 / SCRIPT DUAL TUBE</div>
+        <div class="tag">Liquid Cream & Caramel Lead</div>
+        <div class="stage">
+          <svg class="string-svg" viewBox="0 0 240 120">
+            <!-- Letter D Path -->
+            <path class="tube-base" d="M 45 28 C 42 55, 38 85, 34 102 C 32 110, 24 112, 20 106 C 16 98, 25 93, 38 95 C 62 98, 92 82, 90 54 C 88 32, 65 26, 45 28 Z" />
+            <path class="tube-lead" d="M 45 28 C 42 55, 38 85, 34 102 C 32 110, 24 112, 20 106 C 16 98, 25 93, 38 95 C 62 98, 92 82, 90 54 C 88 32, 65 26, 45 28 Z" />
+            <!-- Letter M Path -->
+            <path class="tube-base" d="M 105 60 C 108 42, 118 32, 126 32 C 132 32, 134 38, 132 52 L 124 102 M 126 68 C 133 46, 144 32, 154 32 C 160 32, 163 38, 162 50 L 154 102 M 156 68 C 163 46, 174 32, 184 32 C 192 32, 196 38, 194 54 L 188 96 C 186 104, 194 106, 204 100" />
+            <path class="tube-lead" d="M 105 60 C 108 42, 118 32, 126 32 C 132 32, 134 38, 132 52 L 124 102 M 126 68 C 133 46, 144 32, 154 32 C 160 32, 163 38, 162 50 L 154 102 M 156 68 C 163 46, 174 32, 184 32 C 192 32, 196 38, 194 54 L 188 96 C 186 104, 194 106, 204 100" />
+          </svg>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <!-- S2: SWISS MINIMAL TUBE (PORTFOLIO PALETTE) -->
+      <section class="card anim-s2">
+        <div class="number"><span class="dot"></span>S2 / SWISS GEOMETRIC TUBE</div>
+        <div class="tag">Charcoal Body + Terracotta Cap</div>
+        <div class="stage">
+          <svg class="string-svg" viewBox="0 0 240 120">
+            <!-- D: Vertical stem + semicircle bowl -->
+            <path class="tube-charcoal" d="M 45 22 L 45 98 M 45 22 C 92 22, 94 98, 45 98" />
+            <path class="tube-terracotta" d="M 45 22 L 45 98 M 45 22 C 92 22, 94 98, 45 98" />
+            <!-- M: Swiss 4-stroke architecture -->
+            <path class="tube-charcoal" d="M 96 98 L 96 22 L 130 76 L 164 22 L 164 98" />
+            <path class="tube-terracotta" d="M 96 98 L 96 22 L 130 76 L 164 22 L 164 98" />
+          </svg>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <!-- S3: DISCONNECTED SEGMENTS SNAPPING TOGETHER (EXACT VIDEO MECHANIC) -->
+      <section class="card anim-s3">
+        <div class="number"><span class="dot"></span>S3 / DISCONNECTED STRING SNAP</div>
+        <div class="tag">Floating Segments Converging</div>
+        <div class="stage">
+          <svg class="string-svg" viewBox="0 0 240 120">
+            <!-- D Stem Segment -->
+            <g class="seg-d-stem">
+              <path class="seg" d="M 46 24 L 46 96" />
+              <path class="seg-tip" d="M 46 82 L 46 96" />
+            </g>
+            <!-- D Arc Segment -->
+            <g class="seg-d-arc">
+              <path class="seg" d="M 46 24 C 95 24, 95 96, 46 96" />
+              <path class="seg-tip" d="M 80 82 C 72 92, 58 96, 46 96" />
+            </g>
+            <!-- M Left Stem -->
+            <g class="seg-m-left">
+              <path class="seg" d="M 98 96 L 98 24" />
+              <path class="seg-tip" d="M 98 38 L 98 24" />
+            </g>
+            <!-- M Diagonal Chevron -->
+            <g class="seg-m-mid">
+              <path class="seg" d="M 98 24 L 132 76 L 166 24" />
+              <path class="seg-tip" d="M 124 64 L 132 76 L 140 64" />
+            </g>
+            <!-- M Right Stem -->
+            <g class="seg-m-right">
+              <path class="seg" d="M 166 24 L 166 96" />
+              <path class="seg-tip" d="M 166 82 L 166 96" />
+            </g>
+          </svg>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <!-- S4: CONTINUOUS SILK FILAMENT TRACER -->
+      <section class="card anim-s4">
+        <div class="number"><span class="dot"></span>S4 / SILK FILAMENT TRACER</div>
+        <div class="tag">Single Continuous String</div>
+        <div class="stage">
+          <svg class="string-svg" viewBox="0 0 240 120">
+            <!-- Underlying Architectural Guide -->
+            <path class="thread-bg" d="M 45 96 L 45 24 C 95 24, 95 96, 45 96 L 96 96 L 96 24 L 130 76 L 164 24 L 164 96" />
+            <!-- Continuous Animated Thread -->
+            <path class="thread-lead" d="M 45 96 L 45 24 C 95 24, 95 96, 45 96 L 96 96 L 96 24 L 130 76 L 164 24 L 164 96" />
+          </svg>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <!-- S5: DUAL INTERLOCKING STRANDS (D & M EMBRACE) -->
+      <section class="card anim-s5">
+        <div class="number"><span class="dot"></span>S5 / INTERLOCKING STRANDS</div>
+        <div class="tag">Charcoal & Terracotta Knot</div>
+        <div class="stage">
+          <svg class="string-svg" viewBox="0 0 240 120">
+            <!-- Strand 1: Charcoal D -->
+            <path class="strand-d" d="M 45 24 L 45 96 M 45 24 C 95 24, 95 96, 45 96" />
+            <!-- Strand 2: Terracotta M -->
+            <path class="strand-m" d="M 96 96 L 96 24 L 130 76 L 164 24 L 164 96" />
+          </svg>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
+
+      <!-- S6: ORIGINAL SPYLT BRAND COLORWAY (CHOCOLATE & CARAMEL) -->
+      <section class="card anim-s6">
+        <div class="number"><span class="dot"></span>S6 / SPYLT ORIGINAL TUBE</div>
+        <div class="tag">Original Video Brand Replica</div>
+        <div class="stage">
+          <svg class="string-svg" viewBox="0 0 240 120">
+            <!-- Script D -->
+            <path class="tube-body" d="M 45 28 C 42 55, 38 85, 34 102 C 32 110, 24 112, 20 106 C 16 98, 25 93, 38 95 C 62 98, 92 82, 90 54 C 88 32, 65 26, 45 28 Z" />
+            <path class="tube-caps" d="M 45 28 C 42 55, 38 85, 34 102 C 32 110, 24 112, 20 106 C 16 98, 25 93, 38 95 C 62 98, 92 82, 90 54 C 88 32, 65 26, 45 28 Z" />
+            <!-- Script M -->
+            <path class="tube-body" d="M 105 60 C 108 42, 118 32, 126 32 C 132 32, 134 38, 132 52 L 124 102 M 126 68 C 133 46, 144 32, 154 32 C 160 32, 163 38, 162 50 L 154 102 M 156 68 C 163 46, 174 32, 184 32 C 192 32, 196 38, 194 54 L 188 96 C 186 104, 194 106, 204 100" />
+            <path class="tube-caps" d="M 105 60 C 108 42, 118 32, 126 32 C 132 32, 134 38, 132 52 L 124 102 M 126 68 C 133 46, 144 32, 154 32 C 160 32, 163 38, 162 50 L 154 102 M 156 68 C 163 46, 174 32, 184 32 C 192 32, 196 38, 194 54 L 188 96 C 186 104, 194 106, 204 100" />
+          </svg>
+        </div>
+        <h2 class="heading">Hello, I'm Dev<span>.</span></h2>
+        <div class="subtitle">DESIGNING & BUILDING DIGITAL EXPERIENCES.</div>
+      </section>
     </div>
 
     <div class="instruction">
@@ -574,6 +1207,37 @@
     </div>
 
     <script>
+      const FONTS = [
+        { name: "Space Grotesk", css: "'Space Grotesk', sans-serif" },
+        { name: "Cormorant Garamond", css: "'Cormorant Garamond', Georgia, serif" },
+        { name: "Bodoni Moda", css: "'Bodoni Moda', serif" },
+        { name: "Playfair Display", css: "'Playfair Display', serif" },
+        { name: "DM Sans", css: "'DM Sans', sans-serif" },
+        { name: "Manrope", css: "'Manrope', sans-serif" },
+        { name: "Pacifico (Script)", css: "'Pacifico', cursive" },
+        { name: "Caveat (Cursive)", css: "'Caveat', cursive" },
+      ];
+      let currentFontIndex = 0;
+
+      function cycleHeadingFont() {
+        currentFontIndex = (currentFontIndex + 1) % FONTS.length;
+        const font = FONTS[currentFontIndex];
+        document.getElementById("currentFontName").textContent = font.name;
+
+        // Apply to all headings
+        document.querySelectorAll(".heading").forEach((el) => {
+          el.style.fontFamily = font.css;
+        });
+
+        // Apply to all svg outline text elements
+        document.querySelectorAll(".heading-stroke-fill text").forEach((el) => {
+          el.setAttribute("font-family", font.css);
+        });
+
+        // Restart animation so stroke recalculates cleanly
+        restartAnimations();
+      }
+
       function restartAnimations() {
         const grid = document.getElementById("grid");
         const clone = grid.cloneNode(true);

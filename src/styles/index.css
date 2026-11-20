@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Caveat:wght@600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Pacifico&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 /* ==================== THEME CSS CUSTOM PROPERTIES ==================== */
 :root {
@@ -66,12 +66,7 @@ html, body {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* Hide default cursor on desktop fine-pointer devices only */
-@media (pointer: fine) {
-  html, body, *, a, button, input, textarea, select, [role="button"], .cursor-pointer, [data-interactive] {
-    cursor: none !important;
-  }
-}
+
 
 /* Faint Film Grain Texture (SVG data URI - ultra low opacity) */
 .bg-subtle-grain {
@@ -229,5 +224,127 @@ button:active:not([disabled]) {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* S1 Dual Script Tube Monogram Animation (Spylt Style Fluid Tube) */
+.s1-tube-svg {
+  width: 100%;
+  height: 100%;
+  max-width: 420px;
+  max-height: 210px;
+  overflow: visible;
+  display: block;
+}
+
+.s1-tube-base {
+  stroke: var(--text-primary);
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  opacity: 0;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: drawS1Cream 2.6s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards;
+}
+
+.s1-tube-lead {
+  stroke: var(--accent);
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  opacity: 0;
+  stroke-dasharray: 60 1200;
+  stroke-dashoffset: 600;
+  animation: drawS1Caramel 2.6s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards;
+}
+
+@keyframes drawS1Cream {
+  0% {
+    stroke-dashoffset: 600;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes drawS1Caramel {
+  0% {
+    stroke-dashoffset: 600;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  88% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -60;
+    opacity: 0;
+  }
+}
+
+.stroke-fill-text {
+  fill: transparent;
+  stroke: var(--text-primary);
+  stroke-width: 1.6px;
+  stroke-dasharray: 450;
+  stroke-dashoffset: 450;
+  animation: strokeOutlineDraw 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards,
+             fillColorIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+}
+
+.stroke-fill-dot {
+  fill: transparent;
+  stroke: #c47758;
+  stroke-width: 2px;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: strokeOutlineDraw 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards,
+             fillDotIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1.4s forwards;
+}
+
+@keyframes strokeOutlineDraw {
+  0% {
+    stroke-dashoffset: 450;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes fillColorIn {
+  0% {
+    fill: transparent;
+    stroke: var(--text-primary);
+  }
+  100% {
+    fill: var(--text-primary);
+    stroke: transparent;
+  }
+}
+
+@keyframes fillDotIn {
+  0% {
+    fill: transparent;
+    stroke: #c47758;
+  }
+  100% {
+    fill: #c47758;
+    stroke: transparent;
   }
 }

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import CustomCursor from './components/CustomCursor';
 import SpatialCanvasBackground from './components/SpatialCanvasBackground';
 import VantaTopologyBackground from './components/VantaTopologyBackground';
 import ThemeToggle from './components/ThemeToggle';
@@ -13,6 +12,7 @@ import SkillsSection from './sections/SkillsSection';
 import JourneySection from './sections/JourneySection';
 import GithubSection from './sections/GithubSection';
 import ContactSection from './sections/ContactSection';
+import TextLoop from './components/TextLoop/TextLoop';
 import './styles/index.css';
 
 // Top-Level Minimal Navigation Sections
@@ -368,7 +368,6 @@ export default function App() {
       {/* Extremely Faint Paper Grain Overlay */}
       <div className="absolute inset-0 pointer-events-none z-[2] bg-subtle-grain opacity-[var(--grain-opacity)]" />
 
-      <CustomCursor />
 
       {/* ==================== GLOBAL ARCHITECTURAL NAVBAR ==================== */}
       <motion.header
@@ -381,63 +380,15 @@ export default function App() {
         className="fixed top-0 left-0 right-0 z-40 h-[72px] px-6 sm:px-10 md:px-14 flex items-center justify-between uppercase font-sans text-[var(--text-primary)] pointer-events-none bg-[var(--bg-primary)]/85 backdrop-blur-md border-b border-[var(--border-primary)] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] transition-colors duration-400"
       >
         <div className="w-full max-w-[1720px] mx-auto flex items-center justify-between">
-          {/* Brand & Personal Metadata */}
-          <div className="flex items-center gap-4 pointer-events-auto sm:gap-6 md:gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{
-                opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
-                y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -10,
-              }}
-              transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-              onClick={() => navigateToView('home')}
-              data-cursor="button"
-              className="flex items-center gap-2.5 cursor-pointer group"
-            >
-              <span className="w-2 h-2 rounded-full bg-[var(--accent)] group-hover:scale-125 transition-transform" />
-              <span className="font-mono text-[10px] tracking-wider text-[var(--text-secondary)]">NAME /</span>
-              <span className="text-base sm:text-lg font-bold tracking-tight text-[var(--text-primary)] font-display group-hover:text-[var(--accent)] transition-colors">
-                DEV MISTRY
-              </span>
-            </motion.div>
-
-            <div className="h-4 w-px bg-[var(--border-subtle)] hidden sm:block" />
-
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{
-                opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
-                y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -10,
-              }}
-              transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="items-center hidden gap-2 sm:flex"
-            >
-              <span className="font-mono text-[10px] tracking-wider text-[var(--text-secondary)]">ROLE /</span>
-              <span className="text-xs sm:text-sm font-semibold tracking-tight text-[var(--text-primary)] font-mono">
-                FULL STACK DEVELOPER
-              </span>
-            </motion.div>
-
-            <div className="h-4 w-px bg-[var(--border-subtle)] hidden xl:block" />
-
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{
-                opacity: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 1 : 0,
-                y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -10,
-              }}
-              transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="items-center hidden gap-2 xl:flex"
-            >
-              <span className="font-mono text-[10px] tracking-wider text-[var(--text-secondary)]">BASE /</span>
-              <span className="text-xs sm:text-sm font-medium tracking-tight text-[var(--text-secondary)] font-mono">
-                MUMBAI · 19°N
-              </span>
-            </motion.div>
+          {/* Left: Portfolio edition */}
+          <div className="flex items-center gap-3 font-mono uppercase pointer-events-auto sm:gap-4">
+            <span className="text-[var(--text-primary)] font-bold text-base sm:text-lg tracking-wider font-mono">
+              PORTFOLIO <span className="text-[var(--accent)]">/</span> 2026
+            </span>
           </div>
 
           {/* Navigation Controls: Segmented Pill Nav + Theme Toggle */}
-          <div className="flex items-center gap-3 pointer-events-auto sm:gap-5">
+          <div className="flex items-center gap-3 pointer-events-auto sm:gap-4">
             <nav className="flex items-center gap-1 sm:gap-1.5 p-1 rounded-full bg-[var(--bg-surface)]/90 border border-[var(--border-primary)] shadow-xs">
               {NAV_SECTIONS.map((sec, idx) => {
                 const isActive =
@@ -454,7 +405,7 @@ export default function App() {
                       y: isAtLeast(TRANSITION_PHASES.NAVIGATION_REVEAL) ? 0 : -12,
                     }}
                     transition={{ duration: 0.5, delay: 0.3 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                    className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${isActive && !contactOpen
+                    className={`px-3.5 sm:px-4.5 py-1 sm:py-1.5 rounded-full text-xs sm:text-[13px] font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${isActive && !contactOpen
                       ? 'bg-[var(--accent)] text-[#F7F6F2] shadow-xs'
                       : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)]'
                       }`}
@@ -480,7 +431,7 @@ export default function App() {
       </motion.header>
 
       {/* ==================== HORIZONTAL EXHIBITION STAGE ==================== */}
-      <main className="relative w-full h-[calc(100vh-128px)] mt-[72px] mb-[56px] overflow-hidden flex items-center justify-center z-10">
+      <main className="relative w-full h-[calc(100vh-72px)] mt-[72px] mb-0 overflow-hidden flex items-center justify-center z-10">
         <AnimatePresence mode="wait" custom={direction}>
           {currentViewId === 'home' && (
             /* 01 HOME (Hero + Horizontal Scroll Exhibition Rooms) */
@@ -618,45 +569,27 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* ==================== GLOBAL ARCHITECTURAL FOOTER ==================== */}
-      <motion.footer
-        initial={{ opacity: 0, y: 24 }}
+      {/* ==================== BOTTOM-RIGHT FIXED INFO BUTTON ==================== */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.85 }}
         animate={{
           opacity: isAtLeast(TRANSITION_PHASES.DECORATION_SETTLEMENT) ? 1 : 0,
-          y: isAtLeast(TRANSITION_PHASES.DECORATION_SETTLEMENT) ? 0 : 24,
+          scale: isAtLeast(TRANSITION_PHASES.DECORATION_SETTLEMENT) ? 1 : 0.85,
         }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed bottom-0 left-0 right-0 z-40 h-[56px] px-6 sm:px-10 md:px-14 flex items-center justify-between font-mono text-xs tracking-wider uppercase text-[var(--text-secondary)] pointer-events-none bg-[var(--bg-primary)]/85 backdrop-blur-md border-t border-[var(--border-primary)] shadow-[0_-4px_24px_-4px_rgba(0,0,0,0.04)] transition-colors duration-400"
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="fixed z-40 pointer-events-auto bottom-6 right-6 md:right-10"
       >
-        <div className="w-full max-w-[1720px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 pointer-events-auto sm:gap-4">
-            <span className="text-[var(--text-primary)] font-semibold text-xs tracking-wider font-mono">
-              PORTFOLIO <span className="text-[var(--accent)]">/</span> 2026
-            </span>
-            <span className="hidden sm:inline text-[var(--border-subtle)]">|</span>
-            <span className="hidden sm:flex items-center gap-1.5 text-[9px] font-mono text-[var(--accent)] font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-              AVAILABLE FOR SELECT CONTRACTS
-            </span>
-          </div>
+        <button
+          onClick={() => setOpenInfo(true)}
+          data-cursor="button"
+          className="px-5 py-2.5 rounded-full border border-[var(--border-primary)] bg-[var(--bg-surface)]/95 backdrop-blur-md hover:border-[var(--accent)] hover:text-[var(--accent)] text-sm sm:text-base font-mono tracking-wider font-bold text-[var(--text-primary)] transition-all cursor-pointer shadow-lg hover:shadow-xl flex items-center gap-2"
+        >
+          <span>INFO</span>
+          <span className="text-[var(--accent)] font-bold text-base">↗</span>
+        </button>
+      </motion.div>
 
-          <div className="hidden md:flex items-center gap-2 text-[10px] text-[var(--text-secondary)] font-mono tracking-widest">
-            <span>ARCHITECTURAL PORTFOLIO & EXHIBITION</span>
-            <span className="text-[var(--text-muted)]">•</span>
-            <span>19.0760° N, 72.8777° E</span>
-          </div>
 
-          <div className="flex items-center gap-4 pointer-events-auto">
-            <button
-              onClick={() => setOpenInfo(true)}
-              data-cursor="button"
-              className="px-3 py-1 rounded-[2px] border border-[var(--border-primary)] bg-[var(--bg-surface)] hover:border-[var(--accent)] hover:text-[var(--accent)] text-[10px] font-mono tracking-wider font-semibold text-[var(--text-primary)] transition-all cursor-pointer shadow-2xs"
-            >
-              INFO ↗
-            </button>
-          </div>
-        </div>
-      </motion.footer>
 
       {/* ==================== CONTACT MODAL DIALOG ==================== */}
       <AnimatePresence>
@@ -790,123 +723,132 @@ export default function App() {
       </AnimatePresence>
 
       {/* ==================== OPEN INFO OVERLAY (DIGITAL SYSTEM SPECIFICATION) ==================== */}
+      {/* ==================== ENGINEERING SPECIFICATION INFO MODAL ==================== */}
       <AnimatePresence>
         {openInfo && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto md:p-8 bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-8 bg-black/60 dark:bg-black/80 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.94, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 20 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-4xl bg-[#111513] border border-[#2A302C] p-6 md:p-10 shadow-2xl text-[#F1EFE8] overflow-hidden my-auto rounded-[2px]"
+              className="relative w-full max-w-5xl h-[min(94vh,860px)] bg-[var(--bg-surface)] border border-[var(--border-primary)] p-6 md:p-10 shadow-2xl text-[var(--text-primary)] flex flex-col justify-between overflow-hidden rounded-[6px]"
             >
-              <div className="relative z-10 flex items-center justify-between pb-4 mb-6 border-b border-[#2A302C]">
-                <div className="flex items-center gap-3">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#65E6D2] animate-pulse" />
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#9EA49F]">
-                    ENGINEERING SPECIFICATION // DEV MISTRY
-                  </span>
-                </div>
+              {/* Top Header Row with DEV MISTRY & Spinning 360 Close Button */}
+              <div className="relative z-10 flex items-start justify-between shrink-0">
+                <h2 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight text-[var(--text-primary)] uppercase font-display leading-[0.88]">
+                  DEV MISTRY
+                </h2>
+
                 <button
                   onClick={() => setOpenInfo(false)}
-                  className="font-mono text-xs uppercase tracking-widest px-3 py-1.5 border border-[#2A302C] hover:bg-[#65E6D2] hover:text-[#0B0D0C] transition-colors cursor-pointer"
+                  aria-label="Close specification"
+                  className="group relative p-2 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors cursor-pointer bg-transparent border-0 outline-none"
                 >
-                  CLOSE [✕]
+                  <span className="block text-2xl font-mono leading-none transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-[360deg]">
+                    ✕
+                  </span>
                 </button>
               </div>
 
-              <div className="relative z-10 grid items-start grid-cols-1 gap-8 md:grid-cols-12">
-                <div className="space-y-6 md:col-span-7">
-                  <div className="border-l-2 border-[#65E6D2] pl-4">
-                    <h2 className="text-3xl font-black leading-none tracking-tight text-[#F1EFE8] uppercase sm:text-4xl font-display">
-                      DEV MISTRY
-                    </h2>
-                    <div className="mt-2 font-mono text-[11px] font-bold tracking-widest text-[#65E6D2] uppercase">
-                      FULL STACK DEVELOPER • AGENTIC SYSTEMS
-                    </div>
+              {/* Specimen Main Content: flex-1 space evenly across card height */}
+              <div className="relative z-10 flex flex-col justify-between flex-1 gap-3 py-2 overflow-hidden sm:py-4 sm:gap-4">
+                {/* Top Section: Role & Manifesto */}
+                <div className="space-y-2 shrink-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs sm:text-sm font-bold tracking-widest uppercase px-3 py-1 bg-[var(--bg-primary)] border border-[var(--border-primary)] rounded-[3px] text-[var(--accent)]">
+                      FULL-STACK ARCHITECT & SOFTWARE ENGINEER
+                    </span>
                   </div>
 
-                  <div className="bg-[#171B19] p-5 border border-[#2A302C] rounded-[2px]">
-                    <p className="font-sans text-xs sm:text-sm text-[#9EA49F] leading-relaxed">
-                      Specialized in full-stack architecture, high-concurrency cloud environments on AWS, and autonomous agentic workflows orchestrating reasoning networks with deterministic boundaries.
-                    </p>
-                  </div>
+                  <p className="font-sans text-sm sm:text-base md:text-lg text-[var(--text-primary)] font-medium leading-relaxed max-w-3xl">
+                    Engineering high-throughput full-stack systems from intuitive client interfaces to fault-tolerant distributed backends and cloud-native databases.
+                  </p>
+                </div>
 
-                  <div className="grid grid-cols-2 gap-4 font-mono text-xs">
-                    <div className="bg-[#171B19] p-4 border border-[#2A302C] rounded-[2px]">
-                      <span className="text-[9px] uppercase tracking-wider block text-[#626A65]">CURRENT STATUS</span>
-                      <p className="font-bold text-[#F1EFE8] text-[11px] leading-tight mt-1">
-                        Building Autonomous AI Swarms & Cloud Meshes
-                      </p>
-                    </div>
-
-                    <div className="bg-[#171B19] p-4 border border-[#2A302C] rounded-[2px]">
-                      <span className="text-[9px] uppercase tracking-wider block text-[#626A65]">LOCATION</span>
-                      <p className="font-bold text-[#65E6D2] text-[11px] leading-tight mt-1">
-                        MUMBAI, INDIA • REMOTE
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {['REACT / NEXT.JS', 'FASTAPI & PYTHON', 'AWS MULTI-REGION', 'TERRAFORM', 'LANGGRAPH & MCP', 'KUBERNETES'].map((tech) => (
-                      <span
-                        key={tech}
-                        className="font-mono text-[10px] tracking-wider uppercase px-2.5 py-1 bg-[#171B19] border border-[#2A302C] text-[#9EA49F]"
-                      >
-                        {tech}
+                {/* Status & Location Bar */}
+                <div className="grid grid-cols-1 gap-3 font-mono text-xs sm:grid-cols-2 shrink-0">
+                  <div className="bg-[var(--bg-primary)] p-3 border border-[var(--border-subtle)] rounded-[4px] flex items-center gap-3">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent)] animate-pulse shrink-0" />
+                    <div>
+                      <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] block font-semibold">STATUS</span>
+                      <span className="font-bold text-[var(--text-primary)] text-xs sm:text-sm">
+                        Full-Stack Design Intern @ Horizon View
                       </span>
-                    ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-[var(--bg-primary)] p-3 border border-[var(--border-subtle)] rounded-[4px] flex items-center justify-between">
+                    <div>
+                      <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] block font-semibold">BASE LOCATION</span>
+                      <span className="font-bold text-[var(--accent)] text-xs sm:text-sm">
+                        MUMBAI, INDIA
+                      </span>
+                    </div>
+                    <span className="text-[9px] uppercase tracking-widest text-[var(--text-muted)] border border-[var(--border-subtle)] px-2 py-0.5 rounded">
+                      REMOTE WORLDWIDE
+                    </span>
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center md:col-span-5">
-                  <div className="relative bg-[#171B19] border border-[#2A302C] p-3 rounded-[2px] shadow-2xl w-full max-w-[280px]">
-                    <div className="relative mb-3 overflow-hidden border border-[#2A302C] aspect-[3/4] bg-[#0B0D0C]">
-                      <img
-                        src="/img/dev_pic.png"
-                        alt="Dev Mistry Portrait"
-                        className="w-full h-full object-cover contrast-[1.05]"
-                      />
-                    </div>
+                {/* Prominent Wavy TextLoop: Hero Feature occupying central space */}
+                <div className="relative w-full flex-1 min-h-[140px] max-h-[220px] overflow-hidden border border-[var(--border-subtle)] bg-[var(--bg-primary)]/80 rounded-[4px] py-2 flex items-center shadow-inner">
+                  <TextLoop
+                    text="REACT ✦ NEXT.JS ✦ TYPESCRIPT ✦ NODE.JS ✦ EXPRESS ✦ POSTGRESQL ✦ MONGODB ✦ PRISMA ✦ DOCKER ✦ AWS ✦ TAILWIND CSS ✦ REDUX ✦ MYSQL ✦ GIT ✦"
+                    shape="wave"
+                    speed={85}
+                    direction="forward"
+                    separator="✦"
+                    curviness={85}
+                    fontSize={26}
+                    fontWeight={800}
+                    letterSpacing={2}
+                    uppercase
+                    ribbon={false}
+                    color="var(--accent)"
+                    pauseOnHover
+                  />
+                </div>
 
-                    <div className="font-mono text-xs font-semibold tracking-wider text-center text-[#9EA49F]">
-                      DEV MISTRY // MUMBAI
-                    </div>
-                  </div>
-
-                  <div className="w-full mt-6 space-y-2">
-                    <button
-                      onClick={() => {
-                        setOpenInfo(false);
-                        navigateToView('projects'); // Jump to Projects
-                      }}
-                      className="w-full py-2.5 bg-[#B96F52] hover:bg-[#C98369] text-[#F7F6F2] font-sans text-xs tracking-wider uppercase font-semibold shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <span>SEE ARCHITECTURAL PROJECTS</span>
-                      <span>→</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setOpenInfo(false);
-                        navigateToView('contact');
-                      }}
-                      className="w-full py-2 bg-[#171B19] hover:bg-[#2A302C] text-[#F7F6F2] font-sans text-xs tracking-wider uppercase transition-colors border border-[#2A302C] cursor-pointer"
-                    >
-                      TRANSMIT INQUIRY ✉
-                    </button>
-                  </div>
+                {/* Action Buttons: See Projects, Internships, Contact */}
+                <div className="flex flex-wrap items-center gap-3 pt-1 shrink-0">
+                  <button
+                    onClick={() => {
+                      setOpenInfo(false);
+                      navigateToView('projects');
+                    }}
+                    className="px-5 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[#F7F6F2] font-mono text-xs uppercase tracking-wider font-semibold rounded-[3px] cursor-pointer shadow-xs transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span>SEE THE PROJECTS</span>
+                    <span>→</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setOpenInfo(false);
+                      navigateToView('internship');
+                    }}
+                    className="px-5 py-2.5 bg-[var(--bg-primary)] hover:bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] hover:text-[var(--accent)] font-mono text-xs uppercase tracking-wider border border-[var(--border-primary)] hover:border-[var(--accent)] rounded-[3px] cursor-pointer font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span>INTERNSHIPS</span>
+                  </button>
+                  <a
+                    href="mailto:devmistry1510@gmail.com"
+                    className="px-5 py-2.5 bg-[var(--bg-primary)] hover:bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] hover:text-[var(--accent)] font-mono text-xs uppercase tracking-wider border border-[var(--border-primary)] hover:border-[var(--accent)] rounded-[3px] cursor-pointer font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span>GET IN TOUCH ✉</span>
+                  </a>
                 </div>
               </div>
 
-              <div className="relative z-10 flex flex-col items-center justify-between gap-2 pt-4 mt-6 text-[11px] font-mono border-t border-[#2A302C] sm:flex-row text-[#788477]">
-                <span>LOCATION: MUMBAI, INDIA • REMOTE WORLDWIDE</span>
-                <div className="flex gap-4 text-[#788477]">
-                  <a href="https://github.com/DevM15" target="_blank" rel="noopener noreferrer" className="hover:text-[#F7F6F2]">GITHUB</a>
+              {/* Footer Metadata & Social Links */}
+              <div className="relative z-10 flex flex-col items-center justify-between gap-4 pt-3 sm:pt-4 border-t border-[var(--border-primary)] sm:flex-row text-[11px] sm:text-xs font-mono text-[var(--text-secondary)] shrink-0">
+                <span>MUMBAI, INDIA • WORLDWIDE REMOTE</span>
+                <div className="flex gap-5 text-[var(--text-secondary)] font-medium">
+                  <a href="https://github.com/DevM15" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">GITHUB</a>
                   <span>•</span>
-                  <a href="https://www.linkedin.com/in/dev-mistry-828586298/" target="_blank" rel="noopener noreferrer" className="hover:text-[#F7F6F2]">LINKEDIN</a>
+                  <a href="https://www.linkedin.com/in/dev-mistry-828586298/" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">LINKEDIN</a>
                   <span>•</span>
-                  <a href="mailto:devmistry1510@gmail.com" className="hover:text-[#F7F6F2]">EMAIL</a>
+                  <a href="mailto:devmistry1510@gmail.com" className="hover:text-[var(--accent)] transition-colors">EMAIL</a>
                 </div>
               </div>
             </motion.div>

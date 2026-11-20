@@ -177,8 +177,6 @@ export default function HorizontalScrollExhibition({
     goToCard(nearest);
   };
 
-  const activeRoom = WORKSPACE_ROOMS[activeCardIndex] || WORKSPACE_ROOMS[0];
-
   return (
     <div
       ref={containerRef}
@@ -186,66 +184,16 @@ export default function HorizontalScrollExhibition({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
-      className={`relative w-full h-[calc(100vh-128px)] overflow-hidden flex flex-col justify-between select-none touch-none ${
-        isInteractive && isDragging ? 'cursor-grabbing' : isInteractive ? 'cursor-grab' : 'cursor-default'
-      }`}
+      className={`relative w-full h-[calc(100vh-128px)] overflow-hidden flex flex-col justify-between select-none touch-none ${isInteractive && isDragging ? 'cursor-grabbing' : isInteractive ? 'cursor-grab' : 'cursor-default'
+        }`}
       style={{ perspective: 1200 }}
     >
-      {/* ==================== 1. TOP GALLERY HEADER ==================== */}
-      <motion.div
-        animate={{
-          opacity: phaseIndex >= 8 ? 1 : 0,
-          y: phaseIndex >= 8 ? 0 : -10,
-        }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="px-6 md:px-12 pt-3 pb-2 z-30 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/85 backdrop-blur-xs font-mono text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
-      >
-        <div className="flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
-          <span className="font-semibold text-[var(--text-primary)]">
-            {activeRoom.num} {'//'} {activeRoom.title}
-          </span>
-          <span className="opacity-40">•</span>
-          <span className="hidden sm:inline text-[9px] text-[var(--text-muted)]">
-            {activeRoom.category}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4 text-[9px]">
-          <span className="hidden md:inline text-[var(--text-muted)]">
-            SCROLL WHEEL OR DRAG TO ROTATE CARDS
-          </span>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                goToCard(activeCardIndex - 1);
-              }}
-              disabled={activeCardIndex === 0}
-              data-cursor="button"
-              className="px-2 py-0.5 rounded-[1px] bg-[var(--bg-surface)] border border-[var(--border-primary)] hover:border-[var(--accent)] disabled:opacity-30 disabled:pointer-events-none cursor-pointer transition-colors"
-            >
-              ← PREV
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                goToCard(activeCardIndex + 1);
-              }}
-              disabled={activeCardIndex === totalCards - 1}
-              data-cursor="button"
-              className="px-2 py-0.5 rounded-[1px] bg-[var(--bg-surface)] border border-[var(--border-primary)] hover:border-[var(--accent)] disabled:opacity-30 disabled:pointer-events-none cursor-pointer transition-colors"
-            >
-              NEXT →
-            </button>
-          </div>
-        </div>
-      </motion.div>
+      {/* ==================== 1. TOP GALLERY HEADER (Clean minimal layout) ==================== */}
 
       {/* ==================== 2. MAIN 3D CURVED CARDS STAGE ==================== */}
-      <div className="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center pointer-events-auto">
+      <div className="relative flex items-center justify-center flex-1 w-full h-full overflow-hidden pointer-events-auto">
         <div
-          className="relative w-full h-full flex items-center justify-center"
+          className="relative flex items-center justify-center w-full h-full"
           style={{ transformStyle: 'preserve-3d' }}
         >
           {WORKSPACE_ROOMS.map((room, idx) => {
@@ -269,68 +217,7 @@ export default function HorizontalScrollExhibition({
         </div>
       </div>
 
-      {/* ==================== 3. BOTTOM GALLERY HUD & JUMP PILLS ==================== */}
-      <motion.div
-        animate={{
-          opacity: phaseIndex >= 8 ? 1 : 0,
-          y: phaseIndex >= 8 ? 0 : 10,
-        }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="px-6 md:px-12 py-3 z-30 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-subtle)] bg-[var(--bg-primary)]/85 backdrop-blur-xs font-mono text-[10px] text-[var(--text-secondary)]"
-      >
-        {/* Active Stage Indicator */}
-        <div className="flex items-center gap-3">
-          <span className="text-[var(--accent)] font-bold">ROOM {activeRoom.num} OF 0{totalCards}</span>
-          <span className="opacity-40">•</span>
-          <span className="font-semibold text-[var(--text-primary)] uppercase">{activeRoom.title}</span>
-        </div>
-
-        {/* Clickable Room Jump Dots */}
-        <div className="flex items-center gap-2">
-          {WORKSPACE_ROOMS.map((room, idx) => (
-            <button
-              key={room.id}
-              onClick={(e) => {
-                e.stopPropagation();
-                goToCard(idx);
-              }}
-              data-cursor="button"
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-[2px] transition-all cursor-pointer font-mono text-[9px] ${
-                idx === activeCardIndex
-                  ? 'bg-[var(--accent)] text-[#F7F6F2] font-bold shadow-xs'
-                  : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)]'
-              }`}
-            >
-              <span>{room.num}</span>
-              <span className="hidden sm:inline">{room.id.toUpperCase()}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Quick Launch / Projects Action */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onNavigateToProjects && onNavigateToProjects();
-            }}
-            data-cursor="button"
-            className="px-3 py-1 rounded-[2px] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent)] hover:text-[var(--accent)] border border-[var(--border-primary)] font-mono text-[9px] font-semibold tracking-wider uppercase transition-colors cursor-pointer"
-          >
-            DISCOGRAPHY DECK ↗
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onNavigateToContact && onNavigateToContact();
-            }}
-            data-cursor="button"
-            className="px-3 py-1 rounded-[2px] bg-[var(--accent)] text-[#F7F6F2] font-mono text-[9px] font-bold tracking-wider uppercase hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
-          >
-            GET IN TOUCH ↗
-          </button>
-        </div>
-      </motion.div>
+      {/* ==================== 3. BOTTOM GALLERY HUD ==================== */}
     </div>
   );
 }
@@ -380,8 +267,9 @@ function WorkspaceCard({
     return Math.max(0.1, 0.4 - (abs - 1.4) * 0.3);
   });
 
-  // Determine card frame presentation during intro
+  // Determine card frame presentation during intro and for hero
   const isIntroCard = index === 0 && phaseIndex < 8;
+  const isHeroCard = room.id === 'hero';
 
   return (
     <motion.div
@@ -395,34 +283,15 @@ function WorkspaceCard({
         zIndex: isActive ? 20 : Math.round(10 - Math.abs(index)),
         transformStyle: 'preserve-3d',
       }}
-      className={`absolute w-[min(94vw,1260px)] h-[min(calc(100vh-165px),640px)] rounded-[4px] transition-all duration-700 overflow-hidden will-change-transform ${
-        isIntroCard
-          ? 'border-transparent bg-transparent shadow-none pointer-events-auto'
-          : isActive
+      className={`absolute w-[min(94vw,1260px)] h-[min(calc(100vh-165px),640px)] rounded-[4px] transition-all duration-700 overflow-hidden will-change-transform ${isHeroCard || isIntroCard
+        ? 'border-transparent bg-transparent shadow-none pointer-events-auto'
+        : isActive
           ? 'border-[var(--border-primary)] bg-[var(--bg-surface)]/95 shadow-2xl pointer-events-auto'
           : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]/75 shadow-xl cursor-pointer pointer-events-auto'
-      }`}
+        }`}
     >
-      {/* Top Architectural Spec Trim on Card (hidden during entrance intro) */}
-      {phaseIndex >= 8 && (
-        <div className={`h-7 px-4 bg-[var(--bg-surface-elevated)] border-b border-[var(--border-primary)] flex items-center justify-between font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)] select-none transition-opacity duration-700 ${
-          phaseIndex >= 9 ? 'opacity-100' : 'opacity-0'
-        }`}>
-          <div className="flex items-center gap-2">
-            <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[var(--accent)] animate-pulse' : 'bg-[var(--text-muted)]'}`} />
-            <span className="font-bold text-[var(--text-primary)]">ROOM {room.num} {'//'} {room.title}</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span>{room.category}</span>
-            {!isActive && (
-              <span className="text-[var(--accent)] font-semibold hidden sm:inline">CLICK TO FOCUS ↗</span>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Internal Room Content Viewport */}
-      <div className={`relative w-full overflow-y-auto no-scrollbar ${phaseIndex >= 8 ? 'h-[calc(100%-28px)]' : 'h-full'}`}>
+      <div className="relative w-full h-full overflow-y-auto no-scrollbar">
         {room.id === 'hero' ? (
           <HomeSection
             onOpenSection={onOpenSection}

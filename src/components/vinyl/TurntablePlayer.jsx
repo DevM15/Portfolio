@@ -11,18 +11,64 @@ import VinylRecord from './VinylRecord';
  * - Tactile start/pause button, 33/45 RPM selector, and power status LED.
  * - Fully responsive with compact dock mode for side-by-side project inspection.
  */
+export const PLAYER_STYLES = [
+  { id: 'technics', label: 'TECHNICS HI-FI', short: 'HI-FI' },
+  { id: 'braun', label: 'BRAUN / RAMS', short: 'MINIMAL' },
+  { id: 'cyber', label: 'NEO CYBER', short: 'CYBER' },
+  { id: 'walnut', label: 'VINTAGE WOOD', short: 'WALNUT' },
+];
+
 export default function TurntablePlayer({
   activeProject,
   isPlaying = false,
   onTogglePlay = () => {},
   compact = false,
   className = '',
+  playerStyle = 'technics',
+  onStyleChange = null,
 }) {
   const [rpm, setRpm] = useState(33);
 
   // Scaled dimensions depending on compact or large layout
   const plinthWidth = compact ? 'w-[280px] sm:w-[320px]' : 'w-[320px] sm:w-[380px] md:w-[440px]';
-  const vinylSize = compact ? 200 : 280;
+  const vinylSize = compact ? 200 : 270;
+
+  // Custom styling per theme
+  const getPlinthStyle = () => {
+    switch (playerStyle) {
+      case 'braun': // Dieter Rams Snow White Minimalist
+        return {
+          background: 'linear-gradient(145deg, #FDFDFD 0%, #EAE8E3 100%)',
+          border: '1px solid #D5D0C5',
+          boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
+          color: '#252A27',
+        };
+      case 'cyber': // Smoked Glass / OLED Neon Cyberpunk
+        return {
+          background: 'linear-gradient(145deg, #0D110F 0%, #171E1A 100%)',
+          border: '1px solid rgba(185, 111, 82, 0.45)',
+          boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 25px rgba(185, 111, 82, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+          color: '#E5E7EB',
+        };
+      case 'walnut': // Mid-Century Walnut & Gold Acoustic
+        return {
+          background: 'linear-gradient(145deg, #3E2723 0%, #2A1810 100%)',
+          border: '1px solid #5D4037',
+          boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(212, 175, 55, 0.3)',
+          color: '#F5EBE6',
+        };
+      case 'technics': // Standard Industrial Brushed Aluminum & Cast Iron
+      default:
+        return {
+          background: 'linear-gradient(145deg, var(--bg-surface) 0%, var(--bg-surface-elevated) 100%)',
+          border: '1px solid var(--border-primary)',
+          boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -2px 0 rgba(0, 0, 0, 0.3)',
+          color: 'var(--text-primary)',
+        };
+    }
+  };
+
+  const plinthTheme = getPlinthStyle();
 
   return (
     <div
@@ -31,37 +77,66 @@ export default function TurntablePlayer({
       {/* ==================== TURNTABLE CHASSIS / PLINTH ==================== */}
       <div
         className="relative w-full h-full rounded-2xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden transition-all duration-500"
-        style={{
-          background: 'linear-gradient(145deg, var(--bg-surface) 0%, var(--bg-surface-elevated) 100%)',
-          border: '1px solid var(--border-primary)',
-          boxShadow:
-            '0 25px 60px -15px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -2px 0 rgba(0, 0, 0, 0.3)',
-        }}
+        style={plinthTheme}
       >
-        {/* Subtle Brushed Metal Surface Texture */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay"
-          style={{
-            backgroundImage:
-              'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px)',
-          }}
-        />
+        {/* Plinth Surface Texture */}
+        {playerStyle === 'walnut' ? (
+          <div
+            className="absolute inset-0 pointer-events-none opacity-25 mix-blend-color-dodge"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 2px, transparent 2px, transparent 8px)',
+            }}
+          />
+        ) : (
+          <div
+            className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px)',
+            }}
+          />
+        )}
 
         {/* Chassis Corner Calibration Marks */}
-        <div className="absolute top-2.5 left-2.5 w-2 h-2 border-t border-l border-[var(--border-primary)]" />
-        <div className="absolute top-2.5 right-2.5 w-2 h-2 border-t border-r border-[var(--border-primary)]" />
-        <div className="absolute bottom-2.5 left-2.5 w-2 h-2 border-b border-l border-[var(--border-primary)]" />
-        <div className="absolute bottom-2.5 right-2.5 w-2 h-2 border-b border-r border-[var(--border-primary)]" />
+        <div className="absolute top-2.5 left-2.5 w-2 h-2 border-t border-l border-current opacity-40" />
+        <div className="absolute top-2.5 right-2.5 w-2 h-2 border-t border-r border-current opacity-40" />
+        <div className="absolute bottom-2.5 left-2.5 w-2 h-2 border-b border-l border-current opacity-40" />
+        <div className="absolute bottom-2.5 right-2.5 w-2 h-2 border-b border-r border-current opacity-40" />
 
         {/* Top Header Strip: Model / Deck Metadata */}
-        <div className="relative z-10 flex items-center justify-between text-[7.5px] font-mono tracking-wider uppercase text-[var(--text-secondary)] border-b border-[var(--border-subtle)] pb-1.5">
+        <div className="relative z-10 flex items-center justify-between text-[7.5px] font-mono tracking-wider uppercase opacity-80 border-b border-black/10 dark:border-white/10 pb-1.5">
           <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-            <span className="font-semibold text-[var(--text-primary)]">DM-TURNTABLE 2026</span>
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                playerStyle === 'cyber' ? 'bg-cyan-400 shadow-[0_0_8px_#22D3EE]' : 'bg-[var(--accent)]'
+              }`}
+            />
+            <span className="font-semibold">{playerStyle.toUpperCase()} &bull; 2026 DECK</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span>HI-FI AUDIO CORE</span>
-            <span className="font-bold text-[var(--accent)]">{isPlaying ? 'PLAYING' : 'IDLE'}</span>
+
+          {/* Quick Style Switcher Pills */}
+          {onStyleChange && (
+            <div className="flex items-center gap-1">
+              {PLAYER_STYLES.map((st) => (
+                <button
+                  key={st.id}
+                  onClick={() => onStyleChange(st.id)}
+                  data-cursor="button"
+                  className={`px-1.5 py-0.5 rounded-[2px] text-[7px] font-mono transition-all cursor-pointer ${
+                    playerStyle === st.id
+                      ? 'bg-[var(--accent)] text-white font-bold shadow-xs'
+                      : 'hover:bg-black/10 dark:hover:bg-white/10 opacity-70 hover:opacity-100'
+                  }`}
+                >
+                  {st.short}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-center gap-1.5">
+            <span className="font-bold text-[var(--accent)]">{isPlaying ? 'MOTOR ON' : 'IDLE'}</span>
           </div>
         </div>
 

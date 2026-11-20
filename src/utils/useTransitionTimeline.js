@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 
 export const TRANSITION_PHASES = {
-  INTRO: 'INTRO',                                 // 0 - 4200ms: DM reveal + delayed greeting + comfortable reading pause
-  GREETING_EXIT: 'GREETING_EXIT',                 // 4200 - 4600ms: Greeting slides up and fades out (400ms)
-  CARD_FORMATION: 'CARD_FORMATION',               // 4600 - 5000ms: Rectangular identity card forms (400ms)
-  CARD_FLIP: 'CARD_FLIP',                         // 5000 - 5800ms: 180° Y-axis flip revealing profile photo (800ms)
-  BACKGROUND_TRANSFORM: 'BACKGROUND_TRANSFORM',   // 5600 - 6200ms: Canvas grid and horizon lines draw (600ms)
-  NAVIGATION_REVEAL: 'NAVIGATION_REVEAL',         // 5900 - 6400ms: Header & nav links staggered entrance (500ms)
-  PROFILE_TRANSITION: 'PROFILE_TRANSITION',       // 6100 - 6500ms: Profile card moves into 3D cylinder depth (400ms)
-  HERO_REVEAL: 'HERO_REVEAL',                     // 6400 - 6700ms: Center camera reticle expands & settles (300ms)
-  PROJECT_REVEAL: 'PROJECT_REVEAL',               // 6600 - 7300ms: Gallery project cards fan out along cylinder (700ms)
-  DECORATION_SETTLEMENT: 'DECORATION_SETTLEMENT', // 7100 - 7600ms: Footer & micro-metadata glide into place (500ms)
-  COMPLETED: 'COMPLETED',                         // 7600ms+: Full interactive mode, physics unrestricted
+  INTRO: 'INTRO',                                 // 0 - 7400ms: Big DM drawing (0-5.4s) + scaled-down DM with "Hello, I'm Dev." outline & fill + subtitle reading pause
+  GREETING_EXIT: 'GREETING_EXIT',                 // 7400 - 7900ms: Greeting slides up and smoothly fades out (500ms)
+  CARD_FORMATION: 'CARD_FORMATION',               // 7900 - 8400ms: Central identity card forms with refined border and metadata (500ms)
+  CARD_FLIP: 'CARD_FLIP',                         // 8400 - 9300ms: 180° Y-axis flip revealing authentic profile photo (900ms)
+  BACKGROUND_TRANSFORM: 'BACKGROUND_TRANSFORM',   // 9100 - 9700ms: Spatial canvas grid and horizon lines draw (600ms)
+  NAVIGATION_REVEAL: 'NAVIGATION_REVEAL',         // 9400 - 9900ms: Header & nav links staggered entrance (500ms)
+  PROFILE_TRANSITION: 'PROFILE_TRANSITION',       // 9600 - 10100ms: Profile card glides into balanced 3-zone hero position (500ms)
+  HERO_REVEAL: 'HERO_REVEAL',                     // 9900 - 10500ms: Typographic identity & Dev Mistry title reveal (600ms)
+  PROJECT_REVEAL: 'PROJECT_REVEAL',               // 10200 - 10900ms: Curated project cards and horizontal gallery cards reveal (700ms)
+  DECORATION_SETTLEMENT: 'DECORATION_SETTLEMENT', // 10700 - 11300ms: Footer & architectural micro-metadata glide into place (600ms)
+  COMPLETED: 'COMPLETED',                         // 11300ms+: Full interactive mode, 3D gallery navigation active
 };
 
 export const PHASE_ORDER = [
@@ -29,16 +29,16 @@ export const PHASE_ORDER = [
 ];
 
 export const TIMINGS = [
-  { phase: TRANSITION_PHASES.GREETING_EXIT, time: 4200 },
-  { phase: TRANSITION_PHASES.CARD_FORMATION, time: 4600 },
-  { phase: TRANSITION_PHASES.CARD_FLIP, time: 5000 },
-  { phase: TRANSITION_PHASES.BACKGROUND_TRANSFORM, time: 5600 },
-  { phase: TRANSITION_PHASES.NAVIGATION_REVEAL, time: 5900 },
-  { phase: TRANSITION_PHASES.PROFILE_TRANSITION, time: 6100 },
-  { phase: TRANSITION_PHASES.HERO_REVEAL, time: 6400 },
-  { phase: TRANSITION_PHASES.PROJECT_REVEAL, time: 6600 },
-  { phase: TRANSITION_PHASES.DECORATION_SETTLEMENT, time: 7100 },
-  { phase: TRANSITION_PHASES.COMPLETED, time: 7600 },
+  { phase: TRANSITION_PHASES.GREETING_EXIT, time: 7400 },
+  { phase: TRANSITION_PHASES.CARD_FORMATION, time: 7900 },
+  { phase: TRANSITION_PHASES.CARD_FLIP, time: 8400 },
+  { phase: TRANSITION_PHASES.BACKGROUND_TRANSFORM, time: 9400 },
+  { phase: TRANSITION_PHASES.NAVIGATION_REVEAL, time: 9600 },
+  { phase: TRANSITION_PHASES.PROFILE_TRANSITION, time: 9700 },
+  { phase: TRANSITION_PHASES.HERO_REVEAL, time: 10000 },
+  { phase: TRANSITION_PHASES.PROJECT_REVEAL, time: 10300 },
+  { phase: TRANSITION_PHASES.DECORATION_SETTLEMENT, time: 10800 },
+  { phase: TRANSITION_PHASES.COMPLETED, time: 11400 },
 ];
 
 export function useTransitionTimeline() {
@@ -67,9 +67,11 @@ export function useTransitionTimeline() {
 
     timelineStartRef.current = performance.now();
 
-    // Loop or pause at the 1st loading animation (DM + greeting) as requested
-    // Set to only stay on TRANSITION_PHASES.INTRO without advancing to subsequent flip/gallery phases
-    const activeTimers = [];
+    const activeTimers = TIMINGS.map(({ phase: targetPhase, time }) => {
+      return setTimeout(() => {
+        setPhase(targetPhase);
+      }, time);
+    });
 
     return () => {
       activeTimers.forEach((t) => clearTimeout(t));

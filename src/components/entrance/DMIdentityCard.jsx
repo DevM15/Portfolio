@@ -40,6 +40,7 @@ export default function DMIdentityCard({
   const widthStyle = cardWidth ? (typeof cardWidth === 'number' ? `${cardWidth}px` : cardWidth) : '100%';
   const heightStyle = cardHeight ? (typeof cardHeight === 'number' ? `${cardHeight}px` : cardHeight) : '100%';
 
+  // eslint-disable-next-line no-unused-vars
   const [iteration, setIteration] = useState('editorial');
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -86,13 +87,12 @@ export default function DMIdentityCard({
         perspective: 1200,
       }}
     >
-      <div
-        className="relative w-full h-full transition-transform duration-700 ease-out transform-gpu"
+      <motion.div
+        className="relative w-full h-full transform-gpu"
         style={{
           transformStyle: 'preserve-3d',
-          transform: `rotateY(${flipDeg}deg) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
           borderRadius: isFramed ? `${borderRadius}px` : '0px',
-          boxShadow: isFramed
+          boxShadow: isFramed && !isFlipped
             ? isHovered
               ? '0 30px 70px -15px rgba(0, 0, 0, 0.28), 0 0 0 1px var(--accent)'
               : isLifted
@@ -100,10 +100,20 @@ export default function DMIdentityCard({
                 : '0 14px 36px -10px rgba(0, 0, 0, 0.14), 0 0 0 1px var(--border-primary)'
             : 'none',
         }}
+        animate={{
+          rotateY: flipDeg + tilt.ry,
+          rotateX: tilt.rx,
+        }}
+        transition={{
+          rotateY: { duration: 1.1, ease: [0.25, 1, 0.5, 1] },
+          rotateX: { duration: 0.2, ease: 'easeOut' },
+          boxShadow: { duration: 0.5 },
+          borderRadius: { duration: 0.5 },
+        }}
       >
         {/* ==================== FRONT FACE: METALLIC DM MONOGRAM ==================== */}
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden transition-all duration-500"
+          className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden transition-colors duration-500"
           style={{
             transform: 'rotateY(0deg) translateZ(1px)',
             backfaceVisibility: 'hidden',
@@ -144,33 +154,46 @@ export default function DMIdentityCard({
               className="absolute inset-0 rounded-full bg-[var(--accent)]/15 blur-2xl pointer-events-none"
             />
 
-            {/* Swiss Minimal DM Monogram (Space Grotesk -7px tracking) */}
+            {/* S1 / Fluid Script Tube Monogram Animation (Inspired by Spylt Video) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.6, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.19, 1, 0.22, 1] }}
               className="relative inline-flex items-center justify-center"
             >
-              <span
-                className="absolute inset-0 font-space font-extrabold text-[65px] sm:text-[75px] md:text-[85px] leading-none tracking-[-7px] text-[var(--border-subtle)] select-none opacity-40"
-                style={{ transform: 'translate3d(3px, 5px, -8px)' }}
-                aria-hidden="true"
-              >
-                DM
-              </span>
-              <span
-                className="relative block font-space font-extrabold text-[65px] sm:text-[75px] md:text-[85px] leading-none tracking-[-7px] select-none"
-                style={{
-                  background: 'linear-gradient(130deg, #222a26, #87918a, #222a26)',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  color: 'transparent',
-                  filter: 'drop-shadow(0 10px 18px rgba(0, 0, 0, 0.18))',
-                }}
-              >
-                DM
-              </span>
+              <svg viewBox="0 0 240 120" className="s1-tube-svg">
+                {/* Letter D - Pure Single Continuous Stroke with Gentle Smooth Velocity */}
+                <motion.path
+                  d="M 45 28 C 42 55, 38 85, 34 102 C 32 110, 24 112, 20 106 C 16 98, 25 93, 38 95 C 62 98, 92 82, 90 54 C 88 32, 65 26, 45 28 C 41 29, 36 34, 34 40"
+                  fill="none"
+                  stroke="var(--text-primary)"
+                  strokeWidth={14}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 1 }}
+                  transition={{
+                    pathLength: { duration: 3.0, delay: 0.3, ease: [0.35, 0.1, 0.25, 1.0] },
+                    opacity: { duration: 0.2, delay: 0.3 },
+                  }}
+                />
+
+                {/* Letter M - Pure Continuous Cursive Stroke */}
+                <motion.path
+                  d="M 105 52 C 112 36, 122 36, 126 50 L 122 102 C 124 72, 134 36, 146 36 C 156 36, 156 52, 152 102 C 154 72, 164 36, 176 36 C 186 36, 188 52, 184 96 C 182 104, 190 106, 202 98"
+                  fill="none"
+                  stroke="var(--text-primary)"
+                  strokeWidth={14}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 1 }}
+                  transition={{
+                    pathLength: { duration: 2.8, delay: 2.5, ease: [0.35, 0.1, 0.25, 1.0] },
+                    opacity: { duration: 0.2, delay: 2.5 },
+                  }}
+                />
+              </svg>
             </motion.div>
 
             {/* Radiant Specular Light Sheen sweep across the Monogram */}
@@ -204,7 +227,8 @@ export default function DMIdentityCard({
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             borderRadius: `${borderRadius}px`,
-            border: isHovered ? '1px solid var(--accent)' : '1px solid var(--border-primary)',
+            border: 'none',
+            boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.12)',
             pointerEvents: isFlipped ? 'auto' : 'none',
           }}
         >
@@ -217,31 +241,21 @@ export default function DMIdentityCard({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="relative flex flex-col justify-between w-full h-full"
+                className="relative flex flex-col justify-end items-center w-full h-full"
               >
-                {/* Subtle Background Horizon & Soft Gradient */}
+                {/* Subtle Card Background Radial Depth & Texture */}
                 <div className="absolute inset-0 pointer-events-none">
                   <div
                     className="absolute inset-0"
                     style={{
-                      background: 'radial-gradient(ellipse at 50% 40%, var(--bg-surface-elevated) 0%, var(--bg-surface) 80%)',
+                      background: 'radial-gradient(ellipse at 50% 45%, var(--bg-surface-elevated) 0%, var(--bg-surface) 85%)',
                     }}
                   />
                   <div className="absolute inset-0 bg-subtle-grain opacity-[var(--grain-opacity)] mix-blend-multiply" />
                 </div>
 
-                {/* Top Minimal Editorial Masthead */}
-                <div className="relative z-10 px-4 pt-3 pb-2 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/75 backdrop-blur-xs font-mono text-[8px] uppercase tracking-wider text-[var(--text-secondary)]">
-                  <div className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-                    <span>FOLIO // 01</span>
-                  </div>
-                  <span>DEV MISTRY</span>
-                  <span className="text-[var(--accent)] font-semibold">MUMBAI · 2026</span>
-                </div>
-
                 {/* Centered Transparent Cutout Portrait with Skeleton Fallback */}
-                <div className="absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 z-20 flex items-end justify-center overflow-visible pointer-events-none">
                   {!imageLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
                       <span className="font-serif font-bold text-7xl text-[var(--text-muted)] animate-pulse">
@@ -249,43 +263,22 @@ export default function DMIdentityCard({
                       </span>
                     </div>
                   )}
-                  <img
+                  <motion.img
                     src="/img/dev_pic.png"
                     alt="Dev Mistry"
                     loading="eager"
                     decoding="sync"
                     onLoad={() => setImageLoaded(true)}
-                    className="h-[84%] w-auto max-w-[84%] object-contain object-bottom transition-all duration-500 ease-out"
+                    initial={{ scale: 0.95 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    className="h-[105%] w-auto max-w-[105%] object-contain object-bottom transition-all duration-500 ease-out"
                     style={{
                       filter: isHovered
-                        ? 'drop-shadow(0 16px 26px rgba(0,0,0,0.28))'
-                        : 'drop-shadow(0 10px 18px rgba(0,0,0,0.18))',
+                        ? 'drop-shadow(0 20px 32px rgba(0,0,0,0.32))'
+                        : 'drop-shadow(0 14px 24px rgba(0,0,0,0.20))',
                     }}
                   />
-                </div>
-
-                {/* Clean Bottom Editorial Metadata Block */}
-                <div className="relative z-30 p-3 pt-6 flex items-end justify-between bg-gradient-to-t from-[var(--bg-surface)] via-[var(--bg-surface)]/90 to-transparent">
-                  <div className="flex flex-col font-mono tracking-wider">
-                    <span className="text-[10px] font-display font-black text-[var(--text-primary)] uppercase leading-none">
-                      DEV MISTRY
-                    </span>
-                    <span className="text-[7px] text-[var(--text-secondary)] uppercase mt-0.5">
-                      FULL STACK ARCHITECT
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (onOpenSection) onOpenSection('about');
-                    }}
-                    data-cursor="button"
-                    className="px-2.5 py-1 rounded-[1px] border border-[var(--border-primary)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent)] hover:text-[var(--accent)] text-[7.5px] font-mono tracking-wider uppercase transition-all shadow-xs cursor-pointer flex items-center gap-1"
-                  >
-                    <span>PROFILE SPEC</span>
-                    <span className="text-[var(--accent)] font-bold">→</span>
-                  </button>
                 </div>
               </motion.div>
             )}
@@ -567,34 +560,9 @@ export default function DMIdentityCard({
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
 
-      {/* ==================== LIVE ITERATION SWITCHER CONTROLS ==================== */}
-      {isFlipped && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-1 p-1 rounded-full bg-[var(--bg-surface)]/90 backdrop-blur-md border border-[var(--border-primary)] shadow-xs z-30 whitespace-nowrap"
-        >
-          {CARD_ITERATIONS.map((iter) => (
-            <button
-              key={iter.id}
-              onClick={(e) => {
-                e.stopPropagation();
-                setIteration(iter.id);
-              }}
-              data-cursor="button"
-              className={`px-2 py-0.5 rounded-full font-mono text-[8px] tracking-wider uppercase transition-all cursor-pointer ${iteration === iter.id
-                  ? 'bg-[var(--accent)] text-[#F7F6F2] font-bold shadow-xs'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                }`}
-            >
-              {iter.label}
-            </button>
-          ))}
-        </motion.div>
-      )}
+      {/* ==================== CARD PRESENTATION ==================== */}
     </div>
   );
 }

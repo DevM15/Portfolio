@@ -87,10 +87,8 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       const illumOuter = hasVanta
         ? (dark ? 'rgba(15, 18, 16, 0)' : 'rgba(233, 229, 220, 0)')
         : (dark ? 'rgba(15, 18, 16, 0.35)' : 'rgba(233, 229, 220, 0.35)');
-      const guideColor = dark ? 'rgba(57, 66, 57, 0.65)' : 'rgba(222, 217, 206, 0.55)';
-      const sageColor = dark ? 'rgba(162, 173, 160, 0.35)' : 'rgba(120, 132, 119, 0.32)';
+      // Clean background colors without guide lines
       const waveColor = dark ? 'rgba(162, 173, 160, 0.08)' : 'rgba(120, 132, 119, 0.08)';
-      const metaColor = dark ? 'rgba(162, 173, 160, 0.55)' : 'rgba(120, 132, 119, 0.55)';
       const accentColor = dark ? '#C98265' : '#B96F52';
 
       // Very gentle mouse lerp for smooth parallax (max 8px)
@@ -135,48 +133,8 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       ctx.save();
       ctx.globalAlpha = revealProgress;
 
-      // ==================== 3. FINE ARCHITECTURAL CONSTRUCTION GUIDELINES ====================
-      ctx.strokeStyle = guideColor;
-      ctx.lineWidth = 0.75;
-      ctx.beginPath();
-
-      // Top and Bottom Structural Margins (drawn only in standalone canvas mode)
-      const topMargin = 80;
-      const bottomMargin = height - 64;
-
-      if (!hasVanta) {
-        ctx.moveTo(32, topMargin);
-        ctx.lineTo(width - 32, topMargin);
-        ctx.moveTo(32, bottomMargin);
-        ctx.lineTo(width - 32, bottomMargin);
-      }
-
-      // Golden ratio architectural vertical accents
-      const leftColX = Math.round(width * 0.08 + mx * 4);
-      const rightColX = Math.round(width * 0.92 + mx * 4);
-      ctx.moveTo(leftColX, topMargin);
-      ctx.lineTo(leftColX, bottomMargin);
-      ctx.moveTo(rightColX, topMargin);
-      ctx.lineTo(rightColX, bottomMargin);
-
-      ctx.stroke();
-
-      // ==================== 4. DELICATE GEOMETRIC EDITORIAL OUTLINES ====================
-      ctx.strokeStyle = sageColor;
-      ctx.lineWidth = 0.85;
-      ctx.beginPath();
-
-      // Top-Left Architectural Corner Bracket
-      const bktSize = 14;
-      ctx.moveTo(leftColX - 8, topMargin + bktSize);
-      ctx.lineTo(leftColX - 8, topMargin - 8);
-      ctx.lineTo(leftColX + bktSize, topMargin - 8);
-
-      // Bottom-Right Corner Bracket
-      ctx.moveTo(rightColX + 8, bottomMargin - bktSize);
-      ctx.lineTo(rightColX + 8, bottomMargin + 8);
-      ctx.lineTo(rightColX - bktSize, bottomMargin + 8);
-      ctx.stroke();
+      // ==================== 3. FINE ARCHITECTURAL GUIDELINES (Vertical lines removed) ====================
+      // Clean background without vertical or edge lines
 
       // ==================== 5. SUBTLE SLOW-DRIFTING WIREFRAME ACCENT ====================
       const waveShift = Math.sin(elapsed * 0.15) * 8;
@@ -192,30 +150,9 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
       );
       ctx.stroke();
 
-      // ==================== 6. EDITORIAL TYPOGRAPHIC COORDINATES & METADATA ====================
-      ctx.font = '8px "IBM Plex Mono", monospace';
-      ctx.fillStyle = metaColor;
-
-      // Left architectural stamp
-      const metaLeftY = topMargin + 24;
-      ctx.fillText('ARCH / REF 01', leftColX + 8, metaLeftY);
-
-      // Right geographic coordinates
-      const crY = bottomMargin - 16;
-      ctx.fillText('19.0760° N, 72.8777° E', rightColX - 120, crY);
-
+      // ==================== 6. CLEAN BACKGROUND (Metadata text removed) ====================
       // ==================== 7. SPARSE RESTING TERRACOTTA ACCENTS ====================
       ctx.fillStyle = accentColor;
-
-      // Dot 1: Beside Left architectural stamp
-      ctx.beginPath();
-      ctx.arc(leftColX + 4, metaLeftY - 3, 1.4, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Dot 2: Beside Right coordinates
-      ctx.beginPath();
-      ctx.arc(rightColX - 126, crY - 3, 1.4, 0, Math.PI * 2);
-      ctx.fill();
 
       // Dot 3: Subtle center bottom datum marker with slow breathing opacity
       const dot3Opacity = (0.35 + Math.sin(elapsed * 0.8) * 0.15) * revealProgress;
@@ -223,7 +160,7 @@ export default function SpatialCanvasBackground({ sectionIndex = 0, isRevealed =
         ? `rgba(201, 130, 101, ${dot3Opacity.toFixed(3)})`
         : `rgba(185, 111, 82, ${dot3Opacity.toFixed(3)})`;
       ctx.beginPath();
-      ctx.arc(width * 0.5, bottomMargin - 8, 1.8, 0, Math.PI * 2);
+      ctx.arc(width * 0.5, height - 72, 1.8, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
